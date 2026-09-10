@@ -81,7 +81,9 @@ export async function getDropProducts(
     take: limit,
     include: productMediaInclude,
   });
-  return products.map(toStorefrontProduct);
+  // One card per color (not per product) so a small catalog still fills
+  // the section out, matching how every category/search page already works.
+  return products.flatMap(toStorefrontProductsByColor);
 }
 
 export async function getTrendingProducts(
@@ -93,7 +95,7 @@ export async function getTrendingProducts(
     take: limit,
     include: productMediaInclude,
   });
-  return products.map(toStorefrontProduct);
+  return products.flatMap(toStorefrontProductsByColor);
 }
 
 export async function getCategoryProductsByColor(
