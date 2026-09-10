@@ -1,23 +1,9 @@
 import Link from "next/link";
-
-const NAV_SECTIONS = [
-  { href: "/admin", label: "Dashboard" },
-  { href: "/admin/products", label: "Products" },
-  { href: "/admin/collections", label: "Collections" },
-  { href: "/admin/inventory", label: "Inventory" },
-  { href: "/admin/orders", label: "Orders" },
-  { href: "/admin/customers", label: "Customers" },
-  { href: "/admin/discounts", label: "Discount Codes" },
-  { href: "/admin/shipping", label: "Shipping" },
-  { href: "/admin/reviews", label: "Reviews" },
-  { href: "/admin/content", label: "Content" },
-  { href: "/admin/analytics", label: "Analytics" },
-  { href: "/admin/settings", label: "Settings" },
-];
+import { NAV_SECTIONS } from "./nav-sections";
 
 export function Sidebar() {
   return (
-    <nav className="flex h-full w-56 shrink-0 flex-col gap-1 border-r border-soft-black/10 bg-warm-white px-4 py-6">
+    <nav className="hidden h-full w-56 shrink-0 flex-col gap-1 border-r border-soft-black/10 bg-warm-white px-4 py-6 md:flex">
       {NAV_SECTIONS.map((item) => (
         <Link
           key={item.href}

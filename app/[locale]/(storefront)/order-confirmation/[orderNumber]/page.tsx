@@ -79,26 +79,26 @@ export default async function OrderConfirmationPage({
       </ul>
 
       <div className="mt-6 space-y-2 border-t border-warm-white/10 pt-6 text-sm">
-        <div className="flex justify-between text-warm-white/60">
+        <div className="flex justify-between gap-3 text-warm-white/60">
           <span>{t("subtotal")}</span>
-          <span>EGP {Number(order.subtotal).toLocaleString()}</span>
+          <span className="text-end">EGP {Number(order.subtotal).toLocaleString()}</span>
         </div>
-        <div className="flex justify-between text-warm-white/60">
+        <div className="flex justify-between gap-3 text-warm-white/60">
           <span>{t("shipping")}</span>
-          <span>EGP {Number(order.shippingCost).toLocaleString()}</span>
+          <span className="text-end">EGP {Number(order.shippingCost).toLocaleString()}</span>
         </div>
         {Number(order.discountAmount) > 0 ? (
-          <div className="flex justify-between text-electric-violet">
+          <div className="flex justify-between gap-3 text-electric-violet">
             <span>
               {t("discount")}
               {order.discountCode ? ` (${order.discountCode})` : ""}
             </span>
-            <span>-EGP {Number(order.discountAmount).toLocaleString()}</span>
+            <span className="text-end shrink-0">-EGP {Number(order.discountAmount).toLocaleString()}</span>
           </div>
         ) : null}
-        <div className="flex justify-between border-t border-warm-white/10 pt-2 text-base text-warm-white">
+        <div className="flex justify-between gap-3 border-t border-warm-white/10 pt-2 text-base text-warm-white">
           <span>{t("total")}</span>
-          <span className="text-gold">
+          <span className="text-end text-gold">
             EGP {Number(order.total).toLocaleString()}
           </span>
         </div>

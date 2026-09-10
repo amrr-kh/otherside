@@ -341,27 +341,27 @@ export function CheckoutForm({
         <input type="hidden" name="promoCode" value={appliedPromo?.code ?? ""} />
 
         <div className="mt-4 space-y-2 border-t border-warm-white/10 pt-4 text-sm">
-          <div className="flex justify-between text-warm-white/60">
+          <div className="flex justify-between gap-3 text-warm-white/60">
             <span>{t("subtotal")}</span>
-            <span>EGP {subtotal.toLocaleString()}</span>
+            <span className="text-end">EGP {subtotal.toLocaleString()}</span>
           </div>
-          <div className="flex justify-between text-warm-white/60">
-            <span>{t("shipping")}</span>
-            <span>
+          <div className="flex justify-between gap-3 text-warm-white/60">
+            <span className="shrink-0">{t("shipping")}</span>
+            <span className="text-end">
               {shippingCost === null
                 ? t("selectGovernorateForShipping")
                 : `EGP ${shippingCost.toLocaleString()}`}
             </span>
           </div>
           {discountAmount > 0 ? (
-            <div className="flex justify-between text-electric-violet">
+            <div className="flex justify-between gap-3 text-electric-violet">
               <span>{t("discount")}</span>
-              <span>-EGP {discountAmount.toLocaleString()}</span>
+              <span className="text-end">-EGP {discountAmount.toLocaleString()}</span>
             </div>
           ) : null}
-          <div className="flex justify-between border-t border-warm-white/10 pt-2 text-base text-warm-white">
+          <div className="flex justify-between gap-3 border-t border-warm-white/10 pt-2 text-base text-warm-white">
             <span>{t("total")}</span>
-            <span className="text-gold">EGP {total.toLocaleString()}</span>
+            <span className="text-end text-gold">EGP {total.toLocaleString()}</span>
           </div>
         </div>
 
