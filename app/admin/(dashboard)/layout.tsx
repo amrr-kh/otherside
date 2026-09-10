@@ -13,7 +13,7 @@ export default async function AdminDashboardLayout({
   return (
     <div className="flex min-h-screen">
       <Sidebar />
-      <div className="flex flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex h-16 items-center justify-between gap-3 border-b border-soft-black/10 px-4 md:px-8">
           <div className="flex items-center gap-3">
             <MobileSidebarToggle />
@@ -26,7 +26,9 @@ export default async function AdminDashboardLayout({
             <SignOutButton />
           </div>
         </header>
-        <main className="flex-1 overflow-x-hidden p-4 md:p-8">{children}</main>
+        <main className="min-w-0 flex-1 overflow-x-hidden p-4 md:p-8">
+          {children}
+        </main>
       </div>
     </div>
   );
