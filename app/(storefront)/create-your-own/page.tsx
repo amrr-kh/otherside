@@ -1,10 +1,11 @@
 import Link from "next/link";
+import { SOCIAL_LINKS } from "@/lib/social";
 
 const CHANNELS = [
-  { href: "https://instagram.com", label: "Instagram" },
-  { href: "https://wa.me", label: "WhatsApp" },
-  { href: "https://facebook.com", label: "Facebook" },
-  { href: "https://tiktok.com", label: "TikTok" },
+  { href: SOCIAL_LINKS.instagram, label: "Instagram" },
+  { href: SOCIAL_LINKS.whatsapp, label: "WhatsApp" },
+  { href: SOCIAL_LINKS.facebook, label: "Facebook" },
+  { href: SOCIAL_LINKS.tiktok, label: "TikTok" },
 ];
 
 export default function CreateYourOwnPage() {

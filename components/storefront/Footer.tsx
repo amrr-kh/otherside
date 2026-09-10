@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "./Logo";
+import { SOCIAL_LINKS } from "@/lib/social";
 
 const COLUMNS = [
   {
@@ -21,18 +22,15 @@ const COLUMNS = [
   },
   {
     heading: "About",
-    links: [
-      { href: "/story", label: "Our Story" },
-      { href: "/brand", label: "The Brand" },
-    ],
+    links: [{ href: "/story", label: "Our Story" }],
   },
   {
     heading: "Social",
     links: [
-      { href: "https://instagram.com", label: "Instagram" },
-      { href: "https://tiktok.com", label: "TikTok" },
-      { href: "https://facebook.com", label: "Facebook" },
-      { href: "https://wa.me", label: "WhatsApp" },
+      { href: SOCIAL_LINKS.instagram, label: "Instagram" },
+      { href: SOCIAL_LINKS.tiktok, label: "TikTok" },
+      { href: SOCIAL_LINKS.facebook, label: "Facebook" },
+      { href: SOCIAL_LINKS.whatsapp, label: "WhatsApp" },
     ],
   },
 ];
@@ -62,6 +60,12 @@ export function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
+                      target={link.href.startsWith("http") ? "_blank" : undefined}
+                      rel={
+                        link.href.startsWith("http")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
                       className="text-sm text-warm-white/55 transition-colors hover:text-warm-white"
                     >
                       {link.label}

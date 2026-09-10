@@ -6,6 +6,7 @@ import path from "node:path";
 import { prisma } from "@/lib/db";
 import { slugify } from "@/lib/slug";
 import { saveUploadedImage } from "@/lib/uploads";
+import { requireAdmin } from "@/lib/require-admin";
 import type { ImageRole } from "@/generated/prisma/enums";
 
 async function getOrCreateOption(productId: string, name: "Color" | "Size") {
@@ -62,6 +63,7 @@ async function regenerateVariants(productId: string) {
 }
 
 export async function addColor(productId: string, formData: FormData) {
+  await requireAdmin();
   const name = String(formData.get("name") ?? "").trim();
   const swatchHex = String(formData.get("swatchHex") ?? "").trim() || null;
   if (!name) throw new Error("Color name is required.");
@@ -85,6 +87,7 @@ export async function addColor(productId: string, formData: FormData) {
 }
 
 export async function addSize(productId: string, formData: FormData) {
+  await requireAdmin();
   const value = String(formData.get("value") ?? "").trim();
   if (!value) throw new Error("Size is required.");
 
@@ -116,6 +119,7 @@ export async function uploadColorImage(
   colorOptionValueId: string,
   formData: FormData,
 ) {
+  await requireAdmin();
   const files = formData.getAll("file").filter(
     (f): f is File => f instanceof File && f.size > 0,
   );
@@ -160,6 +164,7 @@ export async function uploadColorImage(
 }
 
 export async function deleteImage(imageId: string, productId: string) {
+  await requireAdmin();
   const image = await prisma.productImage.findUnique({
     where: { id: imageId },
   });
@@ -172,6 +177,7 @@ export async function deleteImage(imageId: string, productId: string) {
 }
 
 export async function updateInventory(productId: string, formData: FormData) {
+  await requireAdmin();
   const updates: Promise<unknown>[] = [];
   for (const [key, value] of formData.entries()) {
     if (!key.startsWith("qty-")) continue;

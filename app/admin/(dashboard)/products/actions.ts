@@ -6,6 +6,7 @@ import { unlink } from "node:fs/promises";
 import path from "node:path";
 import { prisma } from "@/lib/db";
 import { slugify } from "@/lib/slug";
+import { requireAdmin } from "@/lib/require-admin";
 import type { ProductGender, ProductStatus } from "@/generated/prisma/enums";
 
 async function uniqueSlug(name: string, excludeId?: string) {
@@ -81,6 +82,7 @@ function readProductFields(formData: FormData) {
 }
 
 export async function createProduct(formData: FormData) {
+  await requireAdmin();
   const fields = readProductFields(formData);
   const categoryId = await resolveCategoryId(formData.get("category"));
   const slug = await uniqueSlug(fields.name);
@@ -94,6 +96,7 @@ export async function createProduct(formData: FormData) {
 }
 
 export async function updateProduct(productId: string, formData: FormData) {
+  await requireAdmin();
   const fields = readProductFields(formData);
   const categoryId = await resolveCategoryId(formData.get("category"));
   const slug = await uniqueSlug(fields.name, productId);
@@ -111,6 +114,7 @@ export async function setProductStatus(
   productId: string,
   status: ProductStatus,
 ) {
+  await requireAdmin();
   await prisma.product.update({
     where: { id: productId },
     data: { status },
@@ -119,6 +123,7 @@ export async function setProductStatus(
 }
 
 export async function deleteProduct(productId: string) {
+  await requireAdmin();
   const product = await prisma.product.findUnique({
     where: { id: productId },
     include: { images: true, variants: { select: { id: true } } },

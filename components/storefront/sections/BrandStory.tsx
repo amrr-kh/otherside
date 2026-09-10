@@ -1,15 +1,17 @@
+import Link from "next/link";
+
 const PRINCIPLES = [
   {
     title: "Unisex by design",
-    body: "Made without unnecessary labels.",
+    body: "No unnecessary labels, no fixed rules.",
   },
   {
     title: "Built different",
-    body: "Premium silhouettes and considered details.",
+    body: "Strong silhouettes, comfort, individuality.",
   },
   {
     title: "Beyond the surface",
-    body: "Every piece belongs to a larger world.",
+    body: "What you see is never the whole story.",
   },
 ];
 
@@ -29,12 +31,21 @@ export function BrandStory() {
         </div>
 
         <div className="flex flex-col justify-between gap-10">
-          <p className="max-w-md text-base leading-relaxed text-warm-white/60">
-            OtherSide was created by Bidu, Eshta and Amr around one idea:
-            there is always more than what appears on the surface. We create
-            unisex fashion designed around individuality, perspective and the
-            freedom to express different sides of yourself.
-          </p>
+          <div className="max-w-md">
+            <p className="text-base leading-relaxed text-warm-white/60">
+              OtherSide was founded by Bidu, Eshta, and Amr with one idea:
+              what you see on the surface is never the whole story. We
+              create premium unisex pieces built around strong silhouettes,
+              comfort, individuality, and everyday wear — no unnecessary
+              labels, no fixed rules.
+            </p>
+            <Link
+              href="/story"
+              className="mt-4 inline-block text-xs uppercase tracking-[0.18em] text-warm-white/70 underline underline-offset-4 hover:text-warm-white"
+            >
+              Read Our Story
+            </Link>
+          </div>
 
           <dl className="grid grid-cols-1 gap-8 sm:grid-cols-3">
             {PRINCIPLES.map((p) => (

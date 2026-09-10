@@ -4,11 +4,19 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { getOrCreateGuestId, peekGuestId } from "@/lib/guest";
 
+const MAX_LINE_QUANTITY = 20;
+
+function clampQuantity(quantity: number): number {
+  if (!Number.isFinite(quantity)) return 1;
+  return Math.max(1, Math.min(Math.trunc(quantity), MAX_LINE_QUANTITY));
+}
+
 export async function addToCart(variantId: string, quantity: number) {
   const guestId = await getOrCreateGuestId();
+  const safeQuantity = clampQuantity(quantity);
 
   const variant = await prisma.productVariant.findUniqueOrThrow({
-    where: { id: variantId },
+    where: { id: variantId, isActive: true },
     include: { product: true },
   });
   const unitPrice = variant.priceOverride ?? variant.product.basePrice;
@@ -26,14 +34,16 @@ export async function addToCart(variantId: string, quantity: number) {
   if (existing) {
     await prisma.cartItem.update({
       where: { id: existing.id },
-      data: { quantity: existing.quantity + quantity },
+      data: {
+        quantity: Math.min(existing.quantity + safeQuantity, MAX_LINE_QUANTITY),
+      },
     });
   } else {
     await prisma.cartItem.create({
       data: {
         cartId: cart.id,
         variantId,
-        quantity,
+        quantity: safeQuantity,
         priceSnapshot: unitPrice,
       },
     });
@@ -57,10 +67,13 @@ async function assertOwnsCartItem(itemId: string) {
 export async function updateCartItemQuantity(itemId: string, quantity: number) {
   await assertOwnsCartItem(itemId);
 
-  if (quantity <= 0) {
+  if (!Number.isFinite(quantity) || quantity <= 0) {
     await prisma.cartItem.delete({ where: { id: itemId } });
   } else {
-    await prisma.cartItem.update({ where: { id: itemId }, data: { quantity } });
+    await prisma.cartItem.update({
+      where: { id: itemId },
+      data: { quantity: clampQuantity(quantity) },
+    });
   }
 
   revalidatePath("/cart");

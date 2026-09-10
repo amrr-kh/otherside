@@ -109,7 +109,7 @@ export default async function AdminProductsPage() {
                           action={setProductStatus.bind(
                             null,
                             product.id,
-                            "DRAFT",
+                            "ACTIVE",
                           )}
                         >
                           <button
