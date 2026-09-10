@@ -91,12 +91,46 @@ export async function placeOrder(
     (sum, item) => sum + Number(item.priceSnapshot) * item.quantity,
     0,
   );
+
+  // Discount is always re-validated and recomputed here — never trust the
+  // amount shown by the client-side preview.
+  const promoCodeRaw = required(formData, "promoCode").toUpperCase();
+  let discountCode: string | null = null;
+  let discountAmount = 0;
+  let discountRecordId: string | null = null;
+  let discountTimesUsedSeen = 0;
+
+  if (promoCodeRaw) {
+    const discount = await prisma.discountCode.findUnique({
+      where: { code: promoCodeRaw },
+    });
+    const validNow =
+      discount &&
+      discount.isActive &&
+      (!discount.expiresAt || discount.expiresAt >= new Date()) &&
+      (discount.usageLimit === null || discount.timesUsed < discount.usageLimit) &&
+      (!discount.minSubtotal || subtotal >= Number(discount.minSubtotal));
+
+    if (!discount || !validNow) {
+      return { status: "error", message: "invalidPromo" };
+    }
+
+    const value = Number(discount.value);
+    discountAmount =
+      discount.type === "PERCENT"
+        ? Math.round(subtotal * (value / 100) * 100) / 100
+        : Math.min(value, subtotal);
+    discountCode = promoCodeRaw;
+    discountRecordId = discount.id;
+    discountTimesUsedSeen = discount.timesUsed;
+  }
+
   const freeThreshold = zone.freeShippingThreshold
     ? Number(zone.freeShippingThreshold)
     : null;
   const shippingCost =
     freeThreshold !== null && subtotal >= freeThreshold ? 0 : Number(zone.price);
-  const total = subtotal + shippingCost;
+  const total = subtotal + shippingCost - discountAmount;
 
   let orderNumber: string;
   try {
@@ -154,6 +188,8 @@ export async function placeOrder(
           status: "RECEIVED",
           subtotal,
           shippingCost,
+          discountCode,
+          discountAmount,
           total,
           paymentMethod,
           addressSnapshot: {
@@ -195,6 +231,20 @@ export async function placeOrder(
           statusHistory: { create: { status: "RECEIVED" } },
         },
       });
+
+      if (discountRecordId) {
+        // Optimistic-lock increment: only succeeds if no other order used
+        // this same code in between our check and this transaction — if it
+        // lost the race, this throws and the whole order rolls back rather
+        // than overselling a capped discount code.
+        const result = await tx.discountCode.updateMany({
+          where: { id: discountRecordId, timesUsed: discountTimesUsedSeen },
+          data: { timesUsed: { increment: 1 } },
+        });
+        if (result.count !== 1) {
+          throw new Error("Discount code was just used up — please retry.");
+        }
+      }
 
       for (const item of cartItems) {
         await tx.inventory.update({

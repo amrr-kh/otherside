@@ -106,3 +106,14 @@ export async function getCategoryProductsByColor(
   });
   return products.flatMap(toStorefrontProductsByColor);
 }
+
+export async function getCollectionProductsByColor(
+  collectionSlug: string,
+): Promise<StorefrontProduct[]> {
+  const products = await prisma.product.findMany({
+    where: { status: "ACTIVE", collections: { some: { slug: collectionSlug } } },
+    orderBy: { createdAt: "desc" },
+    include: productMediaInclude,
+  });
+  return products.flatMap(toStorefrontProductsByColor);
+}

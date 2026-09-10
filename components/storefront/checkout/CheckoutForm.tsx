@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo, useState, useActionState } from "react";
+import { useMemo, useState, useActionState, useTransition } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { placeOrder, type PlaceOrderState } from "@/lib/actions/orders";
+import { checkPromoCode } from "@/lib/actions/promo";
 import type { CartLine } from "@/lib/storefront/cart";
 import type { ShippingZoneOption } from "@/lib/storefront/shipping";
 
@@ -33,6 +34,14 @@ export function CheckoutForm({
     "COD" | "INSTAPAY" | "MOBILE_WALLET"
   >("COD");
 
+  const [promoInput, setPromoInput] = useState("");
+  const [appliedPromo, setAppliedPromo] = useState<{
+    code: string;
+    discountAmount: number;
+  } | null>(null);
+  const [promoError, setPromoError] = useState<string | null>(null);
+  const [isCheckingPromo, startPromoCheck] = useTransition();
+
   const governorateOptions = useMemo(
     () =>
       zones
@@ -48,7 +57,30 @@ export function CheckoutForm({
       ? 0
       : matchedZone.price
     : null;
-  const total = subtotal + (shippingCost ?? 0);
+  const discountAmount = appliedPromo?.discountAmount ?? 0;
+  const total = subtotal + (shippingCost ?? 0) - discountAmount;
+
+  function handleApplyPromo() {
+    const code = promoInput.trim();
+    if (!code) return;
+    setPromoError(null);
+    startPromoCheck(async () => {
+      const result = await checkPromoCode(code, subtotal);
+      if (result.valid) {
+        setAppliedPromo({ code: result.code, discountAmount: result.discountAmount });
+        setPromoError(null);
+      } else {
+        setAppliedPromo(null);
+        setPromoError(result.message);
+      }
+    });
+  }
+
+  function handleRemovePromo() {
+    setAppliedPromo(null);
+    setPromoError(null);
+    setPromoInput("");
+  }
 
   return (
     <form action={formAction} className="grid grid-cols-1 gap-12 md:grid-cols-[1.4fr_1fr]">
@@ -268,7 +300,47 @@ export function CheckoutForm({
           ))}
         </div>
 
-        <div className="mt-6 space-y-2 border-t border-warm-white/10 pt-4 text-sm">
+        <div className="mt-6 border-t border-warm-white/10 pt-4">
+          {appliedPromo ? (
+            <div className="flex items-center justify-between gap-2 border border-electric-violet/40 bg-electric-violet/10 px-3 py-2 text-xs text-warm-white">
+              <span dir="ltr">{appliedPromo.code}</span>
+              <button
+                type="button"
+                onClick={handleRemovePromo}
+                className="uppercase tracking-[0.08em] text-warm-white/60 hover:text-warm-white"
+              >
+                {t("removePromo")}
+              </button>
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              <input
+                value={promoInput}
+                onChange={(e) => setPromoInput(e.target.value)}
+                placeholder={t("promoPlaceholder")}
+                dir="ltr"
+                className="w-full border border-warm-white/25 bg-transparent px-3 py-2.5 text-xs text-warm-white placeholder:text-warm-white/35 focus:border-electric-violet focus:outline-none"
+              />
+              <button
+                type="button"
+                onClick={handleApplyPromo}
+                disabled={isCheckingPromo || !promoInput.trim()}
+                className="shrink-0 border border-warm-white/40 px-4 text-xs uppercase tracking-[0.08em] text-warm-white hover:border-warm-white disabled:opacity-40"
+              >
+                {isCheckingPromo ? t("applyingPromo") : t("applyPromo")}
+              </button>
+            </div>
+          )}
+          {promoError ? (
+            <p className="mt-2 text-xs text-magenta">
+              {t(`promoError${capitalize(promoError)}`)}
+            </p>
+          ) : null}
+        </div>
+
+        <input type="hidden" name="promoCode" value={appliedPromo?.code ?? ""} />
+
+        <div className="mt-4 space-y-2 border-t border-warm-white/10 pt-4 text-sm">
           <div className="flex justify-between text-warm-white/60">
             <span>{t("subtotal")}</span>
             <span>EGP {subtotal.toLocaleString()}</span>
@@ -281,6 +353,12 @@ export function CheckoutForm({
                 : `EGP ${shippingCost.toLocaleString()}`}
             </span>
           </div>
+          {discountAmount > 0 ? (
+            <div className="flex justify-between text-electric-violet">
+              <span>{t("discount")}</span>
+              <span>-EGP {discountAmount.toLocaleString()}</span>
+            </div>
+          ) : null}
           <div className="flex justify-between border-t border-warm-white/10 pt-2 text-base text-warm-white">
             <span>{t("total")}</span>
             <span className="text-gold">EGP {total.toLocaleString()}</span>

@@ -87,6 +87,15 @@ export default async function OrderConfirmationPage({
           <span>{t("shipping")}</span>
           <span>EGP {Number(order.shippingCost).toLocaleString()}</span>
         </div>
+        {Number(order.discountAmount) > 0 ? (
+          <div className="flex justify-between text-electric-violet">
+            <span>
+              {t("discount")}
+              {order.discountCode ? ` (${order.discountCode})` : ""}
+            </span>
+            <span>-EGP {Number(order.discountAmount).toLocaleString()}</span>
+          </div>
+        ) : null}
         <div className="flex justify-between border-t border-warm-white/10 pt-2 text-base text-warm-white">
           <span>{t("total")}</span>
           <span className="text-gold">
