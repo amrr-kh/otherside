@@ -3,9 +3,17 @@
 import { useTranslations, useLocale } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { Logo } from "./Logo";
-import { SOCIAL_LINKS } from "@/lib/social";
 
-export function Footer() {
+export function Footer({
+  socialLinks,
+}: {
+  socialLinks: {
+    instagramUrl: string;
+    facebookUrl: string;
+    tiktokUrl: string;
+    whatsappUrl: string;
+  };
+}) {
   const t = useTranslations("footer");
   const tNav = useTranslations("nav");
   const locale = useLocale();
@@ -119,10 +127,10 @@ export function Footer() {
             </h3>
             <ul className="mt-5 space-y-3">
               {[
-                { href: SOCIAL_LINKS.instagram, label: "Instagram" },
-                { href: SOCIAL_LINKS.tiktok, label: "TikTok" },
-                { href: SOCIAL_LINKS.facebook, label: "Facebook" },
-                { href: SOCIAL_LINKS.whatsapp, label: "WhatsApp" },
+                { href: socialLinks.instagramUrl, label: "Instagram" },
+                { href: socialLinks.tiktokUrl, label: "TikTok" },
+                { href: socialLinks.facebookUrl, label: "Facebook" },
+                { href: socialLinks.whatsappUrl, label: "WhatsApp" },
               ].map((link) => (
                 <li key={link.label}>
                   <a

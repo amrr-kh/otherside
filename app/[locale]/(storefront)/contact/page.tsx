@@ -1,16 +1,19 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { SOCIAL_LINKS } from "@/lib/social";
+import { getSiteSettings } from "@/lib/site-settings";
 
 export default async function ContactPage() {
-  const t = await getTranslations("contact");
+  const [t, settings] = await Promise.all([
+    getTranslations("contact"),
+    getSiteSettings(),
+  ]);
 
   const CHANNELS = [
-    { href: SOCIAL_LINKS.whatsapp, label: t("whatsapp"), value: SOCIAL_LINKS.whatsappDisplay },
-    { href: `mailto:${SOCIAL_LINKS.email}`, label: t("email"), value: SOCIAL_LINKS.email },
-    { href: SOCIAL_LINKS.instagram, label: t("instagram"), value: "@otherside.store.eg" },
-    { href: SOCIAL_LINKS.tiktok, label: t("tiktok"), value: "@otherside.store.eg" },
-    { href: SOCIAL_LINKS.facebook, label: t("facebook"), value: "OtherSide" },
+    { href: settings.whatsappUrl, label: t("whatsapp"), value: settings.whatsappDisplay },
+    { href: `mailto:${settings.contactEmail}`, label: t("email"), value: settings.contactEmail },
+    { href: settings.instagramUrl, label: t("instagram"), value: "@otherside.store.eg" },
+    { href: settings.tiktokUrl, label: t("tiktok"), value: "@otherside.store.eg" },
+    { href: settings.facebookUrl, label: t("facebook"), value: "OtherSide" },
   ];
 
   return (

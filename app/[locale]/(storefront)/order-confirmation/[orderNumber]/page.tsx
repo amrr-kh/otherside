@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { prisma } from "@/lib/db";
-import { SOCIAL_LINKS } from "@/lib/social";
+import { getSiteSettings } from "@/lib/site-settings";
 
 export const revalidate = 0;
 
@@ -16,12 +16,14 @@ export default async function OrderConfirmationPage({
   params,
 }: PageProps<"/[locale]/order-confirmation/[orderNumber]">) {
   const { orderNumber } = await params;
-  const t = await getTranslations("orderConfirmation");
-
-  const order = await prisma.order.findUnique({
-    where: { orderNumber: orderNumber.toUpperCase() },
-    include: { items: true },
-  });
+  const [t, settings, order] = await Promise.all([
+    getTranslations("orderConfirmation"),
+    getSiteSettings(),
+    prisma.order.findUnique({
+      where: { orderNumber: orderNumber.toUpperCase() },
+      include: { items: true },
+    }),
+  ]);
 
   if (!order) notFound();
 
@@ -29,7 +31,7 @@ export default async function OrderConfirmationPage({
     orderNumber: order.orderNumber,
     total: Number(order.total).toLocaleString(),
   });
-  const whatsappHref = `${SOCIAL_LINKS.whatsapp}?text=${encodeURIComponent(whatsappMessage)}`;
+  const whatsappHref = `${settings.whatsappUrl}?text=${encodeURIComponent(whatsappMessage)}`;
 
   const address = order.addressSnapshot as {
     name: string;

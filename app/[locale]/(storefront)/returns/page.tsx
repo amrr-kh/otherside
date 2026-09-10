@@ -1,9 +1,12 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { SOCIAL_LINKS } from "@/lib/social";
+import { getSiteSettings } from "@/lib/site-settings";
 
 export default async function ReturnsPage() {
-  const t = await getTranslations("returns");
+  const [t, settings] = await Promise.all([
+    getTranslations("returns"),
+    getSiteSettings(),
+  ]);
 
   return (
     <div className="mx-auto max-w-2xl px-5 py-24 md:px-10 md:py-32">
@@ -31,7 +34,7 @@ export default async function ReturnsPage() {
           {t.rich("p4", {
             whatsapp: (chunks) => (
               <a
-                href={SOCIAL_LINKS.whatsapp}
+                href={settings.whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-warm-white underline underline-offset-4 hover:text-electric-violet"

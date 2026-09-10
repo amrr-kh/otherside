@@ -2,9 +2,13 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/storefront/Header";
 import { Footer } from "@/components/storefront/Footer";
+import { getSiteSettings } from "@/lib/site-settings";
 
 export default async function NotFound() {
-  const t = await getTranslations("notFound");
+  const [t, settings] = await Promise.all([
+    getTranslations("notFound"),
+    getSiteSettings(),
+  ]);
 
   return (
     <>
@@ -26,7 +30,7 @@ export default async function NotFound() {
           {t("cta")}
         </Link>
       </main>
-      <Footer />
+      <Footer socialLinks={settings} />
     </>
   );
 }

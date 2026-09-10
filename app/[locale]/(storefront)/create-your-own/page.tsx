@@ -1,15 +1,18 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { SOCIAL_LINKS } from "@/lib/social";
+import { getSiteSettings } from "@/lib/site-settings";
 
 export default async function CreateYourOwnPage() {
-  const t = await getTranslations("createYourOwn");
+  const [t, settings] = await Promise.all([
+    getTranslations("createYourOwn"),
+    getSiteSettings(),
+  ]);
 
   const CHANNELS = [
-    { href: SOCIAL_LINKS.instagram, label: t("instagram") },
-    { href: SOCIAL_LINKS.whatsapp, label: t("whatsapp") },
-    { href: SOCIAL_LINKS.facebook, label: t("facebook") },
-    { href: SOCIAL_LINKS.tiktok, label: t("tiktok") },
+    { href: settings.instagramUrl, label: t("instagram") },
+    { href: settings.whatsappUrl, label: t("whatsapp") },
+    { href: settings.facebookUrl, label: t("facebook") },
+    { href: settings.tiktokUrl, label: t("tiktok") },
   ];
 
   return (

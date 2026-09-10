@@ -376,3 +376,21 @@ model NewsletterSubscriber {
   email        String   @unique
   subscribedAt DateTime @default(now())
 }
+
+// ---------- Site content ----------
+
+// Single row (looked up via findFirst, not a fixed id) holding the handful
+// of storefront values an admin should be able to change without a code
+// deploy. Null fields fall back to the hardcoded defaults in lib/social.ts.
+model SiteSettings {
+  id             String   @id @default(cuid())
+  instagramUrl   String?
+  facebookUrl    String?
+  tiktokUrl      String?
+  whatsappNumber String?
+  contactEmail   String?
+  bannerEnabled  Boolean  @default(false)
+  bannerText     String?
+  bannerLinkUrl  String?
+  updatedAt      DateTime @updatedAt
+}
