@@ -34,7 +34,10 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-bg px-6">
+    <div
+      className="flex min-h-screen items-center justify-center bg-bg px-6"
+      style={{ colorScheme: "dark" }}
+    >
       <div className="w-full max-w-sm">
         <div className="mb-10 flex flex-col items-center gap-3">
           <LogoMark className="h-8 w-8 text-warm-white" />

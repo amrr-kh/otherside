@@ -52,3 +52,19 @@ html {
   background: var(--color-electric-violet);
   color: var(--color-warm-white);
 }
+
+/* Browser autofill (saved name/email/password) otherwise forces its own
+   background + text color, which can make text unreadable against a
+   dark-themed field. Keep whatever color the field already authored. */
+@layer base {
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:focus {
+    -webkit-text-fill-color: currentColor;
+    caret-color: currentColor;
+    transition: background-color 600000s 0s, color 600000s 0s;
+  }
+}
