@@ -16,7 +16,9 @@ export type ProductDetail = {
     url: string;
     role: string;
     colorOptionValueId: string;
+    modelGender: "MEN" | "WOMEN" | null;
     sortOrder: number;
   }[];
+  availableGenders: ("MEN" | "WOMEN")[];
   variants: { id: string; colorId: string; sizeId: string; quantity: number }[];
 };

@@ -112,6 +112,9 @@
   },
   "product": {
     "eyebrow": "OtherSide essentials",
+    "viewAs": "View As",
+    "viewAsMen": "Men",
+    "viewAsWomen": "Women",
     "color": "Color",
     "size": "Size",
     "front": "Front",

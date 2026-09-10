@@ -156,6 +156,7 @@ export default async function ProductVariantsPage({
                       />
                       <span className="absolute left-1 top-1 rounded bg-black/60 px-1.5 py-0.5 text-[10px] uppercase text-white">
                         {img.role}
+                        {img.modelGender ? ` · ${img.modelGender}` : ""}
                       </span>
                       <form
                         action={deleteImage.bind(null, img.id, product.id)}
@@ -174,17 +175,33 @@ export default async function ProductVariantsPage({
 
                 <form
                   action={uploadColorImage.bind(null, product.id, color.id)}
-                  className="mt-4 flex flex-wrap items-center gap-2"
+                  className="mt-4 flex flex-wrap items-center gap-3"
                 >
-                  <AutoSubmitFileInput
-                    name="file"
-                    accept="image/png,image/jpeg,image/webp"
-                    multiple
-                    className="text-xs"
-                  />
-                  <span className="text-xs text-soft-black/40">
+                  <div>
+                    <label className="mb-1 block text-xs text-soft-black/50">
+                      Photos are for
+                    </label>
+                    <select name="modelGender" defaultValue="" className={`${inputClass} w-36`}>
+                      <option value="">Unisex / Shared</option>
+                      <option value="MEN">Men</option>
+                      <option value="WOMEN">Women</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs text-soft-black/50">
+                      Photos
+                    </label>
+                    <AutoSubmitFileInput
+                      name="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      multiple
+                      className="text-xs"
+                    />
+                  </div>
+                  <span className="w-full text-xs text-soft-black/40">
                     Choosing a file uploads it right away — first becomes
-                    Front, second Back, rest Detail. No extra click needed.
+                    Front, second Back, rest Detail (per Unisex/Men/Women set).
+                    No extra click needed.
                   </span>
                 </form>
               </div>

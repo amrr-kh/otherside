@@ -182,6 +182,9 @@ model ProductImage {
   colorOptionValue   ProductOptionValue @relation(fields: [colorOptionValueId], references: [id], onDelete: Cascade)
   url                String
   role               ImageRole
+  // Which model this shot is of, for the storefront's Men/Women photo
+  // toggle. Null = shown regardless of that selection (shared/unisex shot).
+  modelGender        ProductGender?
   sortOrder          Int                @default(0)
   isPrimary          Boolean            @default(false)
 

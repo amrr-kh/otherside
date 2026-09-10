@@ -112,6 +112,9 @@
   },
   "product": {
     "eyebrow": "أساسيات OtherSide",
+    "viewAs": "اعرض كـ",
+    "viewAsMen": "رجالي",
+    "viewAsWomen": "حريمي",
     "color": "اللون",
     "size": "المقاس",
     "front": "الأمام",

@@ -10,15 +10,21 @@ import { toggleWishlist } from "@/lib/actions/wishlist";
 import { addToCart } from "@/lib/actions/cart";
 import type { ProductDetail } from "./types";
 
+type Gender = "MEN" | "WOMEN";
+
 export function ProductPageClient({
   product,
   initialColorParam,
   initialSizeParam,
+  initialGenderParam,
+  preferredGender,
   initiallyWishlisted,
 }: {
   product: ProductDetail;
   initialColorParam?: string;
   initialSizeParam?: string;
+  initialGenderParam?: Gender;
+  preferredGender?: Gender;
   initiallyWishlisted: boolean;
 }) {
   const t = useTranslations("product");
@@ -35,18 +41,38 @@ export function ProductPageClient({
     () =>
       product.sizes.find((s) => slugify(s.value) === initialSizeParam)?.id,
   );
+  const [selectedGender, setSelectedGender] = useState<Gender | undefined>(
+    () => {
+      if (initialGenderParam && product.availableGenders.includes(initialGenderParam)) {
+        return initialGenderParam;
+      }
+      if (preferredGender && product.availableGenders.includes(preferredGender)) {
+        return preferredGender;
+      }
+      return product.availableGenders[0];
+    },
+  );
   const [activeImageId, setActiveImageId] = useState<string | undefined>();
   const [wishlisted, setWishlisted] = useState(initiallyWishlisted);
   const [quantity, setQuantity] = useState(1);
   const [addedToBag, setAddedToBag] = useState(false);
 
-  const colorImages = useMemo(
-    () =>
-      product.images
-        .filter((img) => img.colorOptionValueId === selectedColorId)
-        .sort((a, b) => a.sortOrder - b.sortOrder),
-    [product.images, selectedColorId],
-  );
+  const colorImages = useMemo(() => {
+    const forColor = product.images.filter(
+      (img) => img.colorOptionValueId === selectedColorId,
+    );
+    // Prefer shots matching the selected gender (plus shared/unisex shots);
+    // if this particular color has none tagged for that gender, fall back
+    // to whatever this color has rather than showing an empty gallery.
+    const pool = selectedGender
+      ? forColor.filter(
+          (img) => img.modelGender === selectedGender || img.modelGender === null,
+        )
+      : forColor;
+    return (pool.length > 0 ? pool : forColor).sort(
+      (a, b) => a.sortOrder - b.sortOrder,
+    );
+  }, [product.images, selectedColorId, selectedGender]);
 
   const frontImage = colorImages.find((i) => i.role === "FRONT") ?? colorImages[0];
   const backImage = colorImages.find((i) => i.role === "BACK");
@@ -68,12 +94,17 @@ export function ProductPageClient({
     selectedVariant && selectedSizeId && availableSizeIds.has(selectedSizeId),
   );
 
-  function updateUrl(colorId: string | undefined, sizeId: string | undefined) {
+  function updateUrl(
+    colorId: string | undefined,
+    sizeId: string | undefined,
+    gender: Gender | undefined = selectedGender,
+  ) {
     const color = product.colors.find((c) => c.id === colorId);
     const size = product.sizes.find((s) => s.id === sizeId);
     const params = new URLSearchParams();
     if (color) params.set("color", slugify(color.value));
     if (size) params.set("size", slugify(size.value));
+    if (gender) params.set("gender", gender.toLowerCase());
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   }
 
@@ -94,6 +125,12 @@ export function ProductPageClient({
     if (!availableSizeIds.has(sizeId)) return;
     setSelectedSizeId(sizeId);
     updateUrl(selectedColorId, sizeId);
+  }
+
+  function handleGenderSelect(gender: Gender) {
+    setSelectedGender(gender);
+    setActiveImageId(undefined);
+    updateUrl(selectedColorId, selectedSizeId, gender);
   }
 
   function handleWishlist() {
@@ -227,6 +264,31 @@ export function ProductPageClient({
           <p className="mt-5 max-w-md text-sm leading-relaxed text-warm-white/60">
             {product.shortDescription}
           </p>
+
+          {/* Gender / model view */}
+          {product.availableGenders.length > 0 ? (
+            <div className="mt-8">
+              <h2 className="text-xs uppercase tracking-[0.15em] text-warm-white/60">
+                {t("viewAs")}
+              </h2>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {product.availableGenders.map((gender) => (
+                  <button
+                    key={gender}
+                    type="button"
+                    onClick={() => handleGenderSelect(gender)}
+                    className={`border px-4 py-2 text-xs uppercase tracking-[0.1em] transition-colors ${
+                      selectedGender === gender
+                        ? "border-warm-white text-warm-white"
+                        : "border-warm-white/25 text-warm-white/55 hover:border-warm-white/60"
+                    }`}
+                  >
+                    {gender === "MEN" ? t("viewAsMen") : t("viewAsWomen")}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : null}
 
           {/* Colors */}
           <div className="mt-8">

@@ -69,8 +69,19 @@ export default async function ProductPage({
       url: img.url,
       role: img.role,
       colorOptionValueId: img.colorOptionValueId,
+      modelGender:
+        img.modelGender === "MEN" || img.modelGender === "WOMEN"
+          ? img.modelGender
+          : null,
       sortOrder: img.sortOrder,
     })),
+    availableGenders: Array.from(
+      new Set(
+        product.images
+          .map((img) => img.modelGender)
+          .filter((g): g is "MEN" | "WOMEN" => g === "MEN" || g === "WOMEN"),
+      ),
+    ),
     variants: product.variants
       .map((v) => {
         const colorId = v.optionValues.find((ov) =>
@@ -92,10 +103,19 @@ export default async function ProductPage({
 
   const rawColor = typeof sp.color === "string" ? sp.color : undefined;
   const rawSize = typeof sp.size === "string" ? sp.size : undefined;
+  const rawGender = typeof sp.gender === "string" ? sp.gender.toUpperCase() : undefined;
+  const initialGenderParam =
+    rawGender === "MEN" || rawGender === "WOMEN" ? rawGender : undefined;
 
   return (
     <ProductPageClient
       product={detail}
+      initialGenderParam={initialGenderParam}
+      preferredGender={
+        product.gender === "MEN" || product.gender === "WOMEN"
+          ? product.gender
+          : undefined
+      }
       initialColorParam={rawColor}
       initialSizeParam={rawSize}
       initiallyWishlisted={wishlistedIds.has(product.id)}

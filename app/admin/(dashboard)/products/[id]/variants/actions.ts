@@ -7,7 +7,7 @@ import { prisma } from "@/lib/db";
 import { slugify } from "@/lib/slug";
 import { saveUploadedImage } from "@/lib/uploads";
 import { requireAdmin } from "@/lib/require-admin";
-import type { ImageRole } from "@/generated/prisma/enums";
+import type { ImageRole, ProductGender } from "@/generated/prisma/enums";
 
 async function getOrCreateOption(productId: string, name: "Color" | "Size") {
   const existing = await prisma.productOption.findFirst({
@@ -127,6 +127,10 @@ export async function uploadColorImage(
     throw new Error("Choose at least one file to upload.");
   }
 
+  const modelGenderRaw = String(formData.get("modelGender") ?? "");
+  const modelGender: ProductGender | null =
+    modelGenderRaw === "MEN" || modelGenderRaw === "WOMEN" ? modelGenderRaw : null;
+
   const product = await prisma.product.findUniqueOrThrow({
     where: { id: productId },
   });
@@ -134,9 +138,15 @@ export async function uploadColorImage(
     where: { id: colorOptionValueId },
   });
 
+  // Front/Back/Detail order is tracked per color+gender, so a Men set and a
+  // Women set for the same color each get their own Front shot.
   let sortOrder = await prisma.productImage.count({
+    where: { productId, colorOptionValueId, modelGender },
+  });
+  const overallSortOrder = await prisma.productImage.count({
     where: { productId, colorOptionValueId },
   });
+  let nextOverallSortOrder = overallSortOrder;
 
   for (const file of files) {
     const url = await saveUploadedImage(
@@ -153,11 +163,13 @@ export async function uploadColorImage(
         colorOptionValueId,
         url,
         role,
-        sortOrder,
-        isPrimary: sortOrder === 0,
+        modelGender,
+        sortOrder: nextOverallSortOrder,
+        isPrimary: overallSortOrder === 0 && sortOrder === 0,
       },
     });
     sortOrder += 1;
+    nextOverallSortOrder += 1;
   }
 
   revalidatePath(`/admin/products/${productId}/variants`);
