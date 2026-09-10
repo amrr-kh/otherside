@@ -18,7 +18,7 @@ export default async function StoryPage() {
 
         <div className="mt-10 space-y-6 text-base leading-relaxed text-warm-white/65">
           <p>
-            تأسست OtherSide على يد بيدو وإشطا وعمرو، انطلاقًا من فكرة واحدة:
+            تأسست OtherSide على يد Bidu وEshta وAmr، انطلاقًا من فكرة واحدة:
             ما تراه على السطح ليس القصة كاملة أبدًا.
           </p>
           <p>
@@ -52,7 +52,7 @@ export default async function StoryPage() {
 
         <div className="mt-14 border-t border-warm-white/10 pt-10 text-center">
           <p className="font-display text-xl italic text-warm-white">
-            بيدو. إشطا. عمرو.
+            Bidu. Eshta. Amr.
           </p>
           <p className="mt-2 text-sm text-warm-white/45">
             ثلاثة مؤسسين. وجهات نظر مختلفة. رؤية واحدة.

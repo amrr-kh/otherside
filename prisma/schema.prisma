@@ -26,15 +26,13 @@ model AdminUser {
 model Customer {
   id        String    @id @default(cuid())
   name      String
-  phone     String
+  phone     String    @unique
   email     String?
   addresses Address[]
   orders    Order[]
   wishlist  Wishlist?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-
-  @@index([phone])
 }
 
 model Address {
@@ -236,6 +234,8 @@ enum PaymentMethod {
 
 model Order {
   id               String               @id @default(cuid())
+  // Atomic, concurrency-safe counter backing orderNumber (OS-10001 = seq 1).
+  sequence         Int                  @unique @default(autoincrement())
   orderNumber      String               @unique
   customerId       String
   customer         Customer             @relation(fields: [customerId], references: [id])

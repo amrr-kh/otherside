@@ -128,13 +128,12 @@ export default async function CartPage() {
           </div>
 
           <div className="mt-8 flex flex-col items-end">
-            <button
-              type="button"
-              disabled
-              className="w-full max-w-xs cursor-not-allowed bg-warm-white/15 px-6 py-3.5 text-xs font-medium uppercase tracking-[0.18em] text-warm-white/40 sm:w-64"
+            <Link
+              href="/checkout"
+              className="w-full max-w-xs bg-warm-white px-6 py-3.5 text-center text-xs font-medium uppercase tracking-[0.18em] text-bg transition-opacity hover:opacity-90 sm:w-64"
             >
-              {t("checkoutComingSoon")}
-            </button>
+              {t("checkout")}
+            </Link>
           </div>
         </div>
       )}

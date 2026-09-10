@@ -1,16 +1,23 @@
+import Link from "next/link";
 import { prisma } from "@/lib/db";
 
 async function getStats() {
   const startOfToday = new Date();
   startOfToday.setHours(0, 0, 0, 0);
 
-  const [activeProducts, totalOrders, ordersToday] = await Promise.all([
-    prisma.product.count({ where: { status: "ACTIVE" } }),
-    prisma.order.count(),
-    prisma.order.count({ where: { createdAt: { gte: startOfToday } } }),
-  ]);
+  const [activeProducts, totalOrders, ordersToday, recentOrders] =
+    await Promise.all([
+      prisma.product.count({ where: { status: "ACTIVE" } }),
+      prisma.order.count(),
+      prisma.order.count({ where: { createdAt: { gte: startOfToday } } }),
+      prisma.order.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 5,
+        include: { customer: true },
+      }),
+    ]);
 
-  return { activeProducts, totalOrders, ordersToday };
+  return { activeProducts, totalOrders, ordersToday, recentOrders };
 }
 
 export default async function AdminDashboardPage() {
@@ -44,6 +51,50 @@ export default async function AdminDashboardPage() {
             </p>
           </div>
         ))}
+      </div>
+
+      <div className="mt-10 rounded-lg border border-soft-black/10 bg-white">
+        <div className="flex items-center justify-between border-b border-soft-black/10 px-5 py-4">
+          <h2 className="text-sm font-semibold text-soft-black">
+            Recent Orders
+          </h2>
+          <Link
+            href="/admin/orders"
+            className="text-xs uppercase tracking-[0.08em] text-electric-violet hover:underline"
+          >
+            View All
+          </Link>
+        </div>
+        {stats.recentOrders.length === 0 ? (
+          <p className="p-5 text-sm text-soft-black/50">
+            No orders yet — they&apos;ll show up here as soon as someone
+            checks out.
+          </p>
+        ) : (
+          <ul className="divide-y divide-soft-black/5">
+            {stats.recentOrders.map((order) => (
+              <li key={order.id}>
+                <Link
+                  href={`/admin/orders/${order.id}`}
+                  className="flex items-center justify-between px-5 py-3 text-sm hover:bg-soft-black/[0.03]"
+                >
+                  <span className="font-medium text-soft-black">
+                    {order.orderNumber}
+                  </span>
+                  <span className="text-soft-black/60">
+                    {order.customer.name}
+                  </span>
+                  <span className="text-soft-black/60">
+                    EGP {Number(order.total).toLocaleString()}
+                  </span>
+                  <span className="text-xs text-soft-black/40">
+                    {order.status.replaceAll("_", " ")}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
