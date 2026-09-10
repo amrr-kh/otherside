@@ -39,7 +39,7 @@ export default async function AdminProductsPage() {
         </p>
       ) : (
         <div className="mt-8 overflow-x-auto rounded-lg border border-soft-black/10 bg-white">
-          <table className="w-full text-left text-sm">
+          <table className="w-full min-w-[640px] text-left text-sm">
             <thead>
               <tr className="border-b border-soft-black/10 text-xs uppercase tracking-[0.08em] text-soft-black/45">
                 <th className="px-5 py-3 font-medium">Name</th>

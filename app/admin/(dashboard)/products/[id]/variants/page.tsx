@@ -218,7 +218,7 @@ export default async function ProductVariantsPage({
           </h2>
           <form action={updateInventory.bind(null, product.id)} className="mt-3">
             <div className="overflow-x-auto rounded-lg border border-soft-black/10 bg-white">
-              <table className="w-full text-left text-sm">
+              <table className="w-full min-w-[480px] text-left text-sm">
                 <thead>
                   <tr className="border-b border-soft-black/10 text-xs uppercase tracking-[0.08em] text-soft-black/45">
                     <th className="px-4 py-3 font-medium">Color</th>
