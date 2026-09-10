@@ -303,5 +303,31 @@
     "whatsapp": "WhatsApp",
     "facebook": "Facebook",
     "tiktok": "TikTok"
+  },
+  "account": {
+    "eyebrow": "Account",
+    "signInHeading": "Welcome back.",
+    "signUpHeading": "Create an account.",
+    "optionalNote": "Accounts are optional — you can always check out as a guest. Signing up just saves your order history for next time.",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signingIn": "Signing In…",
+    "signingUp": "Creating Account…",
+    "name": "Full Name",
+    "phone": "Mobile Number",
+    "email": "Email (optional)",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "errorMissingFields": "Please fill in all required fields.",
+    "errorInvalidPhone": "Enter a valid Egyptian mobile number (e.g. 01xxxxxxxxx).",
+    "errorPasswordTooShort": "Password must be at least 8 characters.",
+    "errorPasswordMismatch": "Passwords don't match.",
+    "errorPhoneRegistered": "An account with that number already exists — sign in instead.",
+    "errorInvalidCredentials": "Incorrect phone number or password.",
+    "welcome": "Hey, {name}.",
+    "logOut": "Log Out",
+    "orderHistory": "Order History",
+    "noOrders": "No orders yet.",
+    "savedAddresses": "Saved Addresses"
   }
 }

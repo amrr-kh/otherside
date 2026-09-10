@@ -85,7 +85,7 @@ export function Header({ cartCount = 0 }: { cartCount?: number }) {
           <Link
             href="/account"
             aria-label={t("account")}
-            className="hidden transition-colors hover:text-electric-violet md:block"
+            className="transition-colors hover:text-electric-violet"
           >
             <User className="h-[18px] w-[18px]" />
           </Link>

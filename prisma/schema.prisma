@@ -24,15 +24,31 @@ model AdminUser {
 }
 
 model Customer {
-  id        String    @id @default(cuid())
-  name      String
-  phone     String    @unique
-  email     String?
-  addresses Address[]
-  orders    Order[]
-  wishlist  Wishlist?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id           String            @id @default(cuid())
+  name         String
+  phone        String            @unique
+  email        String?
+  // Null until the customer opts into creating an account — checkout stays
+  // guest-first, this only gets set via signup (either fresh or "claiming"
+  // a phone number that already has guest order history).
+  passwordHash String?
+  addresses    Address[]
+  orders       Order[]
+  wishlist     Wishlist?
+  sessions     CustomerSession[]
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+}
+
+model CustomerSession {
+  id         String   @id @default(cuid())
+  token      String   @unique
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+
+  @@index([customerId])
 }
 
 model Address {

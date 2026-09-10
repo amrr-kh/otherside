@@ -19,10 +19,12 @@ export function CheckoutForm({
   items,
   subtotal,
   zones,
+  prefill,
 }: {
   items: CartLine[];
   subtotal: number;
   zones: ShippingZoneOption[];
+  prefill?: { name: string; phone: string; email: string };
 }) {
   const t = useTranslations("checkout");
   const [state, formAction, isPending] = useActionState(
@@ -98,7 +100,13 @@ export function CheckoutForm({
               <label className={labelClass} htmlFor="name">
                 {t("fullName")}
               </label>
-              <input id="name" name="name" required className={inputClass} />
+              <input
+                id="name"
+                name="name"
+                required
+                defaultValue={prefill?.name}
+                className={inputClass}
+              />
             </div>
             <div>
               <label className={labelClass} htmlFor="phone">
@@ -111,6 +119,7 @@ export function CheckoutForm({
                 dir="ltr"
                 placeholder="01xxxxxxxxx"
                 required
+                defaultValue={prefill?.phone}
                 className={inputClass}
               />
             </div>
@@ -123,6 +132,7 @@ export function CheckoutForm({
                 name="email"
                 type="email"
                 dir="ltr"
+                defaultValue={prefill?.email}
                 className={inputClass}
               />
             </div>
