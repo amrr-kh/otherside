@@ -1,8 +1,16 @@
 import { ProductCard } from "../ProductCard";
-import { getDropProducts } from "@/lib/storefront/products";
+import { Unavailable } from "../Unavailable";
+import { getDropProducts, type StorefrontProduct } from "@/lib/storefront/products";
 
 export async function DropSection() {
-  const products = await getDropProducts();
+  let products: StorefrontProduct[] = [];
+  let unavailable = false;
+  try {
+    products = await getDropProducts();
+  } catch (error) {
+    console.error("DropSection: failed to load products", error);
+    unavailable = true;
+  }
 
   return (
     <section id="drop" className="relative overflow-hidden py-24 md:py-32">
@@ -23,7 +31,11 @@ export async function DropSection() {
           </h2>
         </div>
 
-        {products.length === 0 ? (
+        {unavailable ? (
+          <div className="mt-14">
+            <Unavailable />
+          </div>
+        ) : products.length === 0 ? (
           <p className="mt-14 text-sm text-warm-white/45">
             New arrivals are on their way.
           </p>

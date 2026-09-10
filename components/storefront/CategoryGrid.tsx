@@ -1,5 +1,6 @@
 import { ProductCard } from "./ProductCard";
-import { getCategoryProductsByColor } from "@/lib/storefront/products";
+import { Unavailable } from "./Unavailable";
+import { getCategoryProductsByColor, type StorefrontProduct } from "@/lib/storefront/products";
 
 export async function CategoryGrid({
   categorySlug,
@@ -10,7 +11,14 @@ export async function CategoryGrid({
   title: string;
   intro: string;
 }) {
-  const products = await getCategoryProductsByColor(categorySlug);
+  let products: StorefrontProduct[] = [];
+  let unavailable = false;
+  try {
+    products = await getCategoryProductsByColor(categorySlug);
+  } catch (error) {
+    console.error(`CategoryGrid(${categorySlug}): failed to load products`, error);
+    unavailable = true;
+  }
 
   return (
     <div className="mx-auto max-w-[1600px] px-5 py-16 md:px-10 md:py-24">
@@ -19,7 +27,11 @@ export async function CategoryGrid({
       </h1>
       <p className="mt-3 max-w-md text-sm text-warm-white/50">{intro}</p>
 
-      {products.length === 0 ? (
+      {unavailable ? (
+        <div className="mt-14">
+          <Unavailable />
+        </div>
+      ) : products.length === 0 ? (
         <p className="mt-14 text-sm text-warm-white/45">
           Nothing here yet — check back soon.
         </p>

@@ -13,14 +13,36 @@ export default async function ProductPage({
   const { slug } = await params;
   const sp = await searchParams;
 
-  const product = await prisma.product.findFirst({
-    where: { slug, status: "ACTIVE" },
-    include: {
-      images: { orderBy: { sortOrder: "asc" } },
-      options: { include: { values: { orderBy: { sortOrder: "asc" } } } },
-      variants: { include: { optionValues: true, inventory: true } },
-    },
-  });
+  let product;
+  let wishlistedIds: Set<string>;
+  try {
+    [product, wishlistedIds] = await Promise.all([
+      prisma.product.findFirst({
+        where: { slug, status: "ACTIVE" },
+        include: {
+          images: { orderBy: { sortOrder: "asc" } },
+          options: { include: { values: { orderBy: { sortOrder: "asc" } } } },
+          variants: { include: { optionValues: true, inventory: true } },
+        },
+      }),
+      getWishlistProductIds(),
+    ]);
+  } catch (error) {
+    console.error(`ProductPage(${slug}): failed to load`, error);
+    return (
+      <div className="flex flex-1 flex-col items-center justify-center px-6 py-32 text-center">
+        <p className="text-xs uppercase tracking-[0.25em] text-electric-violet">
+          One moment
+        </p>
+        <h1 className="mt-5 font-display text-3xl italic text-warm-white md:text-4xl">
+          Having trouble loading this product.
+        </h1>
+        <p className="mt-4 max-w-sm text-sm text-warm-white/55">
+          Please refresh in a moment.
+        </p>
+      </div>
+    );
+  }
 
   if (!product) notFound();
 
@@ -67,8 +89,6 @@ export default async function ProductPage({
       })
       .filter((v) => v !== null),
   };
-
-  const wishlistedIds = await getWishlistProductIds();
 
   const rawColor = typeof sp.color === "string" ? sp.color : undefined;
   const rawSize = typeof sp.size === "string" ? sp.size : undefined;

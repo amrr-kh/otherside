@@ -2,7 +2,13 @@ import { ProductCard } from "../ProductCard";
 import { getTrendingProducts } from "@/lib/storefront/products";
 
 export async function SelectedProducts() {
-  const products = await getTrendingProducts();
+  let products;
+  try {
+    products = await getTrendingProducts();
+  } catch (error) {
+    console.error("SelectedProducts: failed to load products", error);
+    return null;
+  }
   if (products.length === 0) return null;
 
   return (
