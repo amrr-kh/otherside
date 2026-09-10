@@ -19,7 +19,11 @@ export default function AdminRootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${inter.variable} h-full antialiased`}
+      style={{ colorScheme: "light" }}
+    >
       <body className="min-h-screen bg-warm-white font-sans text-soft-black">
         {children}
       </body>

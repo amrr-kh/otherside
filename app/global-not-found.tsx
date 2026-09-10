@@ -24,6 +24,7 @@ export default function GlobalNotFound() {
     <html
       lang="en"
       className={`${fraunces.variable} ${inter.variable} h-full antialiased`}
+      style={{ colorScheme: "dark" }}
     >
       <body className="flex min-h-full flex-col items-center justify-center bg-bg px-6 py-32 text-center text-warm-white">
         <p className="text-xs uppercase tracking-[0.25em] text-electric-violet">

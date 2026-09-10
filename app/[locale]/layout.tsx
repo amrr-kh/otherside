@@ -56,6 +56,7 @@ export default async function LocaleLayout({
       lang={locale}
       dir={dir}
       className={`${fraunces.variable} ${inter.variable} ${amiri.variable} ${cairo.variable} h-full antialiased`}
+      style={{ colorScheme: "dark" }}
     >
       <body
         data-locale={locale}

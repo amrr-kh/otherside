@@ -40,10 +40,12 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
-  background: var(--color-bg);
-  color: var(--color-warm-white);
-  font-family: var(--font-sans);
+@layer base {
+  body {
+    background: var(--color-bg);
+    color: var(--color-warm-white);
+    font-family: var(--font-sans);
+  }
 }
 
 ::selection {
