@@ -4,6 +4,7 @@ import { getLocale } from "next-intl/server";
 import { redirect } from "@/i18n/navigation";
 import { prisma } from "@/lib/db";
 import { notifyNewOrder } from "@/lib/notifications/notifyNewOrder";
+import { logOrderToSheet } from "@/lib/notifications/googleSheets";
 import { getOrCreateGuestId } from "@/lib/guest";
 import type { PaymentMethod } from "@/generated/prisma/enums";
 import { Prisma } from "@/generated/prisma/client";
@@ -48,6 +49,20 @@ export async function placeOrder(
   }
   const cartId = cart.id;
   const cartItems = cart.items;
+
+  function getColorAndSize(item: (typeof cartItems)[number]) {
+    const colorOption = item.variant.product.options.find(
+      (o) => o.name === "Color",
+    );
+    const colorValueIds = new Set(colorOption?.values.map((v) => v.id));
+    const colorValue = item.variant.optionValues.find((ov) =>
+      colorValueIds.has(ov.id),
+    );
+    const sizeValue = item.variant.optionValues.find(
+      (ov) => !colorValueIds.has(ov.id),
+    );
+    return { color: colorValue?.value ?? "", size: sizeValue?.value ?? "" };
+  }
 
   const name = required(formData, "name");
   const phone = required(formData, "phone");
@@ -140,15 +155,40 @@ export async function placeOrder(
     return { status: "error", message: "generic" };
   }
 
-  await notifyNewOrder({
-    orderNumber,
-    customerName: name,
-    customerPhone: phone,
-    total,
-    paymentMethod,
-    governorate,
-    city,
-  });
+  const itemsSummary = cartItems
+    .map((item) => {
+      const { color, size } = getColorAndSize(item);
+      return `${item.variant.product.name} (${color}/${size}) x${item.quantity}`;
+    })
+    .join("; ");
+
+  await Promise.all([
+    notifyNewOrder({
+      orderNumber,
+      customerName: name,
+      customerPhone: phone,
+      total,
+      paymentMethod,
+      governorate,
+      city,
+    }),
+    logOrderToSheet({
+      orderNumber,
+      createdAt: new Date().toISOString(),
+      customerName: name,
+      phone,
+      email,
+      governorate,
+      city,
+      items: itemsSummary,
+      subtotal,
+      shippingCost,
+      discountCode: discountCode ?? "",
+      discountAmount,
+      total,
+      paymentMethod,
+    }),
+  ]);
 
   const locale = await getLocale();
   redirect({ href: `/order-confirmation/${orderNumber}`, locale });
@@ -206,23 +246,12 @@ export async function placeOrder(
           notes: notes || null,
           items: {
             create: cartItems.map((item) => {
-              const colorOption = item.variant.product.options.find(
-                (o) => o.name === "Color",
-              );
-              const colorValueIds = new Set(
-                colorOption?.values.map((v) => v.id),
-              );
-              const colorValue = item.variant.optionValues.find((ov) =>
-                colorValueIds.has(ov.id),
-              );
-              const sizeValue = item.variant.optionValues.find(
-                (ov) => !colorValueIds.has(ov.id),
-              );
+              const { color, size } = getColorAndSize(item);
               return {
                 variantId: item.variant.id,
                 productNameSnapshot: item.variant.product.name,
-                colorSnapshot: colorValue?.value ?? "",
-                sizeSnapshot: sizeValue?.value ?? "",
+                colorSnapshot: color,
+                sizeSnapshot: size,
                 unitPrice: item.priceSnapshot,
                 quantity: item.quantity,
               };
