@@ -61,15 +61,22 @@ export function ProductPageClient({
     const forColor = product.images.filter(
       (img) => img.colorOptionValueId === selectedColorId,
     );
-    // Prefer shots matching the selected gender (plus shared/unisex shots);
-    // if this particular color has none tagged for that gender, fall back
-    // to whatever this color has rather than showing an empty gallery.
-    const pool = selectedGender
-      ? forColor.filter(
-          (img) => img.modelGender === selectedGender || img.modelGender === null,
-        )
-      : forColor;
-    return (pool.length > 0 ? pool : forColor).sort(
+    if (!selectedGender) {
+      return forColor.slice().sort((a, b) => a.sortOrder - b.sortOrder);
+    }
+
+    // Gender-specific shots always win. A shared/unisex shot only fills in
+    // for a role (Front/Back/...) the selected gender doesn't have a shot
+    // for — so a matching Front never loses to an unrelated shared Front.
+    const genderMatched = forColor.filter((img) => img.modelGender === selectedGender);
+    if (genderMatched.length === 0) {
+      return forColor.slice().sort((a, b) => a.sortOrder - b.sortOrder);
+    }
+    const coveredRoles = new Set(genderMatched.map((img) => img.role));
+    const sharedFallback = forColor.filter(
+      (img) => img.modelGender === null && !coveredRoles.has(img.role),
+    );
+    return [...genderMatched, ...sharedFallback].sort(
       (a, b) => a.sortOrder - b.sortOrder,
     );
   }, [product.images, selectedColorId, selectedGender]);
