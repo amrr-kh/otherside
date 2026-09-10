@@ -1,17 +1,28 @@
 @import "tailwindcss";
 
 :root {
-  --color-bg: #080812;
-  --color-cosmic-black: #0d0b12;
-  --color-soft-black: #141217;
-  --color-dark-purple: #361a4e;
-  --color-deep-violet: #70257e;
-  --color-electric-violet: #8a32c6;
-  --color-magenta: #c743a1;
-  --color-orange: #e07f3f;
-  --color-gold: #f4b44a;
-  --color-warm-white: #f6f3ee;
-  --color-pure-white: #ffffff;
+  /* Warm burgundy/copper OtherSide palette. Token NAMES are kept from the
+     old purple/magenta/gold system so every existing bg-warm-white,
+     text-electric-violet, etc. across the app re-themes automatically —
+     only the hex values (and therefore the role each name plays) changed. */
+  --color-bg: #1d1111;
+  --color-cosmic-black: #110b0b;
+  --color-soft-black: #261616;
+  --color-dark-purple: #4e2026;
+  --color-deep-violet: #6b2930;
+  --color-electric-violet: #b9673f;
+  --color-magenta: #6b2930;
+  --color-orange: #c88a6a;
+  --color-gold: #b9673f;
+  --color-warm-white: #f3e8d8;
+  --color-pure-white: #f3e8d8;
+
+  /* Same palette, exposed under its own names too for new code. */
+  --color-copper: #b9673f;
+  --color-copper-light: #c88a6a;
+  --color-copper-dark: #8f5137;
+  --color-burgundy: #6b2930;
+  --color-burgundy-deep: #4e2026;
 }
 
 @theme inline {
@@ -26,6 +37,11 @@
   --color-gold: var(--color-gold);
   --color-warm-white: var(--color-warm-white);
   --color-pure-white: var(--color-pure-white);
+  --color-copper: var(--color-copper);
+  --color-copper-light: var(--color-copper-light);
+  --color-copper-dark: var(--color-copper-dark);
+  --color-burgundy: var(--color-burgundy);
+  --color-burgundy-deep: var(--color-burgundy-deep);
 
   --font-display: var(--font-display-en);
   --font-sans: var(--font-sans-en);

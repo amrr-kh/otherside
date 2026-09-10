@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter, Amiri, Cairo } from "next/font/google";
+import { Cormorant_Garamond, Inter, Amiri, Cairo } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import "../globals.css";
 
-const fraunces = Fraunces({
+const cormorantGaramond = Cormorant_Garamond({
   variable: "--font-display-en",
   subsets: ["latin"],
   style: ["normal", "italic"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["500", "600"],
 });
 
 const inter = Inter({
@@ -55,7 +55,7 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       dir={dir}
-      className={`${fraunces.variable} ${inter.variable} ${amiri.variable} ${cairo.variable} h-full antialiased`}
+      className={`${cormorantGaramond.variable} ${inter.variable} ${amiri.variable} ${cairo.variable} h-full antialiased`}
       style={{ colorScheme: "dark" }}
     >
       <body
