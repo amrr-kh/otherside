@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { prisma } from "@/lib/db";
+import { SOCIAL_LINKS } from "@/lib/social";
 
 export const revalidate = 0;
 
@@ -23,6 +24,12 @@ export default async function OrderConfirmationPage({
   });
 
   if (!order) notFound();
+
+  const whatsappMessage = t("whatsappMessage", {
+    orderNumber: order.orderNumber,
+    total: Number(order.total).toLocaleString(),
+  });
+  const whatsappHref = `${SOCIAL_LINKS.whatsapp}?text=${encodeURIComponent(whatsappMessage)}`;
 
   const address = order.addressSnapshot as {
     name: string;
@@ -115,7 +122,21 @@ export default async function OrderConfirmationPage({
         ) : null}
       </div>
 
-      <div className="mt-10 flex flex-wrap gap-4">
+      <div className="mt-10 border-t border-warm-white/10 pt-8">
+        <a
+          href={whatsappHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block w-full bg-warm-white px-6 py-3.5 text-center text-xs font-medium uppercase tracking-[0.18em] text-bg transition-opacity hover:opacity-90"
+        >
+          {t("whatsappCta")}
+        </a>
+        <p className="mt-2 text-center text-xs text-warm-white/40">
+          {t("whatsappHint")}
+        </p>
+      </div>
+
+      <div className="mt-6 flex flex-wrap gap-4">
         <Link
           href="/track-order"
           className="border border-warm-white/70 px-7 py-3 text-xs font-medium uppercase tracking-[0.18em] text-warm-white transition-colors hover:bg-warm-white hover:text-bg"

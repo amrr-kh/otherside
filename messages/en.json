@@ -252,6 +252,9 @@
     "paymentInstapay": "InstaPay Transfer",
     "paymentWallet": "Mobile Wallet Transfer",
     "manualPaymentNote": "We'll message you on WhatsApp shortly with transfer details.",
+    "whatsappCta": "Message Us on WhatsApp",
+    "whatsappHint": "For a faster confirmation, send us a quick message with your order details.",
+    "whatsappMessage": "Hi OtherSide! I just placed order {orderNumber} — total EGP {total}. Please confirm 🙏",
     "trackOrder": "Track Order",
     "continueShopping": "Continue Shopping",
     "notFound": "We couldn't find that order."
