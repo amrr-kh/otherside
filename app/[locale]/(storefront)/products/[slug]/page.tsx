@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { getWishlistProductIds } from "@/lib/storefront/wishlist";
 import { ProductPageClient } from "@/components/storefront/product/ProductPageClient";
+import { ProductReviews } from "@/components/storefront/product/ProductReviews";
 import type { ProductDetail } from "@/components/storefront/product/types";
 
 export const revalidate = 60;
@@ -45,6 +46,17 @@ export default async function ProductPage({
   }
 
   if (!product) notFound();
+
+  let reviews: { id: string; customerName: string; rating: number; body: string; createdAt: Date }[] = [];
+  try {
+    reviews = await prisma.review.findMany({
+      where: { productId: product.id, isApproved: true },
+      orderBy: { createdAt: "desc" },
+      select: { id: true, customerName: true, rating: true, body: true, createdAt: true },
+    });
+  } catch (error) {
+    console.error(`ProductPage(${slug}): failed to load reviews`, error);
+  }
 
   const colorOption = product.options.find((o) => o.name === "Color");
   const sizeOption = product.options.find((o) => o.name === "Size");
@@ -108,17 +120,30 @@ export default async function ProductPage({
     rawGender === "MEN" || rawGender === "WOMEN" ? rawGender : undefined;
 
   return (
-    <ProductPageClient
-      product={detail}
-      initialGenderParam={initialGenderParam}
-      preferredGender={
-        product.gender === "MEN" || product.gender === "WOMEN"
-          ? product.gender
-          : undefined
-      }
-      initialColorParam={rawColor}
-      initialSizeParam={rawSize}
-      initiallyWishlisted={wishlistedIds.has(product.id)}
-    />
+    <>
+      <ProductPageClient
+        product={detail}
+        initialGenderParam={initialGenderParam}
+        preferredGender={
+          product.gender === "MEN" || product.gender === "WOMEN"
+            ? product.gender
+            : undefined
+        }
+        initialColorParam={rawColor}
+        initialSizeParam={rawSize}
+        initiallyWishlisted={wishlistedIds.has(product.id)}
+      />
+      <ProductReviews
+        productId={product.id}
+        productSlug={product.slug}
+        reviews={reviews.map((r) => ({
+          id: r.id,
+          customerName: r.customerName,
+          rating: r.rating,
+          body: r.body,
+          createdAt: r.createdAt.toISOString(),
+        }))}
+      />
+    </>
   );
 }

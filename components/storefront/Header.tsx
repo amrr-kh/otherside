@@ -1,15 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { Search, User, Heart, ShoppingBag, Menu, X } from "lucide-react";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { Logo } from "./Logo";
 
 export function Header({ cartCount = 0 }: { cartCount?: number }) {
   const t = useTranslations("nav");
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const NAV_LINKS = [
     { href: "/hoodies", label: t("hoodies") },
@@ -23,6 +27,18 @@ export function Header({ cartCount = 0 }: { cartCount?: number }) {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    if (searchOpen) searchInputRef.current?.focus();
+  }, [searchOpen]);
+
+  function handleSearchSubmit(e: FormEvent) {
+    e.preventDefault();
+    const query = searchValue.trim();
+    if (!query) return;
+    router.push(`/search?q=${encodeURIComponent(query)}`);
+    setSearchOpen(false);
+  }
 
   return (
     <header
@@ -60,8 +76,9 @@ export function Header({ cartCount = 0 }: { cartCount?: number }) {
         <div className="flex items-center gap-4 md:gap-5">
           <button
             type="button"
+            onClick={() => setSearchOpen((v) => !v)}
             aria-label={t("search")}
-            className="hidden transition-colors hover:text-electric-violet md:block"
+            className="transition-colors hover:text-electric-violet"
           >
             <Search className="h-[18px] w-[18px]" />
           </button>
@@ -93,6 +110,33 @@ export function Header({ cartCount = 0 }: { cartCount?: number }) {
           </Link>
         </div>
       </div>
+
+      {searchOpen ? (
+        <div className="border-b border-white/10 bg-cosmic-black">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="mx-auto flex max-w-[1600px] items-center gap-3 px-5 py-4 md:px-10"
+          >
+            <Search className="h-4 w-4 shrink-0 text-warm-white/40" />
+            <input
+              ref={searchInputRef}
+              type="text"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              placeholder={t("searchPlaceholder")}
+              className="w-full bg-transparent text-sm text-warm-white placeholder:text-warm-white/35 focus:outline-none"
+            />
+            <button
+              type="button"
+              onClick={() => setSearchOpen(false)}
+              aria-label={t("closeMenu")}
+              className="shrink-0 text-warm-white/50 hover:text-warm-white"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </form>
+        </div>
+      ) : null}
 
       {menuOpen ? (
         <div className="fixed inset-0 z-50 flex flex-col bg-cosmic-black md:hidden">

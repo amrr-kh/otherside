@@ -4,6 +4,7 @@
     "pants": "Pants",
     "createYourOwn": "Create Your Own",
     "search": "Search",
+    "searchPlaceholder": "Search products…",
     "account": "Account",
     "wishlist": "Wishlist",
     "bag": "Bag",
@@ -109,6 +110,26 @@
     "pantsTitle": "Pants",
     "pantsIntro": "Fluid wide-leg pants built for the full silhouette. Every color, every size.",
     "empty": "Nothing here yet — check back soon."
+  },
+  "search": {
+    "heading": "Search",
+    "intro": "Search for hoodies, pants, colors, and more.",
+    "resultsFor": "Results for \"{query}\"",
+    "noResults": "Nothing matched that search — try a different word."
+  },
+  "productReviews": {
+    "heading": "Reviews ({count})",
+    "empty": "No reviews yet. Be the first to review this product.",
+    "writeReview": "Write a Review",
+    "rating": "Rating",
+    "name": "Your Name",
+    "body": "Your Review",
+    "submit": "Submit Review",
+    "submitting": "Submitting…",
+    "thankYou": "Thanks! Your review will appear once approved.",
+    "errorMissingFields": "Please fill in your name and review.",
+    "errorInvalidRating": "Please select a star rating.",
+    "errorTooLong": "That's too long — please shorten it."
   },
   "product": {
     "eyebrow": "OtherSide essentials",

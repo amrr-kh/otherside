@@ -4,6 +4,7 @@
     "pants": "بناطيل",
     "createYourOwn": "صمم قطعتك الخاصة",
     "search": "بحث",
+    "searchPlaceholder": "ابحث عن المنتجات…",
     "account": "حسابي",
     "wishlist": "المفضلة",
     "bag": "الحقيبة",
@@ -109,6 +110,26 @@
     "pantsTitle": "بناطيل",
     "pantsIntro": "بناطيل واسعة وانسيابية لسيلويت مكتمل. كل لون، وكل مقاس.",
     "empty": "لا يوجد شيء هنا بعد — عد قريبًا."
+  },
+  "search": {
+    "heading": "بحث",
+    "intro": "ابحث عن هوديز، بناطيل، ألوان، وأكثر.",
+    "resultsFor": "نتائج \"{query}\"",
+    "noResults": "لا توجد نتائج مطابقة — جرّب كلمة أخرى."
+  },
+  "productReviews": {
+    "heading": "التقييمات ({count})",
+    "empty": "لا توجد تقييمات بعد. كن أول من يقيّم هذا المنتج.",
+    "writeReview": "أضف تقييمك",
+    "rating": "التقييم",
+    "name": "اسمك",
+    "body": "رأيك",
+    "submit": "إرسال التقييم",
+    "submitting": "جارٍ الإرسال…",
+    "thankYou": "شكرًا! سيظهر تقييمك بعد الموافقة عليه.",
+    "errorMissingFields": "يرجى إدخال اسمك ورأيك.",
+    "errorInvalidRating": "يرجى اختيار تقييم بالنجوم.",
+    "errorTooLong": "النص طويل جدًا — يرجى اختصاره."
   },
   "product": {
     "eyebrow": "أساسيات OtherSide",
