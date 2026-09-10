@@ -27,8 +27,13 @@
   --color-warm-white: var(--color-warm-white);
   --color-pure-white: var(--color-pure-white);
 
-  --font-display: var(--font-fraunces);
-  --font-sans: var(--font-inter);
+  --font-display: var(--font-display-en);
+  --font-sans: var(--font-sans-en);
+}
+
+[data-locale="ar"] {
+  --font-display: var(--font-display-ar);
+  --font-sans: var(--font-sans-ar);
 }
 
 html {

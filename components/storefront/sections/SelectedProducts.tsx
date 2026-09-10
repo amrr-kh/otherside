@@ -1,7 +1,9 @@
+import { getTranslations } from "next-intl/server";
 import { ProductCard } from "../ProductCard";
 import { getTrendingProducts } from "@/lib/storefront/products";
 
 export async function SelectedProducts() {
+  const t = await getTranslations("selectedProducts");
   let products;
   try {
     products = await getTrendingProducts();
@@ -16,15 +18,13 @@ export async function SelectedProducts() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs uppercase tracking-[0.25em] text-electric-violet">
-            Trending Now
+            {t("eyebrow")}
           </p>
           <h2 className="mt-4 font-display text-4xl italic text-warm-white md:text-5xl">
-            Pulled from the dark.
+            {t("heading")}
           </h2>
         </div>
-        <p className="max-w-xs text-sm text-warm-white/45">
-          A short list. It doesn&apos;t need to be spelled out.
-        </p>
+        <p className="max-w-xs text-sm text-warm-white/45">{t("subtitle")}</p>
       </div>
 
       <div className="mt-14 grid max-w-2xl grid-cols-2 gap-x-4 gap-y-10 md:gap-x-8">

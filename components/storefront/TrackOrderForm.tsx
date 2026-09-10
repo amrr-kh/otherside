@@ -1,18 +1,17 @@
 "use client";
 
 import { useActionState } from "react";
+import { useTranslations } from "next-intl";
 import { trackOrderAction, type TrackOrderState } from "@/lib/actions/tracking";
 
-const STATUS_LABELS: Record<string, string> = {
-  RECEIVED: "Order Received",
-  CONFIRMED: "Confirmed",
-  PREPARING: "Preparing",
-  SHIPPED: "Shipped",
-  OUT_FOR_DELIVERY: "Out for Delivery",
-  DELIVERED: "Delivered",
-  CANCELLED: "Cancelled",
-  RETURNED: "Returned",
-};
+const STATUS_KEYS = [
+  "statusReceived",
+  "statusConfirmed",
+  "statusPreparing",
+  "statusShipped",
+  "statusOutForDelivery",
+  "statusDelivered",
+] as const;
 
 const STATUS_ORDER = [
   "RECEIVED",
@@ -26,6 +25,7 @@ const STATUS_ORDER = [
 const initialState: TrackOrderState = { status: "idle" };
 
 export function TrackOrderForm() {
+  const t = useTranslations("trackOrder");
   const [state, formAction, isPending] = useActionState(
     trackOrderAction,
     initialState,
@@ -36,13 +36,16 @@ export function TrackOrderForm() {
       <form action={formAction} className="flex flex-col gap-4 sm:flex-row">
         <input
           name="orderNumber"
-          placeholder="Order Number (e.g. OS-10001)"
+          dir="ltr"
+          placeholder={t("orderNumberPlaceholder")}
           required
           className="flex-1 border border-warm-white/25 bg-transparent px-4 py-3 text-sm text-warm-white placeholder:text-warm-white/35 focus:border-electric-violet focus:outline-none"
         />
         <input
           name="phone"
-          placeholder="Phone Number"
+          type="tel"
+          dir="ltr"
+          placeholder={t("phonePlaceholder")}
           required
           className="flex-1 border border-warm-white/25 bg-transparent px-4 py-3 text-sm text-warm-white placeholder:text-warm-white/35 focus:border-electric-violet focus:outline-none"
         />
@@ -51,19 +54,19 @@ export function TrackOrderForm() {
           disabled={isPending}
           className="border border-warm-white/70 px-7 py-3 text-xs font-medium uppercase tracking-[0.18em] text-warm-white transition-colors hover:bg-warm-white hover:text-bg disabled:opacity-50"
         >
-          {isPending ? "Searching…" : "Track Order"}
+          {isPending ? t("searching") : t("submit")}
         </button>
       </form>
 
       {state.status === "error" ? (
-        <p className="mt-4 text-sm text-magenta">{state.message}</p>
+        <p className="mt-4 text-sm text-magenta">{t(state.message)}</p>
       ) : null}
 
       {state.status === "found" ? (
         <div className="mt-12 border-t border-warm-white/10 pt-10">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <h2 className="font-display text-2xl italic text-warm-white">
-              Order {state.order.orderNumber}
+              {t("orderLabel")} {state.order.orderNumber}
             </h2>
             <span className="text-sm text-gold">
               EGP {state.order.total.toLocaleString()}
@@ -72,7 +75,7 @@ export function TrackOrderForm() {
 
           {state.order.trackingNumber ? (
             <p className="mt-2 text-sm text-warm-white/50">
-              Tracking number: {state.order.trackingNumber}
+              {t("trackingNumber", { number: state.order.trackingNumber })}
             </p>
           ) : null}
 
@@ -87,11 +90,16 @@ export function TrackOrderForm() {
           {state.order.status === "CANCELLED" ||
           state.order.status === "RETURNED" ? (
             <p className="mt-8 text-sm text-orange">
-              This order was {STATUS_LABELS[state.order.status].toLowerCase()}.
+              {t("statusTerminal", {
+                status:
+                  state.order.status === "CANCELLED"
+                    ? t("statusCancelled")
+                    : t("statusReturned"),
+              })}
             </p>
           ) : (
             <ol className="mt-8 flex flex-wrap gap-x-6 gap-y-3">
-              {STATUS_ORDER.map((step) => {
+              {STATUS_ORDER.map((step, i) => {
                 const reached =
                   STATUS_ORDER.indexOf(step) <=
                   STATUS_ORDER.indexOf(state.order.status);
@@ -102,7 +110,7 @@ export function TrackOrderForm() {
                       reached ? "text-warm-white" : "text-warm-white/25"
                     }`}
                   >
-                    {STATUS_LABELS[step]}
+                    {t(STATUS_KEYS[i])}
                   </li>
                 );
               })}

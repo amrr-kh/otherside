@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { ProductCard } from "./ProductCard";
 import { Unavailable } from "./Unavailable";
 import { getCategoryProductsByColor, type StorefrontProduct } from "@/lib/storefront/products";
@@ -11,6 +12,7 @@ export async function CategoryGrid({
   title: string;
   intro: string;
 }) {
+  const t = await getTranslations("category");
   let products: StorefrontProduct[] = [];
   let unavailable = false;
   try {
@@ -32,9 +34,7 @@ export async function CategoryGrid({
           <Unavailable />
         </div>
       ) : products.length === 0 ? (
-        <p className="mt-14 text-sm text-warm-white/45">
-          Nothing here yet — check back soon.
-        </p>
+        <p className="mt-14 text-sm text-warm-white/45">{t("empty")}</p>
       ) : (
         <div className="mt-14 grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 md:grid-cols-4 md:gap-x-8">
           {products.map((product, i) => (

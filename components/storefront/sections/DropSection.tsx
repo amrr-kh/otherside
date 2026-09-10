@@ -1,8 +1,10 @@
+import { getTranslations } from "next-intl/server";
 import { ProductCard } from "../ProductCard";
 import { Unavailable } from "../Unavailable";
 import { getDropProducts, type StorefrontProduct } from "@/lib/storefront/products";
 
 export async function DropSection() {
+  const t = await getTranslations("drop");
   let products: StorefrontProduct[] = [];
   let unavailable = false;
   try {
@@ -18,16 +20,16 @@ export async function DropSection() {
         aria-hidden="true"
         className="pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 select-none font-display text-[26vw] italic text-electric-violet/10 md:text-[20vw]"
       >
-        DROP
+        {t("giantWord")}
       </span>
 
       <div className="relative mx-auto max-w-[1600px] px-5 md:px-10">
         <div>
           <p className="text-xs uppercase tracking-[0.25em] text-electric-violet">
-            New Collection
+            {t("eyebrow")}
           </p>
           <h2 className="mt-4 font-display text-4xl italic text-warm-white md:text-5xl">
-            The Veil Study
+            {t("heading")}
           </h2>
         </div>
 
@@ -36,9 +38,7 @@ export async function DropSection() {
             <Unavailable />
           </div>
         ) : products.length === 0 ? (
-          <p className="mt-14 text-sm text-warm-white/45">
-            New arrivals are on their way.
-          </p>
+          <p className="mt-14 text-sm text-warm-white/45">{t("empty")}</p>
         ) : (
           <div className="mt-14 grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 md:gap-x-8">
             {products.map((product) => (

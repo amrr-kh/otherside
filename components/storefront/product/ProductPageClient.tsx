@@ -3,6 +3,7 @@
 import { useMemo, useState, useTransition } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { Heart, ShoppingBag } from "lucide-react";
 import { slugify } from "@/lib/slug";
 import { toggleWishlist } from "@/lib/actions/wishlist";
@@ -20,6 +21,7 @@ export function ProductPageClient({
   initialSizeParam?: string;
   initiallyWishlisted: boolean;
 }) {
+  const t = useTranslations("product");
   const router = useRouter();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
@@ -133,7 +135,7 @@ export function ProductPageClient({
               />
             ) : (
               <div className="flex h-full items-center justify-center text-warm-white/30">
-                No photos yet
+                {t("noPhotosYet")}
               </div>
             )}
           </div>
@@ -149,7 +151,7 @@ export function ProductPageClient({
                     : "border-warm-white/25 text-warm-white/50"
                 }`}
               >
-                Front
+                {t("front")}
               </button>
               {backImage ? (
                 <button
@@ -161,7 +163,7 @@ export function ProductPageClient({
                       : "border-warm-white/25 text-warm-white/50"
                   }`}
                 >
-                  Other Side
+                  {t("otherSide")}
                 </button>
               ) : null}
             </div>
@@ -196,7 +198,7 @@ export function ProductPageClient({
         {/* Purchase panel */}
         <div>
           <p className="text-xs uppercase tracking-[0.25em] text-electric-violet">
-            OtherSide essentials
+            {t("eyebrow")}
           </p>
           <div className="mt-3 flex items-start justify-between gap-4">
             <h1 className="font-display text-4xl italic text-warm-white md:text-5xl">
@@ -205,7 +207,9 @@ export function ProductPageClient({
             <button
               type="button"
               onClick={handleWishlist}
-              aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
+              aria-label={
+                wishlisted ? t("removeFromWishlist") : t("addToWishlist")
+              }
               className="mt-2 shrink-0 text-warm-white/70 transition-colors hover:text-magenta"
             >
               <Heart
@@ -227,11 +231,11 @@ export function ProductPageClient({
           {/* Colors */}
           <div className="mt-8">
             <h2 className="text-xs uppercase tracking-[0.15em] text-warm-white/60">
-              Color
+              {t("color")}
               {(() => {
                 const c = product.colors.find((c) => c.id === selectedColorId);
                 return c ? (
-                  <span className="ml-2 normal-case text-warm-white/40">
+                  <span className="ms-2 normal-case text-warm-white/40">
                     {c.value}
                   </span>
                 ) : null;
@@ -258,7 +262,7 @@ export function ProductPageClient({
           {/* Sizes */}
           <div className="mt-6">
             <h2 className="text-xs uppercase tracking-[0.15em] text-warm-white/60">
-              Size
+              {t("size")}
             </h2>
             <div className="mt-3 flex flex-wrap gap-2">
               {product.sizes.map((size) => {
@@ -292,7 +296,7 @@ export function ProductPageClient({
                   type="button"
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                   className="flex h-11 w-11 items-center justify-center text-warm-white/70 hover:text-warm-white"
-                  aria-label="Decrease quantity"
+                  aria-label={t("decreaseQuantity")}
                 >
                   −
                 </button>
@@ -303,7 +307,7 @@ export function ProductPageClient({
                   type="button"
                   onClick={() => setQuantity((q) => q + 1)}
                   className="flex h-11 w-11 items-center justify-center text-warm-white/70 hover:text-warm-white"
-                  aria-label="Increase quantity"
+                  aria-label={t("increaseQuantity")}
                 >
                   +
                 </button>
@@ -317,41 +321,45 @@ export function ProductPageClient({
               >
                 <ShoppingBag className="h-4 w-4" />
                 {addedToBag
-                  ? "Added to Bag"
+                  ? t("addedToBag")
                   : canAddToBag
-                    ? "Add to Bag"
-                    : "Select a Size"}
+                    ? t("addToBag")
+                    : t("selectSize")}
               </button>
             </div>
           </div>
 
           <div className="mt-10 divide-y divide-warm-white/10 border-t border-warm-white/10">
-            <DetailSection title="Description">
+            <DetailSection title={t("descriptionHeading")}>
               {product.fullDescription}
             </DetailSection>
             {product.fit ? (
-              <DetailSection title="Fit">{product.fit}</DetailSection>
+              <DetailSection title={t("fitHeading")}>
+                {product.fit}
+              </DetailSection>
             ) : null}
             {product.material ? (
-              <DetailSection title="Material">{product.material}</DetailSection>
+              <DetailSection title={t("materialHeading")}>
+                {product.material}
+              </DetailSection>
             ) : null}
             {product.care ? (
-              <DetailSection title="Care">{product.care}</DetailSection>
+              <DetailSection title={t("careHeading")}>
+                {product.care}
+              </DetailSection>
             ) : null}
-            <DetailSection title="Shipping">
-              Calculated at checkout based on your governorate. Cash on
-              delivery across Egypt.
+            <DetailSection title={t("shippingHeading")}>
+              {t("shippingBody")}
             </DetailSection>
-            <DetailSection title="Returns">
-              Unworn items in original condition can be returned within 14
-              days of delivery.
+            <DetailSection title={t("returnsHeading")}>
+              {t("returnsBody")}
             </DetailSection>
-            <DetailSection title="Availability">
+            <DetailSection title={t("availabilityHeading")}>
               {selectedVariant
                 ? selectedVariant.quantity > 0
-                  ? `In stock — ${selectedVariant.quantity} left`
-                  : "Out of stock in this size"
-                : "Select a color and size to check availability"}
+                  ? t("availabilityInStock", { count: selectedVariant.quantity })
+                  : t("availabilityOutOfStock")
+                : t("availabilitySelect")}
             </DetailSection>
           </div>
         </div>

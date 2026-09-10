@@ -1,24 +1,27 @@
-import Link from "next/link";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { PlaceholderPhoto } from "../PlaceholderPhoto";
 
-const FEATURES = [
-  {
-    eyebrow: "Hoodies",
-    title: "The signature volume.",
-    body: "Oversized silhouette and proportion, weight and movement.",
-    href: "/hoodies",
-    variant: "model" as const,
-  },
-  {
-    eyebrow: "Pants",
-    title: "Built for the full silhouette.",
-    body: "Fluid wide-leg pants designed to complete the OtherSide uniform.",
-    href: "/pants",
-    variant: "product" as const,
-  },
-];
+export async function EditorialFeature() {
+  const t = await getTranslations("editorial");
 
-export function EditorialFeature() {
+  const FEATURES = [
+    {
+      eyebrow: t("hoodiesEyebrow"),
+      title: t("hoodiesTitle"),
+      body: t("hoodiesBody"),
+      href: "/hoodies",
+      variant: "model" as const,
+    },
+    {
+      eyebrow: t("pantsEyebrow"),
+      title: t("pantsTitle"),
+      body: t("pantsBody"),
+      href: "/pants",
+      variant: "product" as const,
+    },
+  ];
+
   return (
     <section className="grid grid-cols-1 md:grid-cols-2">
       {FEATURES.map((f) => (

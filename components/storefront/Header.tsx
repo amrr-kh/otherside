@@ -1,19 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Search, User, Heart, ShoppingBag, Menu, X } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import { Logo } from "./Logo";
 
-const NAV_LINKS = [
-  { href: "/hoodies", label: "Hoodies" },
-  { href: "/pants", label: "Pants" },
-  { href: "/create-your-own", label: "Create Your Own" },
-];
-
 export function Header({ cartCount = 0 }: { cartCount?: number }) {
+  const t = useTranslations("nav");
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const NAV_LINKS = [
+    { href: "/hoodies", label: t("hoodies") },
+    { href: "/pants", label: t("pants") },
+    { href: "/create-your-own", label: t("createYourOwn") },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -35,7 +37,7 @@ export function Header({ cartCount = 0 }: { cartCount?: number }) {
           type="button"
           onClick={() => setMenuOpen(true)}
           className="flex items-center justify-center md:hidden"
-          aria-label="Open menu"
+          aria-label={t("openMenu")}
         >
           <Menu className="h-5 w-5" />
         </button>
@@ -58,28 +60,28 @@ export function Header({ cartCount = 0 }: { cartCount?: number }) {
         <div className="flex items-center gap-4 md:gap-5">
           <button
             type="button"
-            aria-label="Search"
+            aria-label={t("search")}
             className="hidden transition-colors hover:text-electric-violet md:block"
           >
             <Search className="h-[18px] w-[18px]" />
           </button>
           <Link
             href="/account"
-            aria-label="Account"
+            aria-label={t("account")}
             className="hidden transition-colors hover:text-electric-violet md:block"
           >
             <User className="h-[18px] w-[18px]" />
           </Link>
           <Link
             href="/wishlist"
-            aria-label="Wishlist"
+            aria-label={t("wishlist")}
             className="transition-colors hover:text-electric-violet"
           >
             <Heart className="h-[18px] w-[18px]" />
           </Link>
           <Link
             href="/cart"
-            aria-label="Bag"
+            aria-label={t("bag")}
             className="relative transition-colors hover:text-electric-violet"
           >
             <ShoppingBag className="h-[18px] w-[18px]" />
@@ -99,7 +101,7 @@ export function Header({ cartCount = 0 }: { cartCount?: number }) {
             <button
               type="button"
               onClick={() => setMenuOpen(false)}
-              aria-label="Close menu"
+              aria-label={t("closeMenu")}
             >
               <X className="h-5 w-5" />
             </button>

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 /**
  * Placeholder monogram — swap for the real O/S ivory monogram asset

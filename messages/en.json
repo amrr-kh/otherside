@@ -1,0 +1,215 @@
+{
+  "nav": {
+    "hoodies": "Hoodies",
+    "pants": "Pants",
+    "createYourOwn": "Create Your Own",
+    "search": "Search",
+    "account": "Account",
+    "wishlist": "Wishlist",
+    "bag": "Bag",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "footer": {
+    "tagline": "See the reality behind the veil.",
+    "subtagline": "A study in silhouette, shadow, and the reality behind the veil.",
+    "shop": "Shop",
+    "help": "Help",
+    "about": "About",
+    "social": "Social",
+    "ourStory": "Our Story",
+    "trackOrder": "Track Order",
+    "shipping": "Shipping",
+    "returns": "Returns",
+    "contact": "Contact",
+    "copyright": "© {year} OtherSide. All rights reserved.",
+    "privacy": "Privacy",
+    "terms": "Terms"
+  },
+  "hero": {
+    "line1": "See the",
+    "line2": "reality",
+    "line3": "behind the",
+    "line4": "veil.",
+    "shopHoodies": "Shop Hoodies",
+    "shopPants": "Shop Pants",
+    "exploreDrop": "Explore the Drop"
+  },
+  "brandStory": {
+    "eyebrow": "The OtherSide — 01",
+    "headingLine1": "The reality is",
+    "headingLine2": "in the details.",
+    "body": "OtherSide was founded by Bidu, Eshta, and Amr with one idea: what you see on the surface is never the whole story. We create premium unisex pieces built around strong silhouettes, comfort, individuality, and everyday wear — no unnecessary labels, no fixed rules.",
+    "readMore": "Read Our Story",
+    "principle1Title": "Unisex by design",
+    "principle1Body": "No unnecessary labels, no fixed rules.",
+    "principle2Title": "Built different",
+    "principle2Body": "Strong silhouettes, comfort, individuality.",
+    "principle3Title": "Beyond the surface",
+    "principle3Body": "What you see is never the whole story."
+  },
+  "drop": {
+    "eyebrow": "New Collection",
+    "heading": "The Veil Study",
+    "giantWord": "DROP",
+    "empty": "New arrivals are on their way."
+  },
+  "editorial": {
+    "hoodiesEyebrow": "Hoodies",
+    "hoodiesTitle": "The signature volume.",
+    "hoodiesBody": "Oversized silhouette and proportion, weight and movement.",
+    "pantsEyebrow": "Pants",
+    "pantsTitle": "Built for the full silhouette.",
+    "pantsBody": "Fluid wide-leg pants designed to complete the OtherSide uniform."
+  },
+  "campaign": {
+    "line1": "Make the",
+    "line2": "silhouette",
+    "line3": "yours.",
+    "tagline": "Your side. Your movement. Your way.",
+    "cta": "Explore the Collection"
+  },
+  "selectedProducts": {
+    "eyebrow": "Trending Now",
+    "heading": "Pulled from the dark.",
+    "subtitle": "A short list. It doesn't need to be spelled out."
+  },
+  "material": {
+    "eyebrow": "Complete the Look",
+    "heading": "Layer the unseen.",
+    "body": "The silhouette that will bring your two sides together.",
+    "cta": "Discover the Details"
+  },
+  "reviews": {
+    "heading": "In their words.",
+    "demoLabel": "Demo review · placeholder",
+    "quote1": "The fit is impossibly good. Structured, oversized, still clean.",
+    "quote2": "It feels considered in every detail, even the weight of the fabric.",
+    "quote3": "Not loud. Just unforgettable."
+  },
+  "newsletter": {
+    "line1": "A signal from",
+    "line2": "the other side.",
+    "placeholder": "Your email address",
+    "cta": "Enter the Other Side",
+    "success": "You're in"
+  },
+  "notFound": {
+    "eyebrow": "404",
+    "heading": "There's nothing on this side.",
+    "body": "The page you're looking for doesn't exist yet, or has moved to the other side.",
+    "cta": "Back to the Homepage"
+  },
+  "productCard": {
+    "addToWishlist": "Add to wishlist"
+  },
+  "category": {
+    "hoodiesTitle": "Hoodies",
+    "hoodiesIntro": "Oversized silhouette and proportion, weight and movement. Every color, every size.",
+    "pantsTitle": "Pants",
+    "pantsIntro": "Fluid wide-leg pants built for the full silhouette. Every color, every size.",
+    "empty": "Nothing here yet — check back soon."
+  },
+  "product": {
+    "eyebrow": "OtherSide essentials",
+    "color": "Color",
+    "size": "Size",
+    "front": "Front",
+    "otherSide": "Other Side",
+    "decreaseQuantity": "Decrease quantity",
+    "increaseQuantity": "Increase quantity",
+    "addToBag": "Add to Bag",
+    "addedToBag": "Added to Bag",
+    "selectSize": "Select a Size",
+    "removeFromWishlist": "Remove from wishlist",
+    "addToWishlist": "Add to wishlist",
+    "noPhotosYet": "No photos yet",
+    "descriptionHeading": "Description",
+    "fitHeading": "Fit",
+    "materialHeading": "Material",
+    "careHeading": "Care",
+    "shippingHeading": "Shipping",
+    "shippingBody": "Calculated at checkout based on your governorate. Cash on delivery across Egypt.",
+    "returnsHeading": "Returns",
+    "returnsBody": "Unworn items in original condition can be returned within 14 days of delivery.",
+    "availabilityHeading": "Availability",
+    "availabilityInStock": "In stock — {count} left",
+    "availabilityOutOfStock": "Out of stock in this size",
+    "availabilitySelect": "Select a color and size to check availability"
+  },
+  "cart": {
+    "title": "Your Bag",
+    "empty": "Your bag is empty.",
+    "continueShopping": "Continue Shopping",
+    "subtotal": "Subtotal",
+    "shippingNote": "Shipping calculated at checkout.",
+    "checkoutComingSoon": "Checkout — Coming Soon",
+    "decreaseQuantity": "Decrease quantity",
+    "increaseQuantity": "Increase quantity",
+    "remove": "Remove"
+  },
+  "wishlist": {
+    "title": "Your Wishlist",
+    "empty": "Nothing saved yet. Tap the heart on any product to add it here.",
+    "continueShopping": "Continue Shopping"
+  },
+  "trackOrder": {
+    "eyebrow": "Order Status",
+    "heading": "Track Your Order",
+    "intro": "Enter your order number and the phone number used at checkout.",
+    "orderNumberPlaceholder": "Order Number (e.g. OS-10001)",
+    "phonePlaceholder": "Phone Number",
+    "submit": "Track Order",
+    "searching": "Searching…",
+    "missingFields": "Enter both your order number and phone number.",
+    "notFound": "No order found matching that order number and phone number. Double-check both and try again.",
+    "orderLabel": "Order",
+    "trackingNumber": "Tracking number: {number}",
+    "statusReceived": "Order Received",
+    "statusConfirmed": "Confirmed",
+    "statusPreparing": "Preparing",
+    "statusShipped": "Shipped",
+    "statusOutForDelivery": "Out for Delivery",
+    "statusDelivered": "Delivered",
+    "statusCancelled": "Cancelled",
+    "statusReturned": "Returned",
+    "statusTerminal": "This order was {status}."
+  },
+  "shipping": {
+    "eyebrow": "Delivery",
+    "heading": "Shipping",
+    "p1": "We currently deliver across Egypt. Shipping cost and estimated delivery time depend on your governorate and are shown at checkout before you place your order.",
+    "p2": "Every order is confirmed by phone or WhatsApp before it ships, so please make sure the number you provide at checkout is correct and reachable.",
+    "p3": "Payment on delivery is available across Egypt. We also accept InstaPay and Egyptian mobile wallet transfers — both are shown as options at checkout.",
+    "p4": "Questions about a specific delivery? Reach us on <whatsapp>WhatsApp</whatsapp> and we'll help directly."
+  },
+  "returns": {
+    "eyebrow": "Policy",
+    "heading": "Returns & Exchanges",
+    "p1": "Unworn items in their original condition, with tags attached, can be returned or exchanged within 14 days of delivery.",
+    "p2": "To start a return or exchange, message us on WhatsApp with your order number and which item you'd like to return — we'll walk you through the next steps from there.",
+    "p3Prefix": "Items that are worn, washed, altered, or without original tags can't be accepted. Custom or made-to-order pieces from",
+    "p3Link": "Create Your Own",
+    "p3Suffix": "are final sale.",
+    "p4": "Questions before you buy? Reach us on <whatsapp>WhatsApp</whatsapp> — sizing help included."
+  },
+  "contact": {
+    "eyebrow": "Get in Touch",
+    "heading": "Contact",
+    "intro": "Order questions, sizing help, custom requests, or anything else — WhatsApp is the fastest way to reach us.",
+    "whatsapp": "WhatsApp",
+    "email": "Email",
+    "instagram": "Instagram",
+    "tiktok": "TikTok",
+    "facebook": "Facebook"
+  },
+  "createYourOwn": {
+    "eyebrow": "Custom Orders",
+    "heading": "Make the silhouette yours.",
+    "body": "Want a custom print, your own design, or a one-off hoodie or pair of pants made to spec? We do custom and print-on-demand pieces directly — reach out through any of the channels below and our team will walk you through it.",
+    "instagram": "Instagram",
+    "whatsapp": "WhatsApp",
+    "facebook": "Facebook",
+    "tiktok": "TikTok"
+  }
+}

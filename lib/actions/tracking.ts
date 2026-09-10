@@ -14,7 +14,7 @@ export type TrackedOrder = {
 
 export type TrackOrderState =
   | { status: "idle" }
-  | { status: "error"; message: string }
+  | { status: "error"; message: "missingFields" | "notFound" }
   | { status: "found"; order: TrackedOrder };
 
 export async function trackOrderAction(
@@ -25,10 +25,7 @@ export async function trackOrderAction(
   const phone = String(formData.get("phone") ?? "").trim();
 
   if (!orderNumber || !phone) {
-    return {
-      status: "error",
-      message: "Enter both your order number and phone number.",
-    };
+    return { status: "error", message: "missingFields" };
   }
 
   const order = await prisma.order.findFirst({
@@ -43,11 +40,7 @@ export async function trackOrderAction(
   });
 
   if (!order) {
-    return {
-      status: "error",
-      message:
-        "No order found matching that order number and phone number. Double-check both and try again.",
-    };
+    return { status: "error", message: "notFound" };
   }
 
   return {

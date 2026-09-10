@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { Heart } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import { PlaceholderPhoto } from "./PlaceholderPhoto";
 
 export type ProductCardData = {
@@ -17,6 +18,7 @@ export type ProductCardData = {
 };
 
 export function ProductCard({ product }: { product: ProductCardData }) {
+  const t = useTranslations("productCard");
   const [hovered, setHovered] = useState(false);
   const hasPhoto = Boolean(product.primaryImageUrl);
   const href = product.colorSlug
@@ -70,9 +72,9 @@ export function ProductCard({ product }: { product: ProductCardData }) {
         )}
         <button
           type="button"
-          aria-label="Add to wishlist"
+          aria-label={t("addToWishlist")}
           onClick={(e) => e.preventDefault()}
-          className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-black/30 text-warm-white/80 backdrop-blur transition-colors hover:text-magenta"
+          className="absolute end-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-black/30 text-warm-white/80 backdrop-blur transition-colors hover:text-magenta"
         >
           <Heart className="h-4 w-4" />
         </button>
