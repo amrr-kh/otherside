@@ -11,7 +11,7 @@ const NAV_LINKS = [
   { href: "/create-your-own", label: "Create Your Own" },
 ];
 
-export function Header() {
+export function Header({ cartCount = 0 }: { cartCount?: number }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -83,6 +83,11 @@ export function Header() {
             className="relative transition-colors hover:text-electric-violet"
           >
             <ShoppingBag className="h-[18px] w-[18px]" />
+            {cartCount > 0 ? (
+              <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-electric-violet text-[9px] font-medium text-warm-white">
+                {cartCount > 9 ? "9+" : cartCount}
+              </span>
+            ) : null}
           </Link>
         </div>
       </div>

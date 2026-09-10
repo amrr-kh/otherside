@@ -110,6 +110,7 @@ export function ProductPageClient({
     startTransition(async () => {
       await addToCart(selectedVariant.id, quantity);
       setAddedToBag(true);
+      router.refresh();
       setTimeout(() => setAddedToBag(false), 2500);
     });
   }

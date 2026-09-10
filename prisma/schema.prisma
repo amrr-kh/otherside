@@ -229,26 +229,31 @@ enum OrderStatus {
 
 enum PaymentMethod {
   COD
+  INSTAPAY
+  MOBILE_WALLET
+  // EASYKASH — planned post-launch gateway integration.
 }
 
 model Order {
-  id              String               @id @default(cuid())
-  orderNumber     String               @unique
-  customerId      String
-  customer        Customer             @relation(fields: [customerId], references: [id])
-  status          OrderStatus          @default(RECEIVED)
-  subtotal        Decimal              @db.Decimal(10, 2)
-  shippingCost    Decimal              @db.Decimal(10, 2)
-  total           Decimal              @db.Decimal(10, 2)
-  paymentMethod   PaymentMethod        @default(COD)
-  codPaid         Boolean              @default(false)
-  addressSnapshot Json
-  trackingNumber  String?
-  notes           String?
-  items           OrderItem[]
-  statusHistory   OrderStatusHistory[]
-  createdAt       DateTime             @default(now())
-  updatedAt       DateTime             @updatedAt
+  id               String               @id @default(cuid())
+  orderNumber      String               @unique
+  customerId       String
+  customer         Customer             @relation(fields: [customerId], references: [id])
+  status           OrderStatus          @default(RECEIVED)
+  subtotal         Decimal              @db.Decimal(10, 2)
+  shippingCost     Decimal              @db.Decimal(10, 2)
+  total            Decimal              @db.Decimal(10, 2)
+  paymentMethod    PaymentMethod        @default(COD)
+  // Manual confirmation until EasyKash is integrated: COD collected, or an
+  // InstaPay/mobile wallet transfer verified by an admin.
+  paymentConfirmed Boolean              @default(false)
+  addressSnapshot  Json
+  trackingNumber   String?
+  notes            String?
+  items            OrderItem[]
+  statusHistory    OrderStatusHistory[]
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
 
   @@index([customerId])
 }
