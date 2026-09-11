@@ -42,7 +42,10 @@ export async function DropSection() {
         ) : (
           <div className="mt-14 grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 md:gap-x-8">
             {products.map((product) => (
-              <ProductCard key={product.slug} product={product} />
+              <ProductCard
+                key={`${product.slug}-${product.colorSlug ?? product.colors[0]}`}
+                product={product}
+              />
             ))}
           </div>
         )}
