@@ -290,7 +290,7 @@
     "manualPaymentNote": "سنراسلك على واتساب قريبًا بتفاصيل التحويل.",
     "whatsappCta": "أرسل لنا رسالة على واتساب",
     "whatsappHint": "لتأكيد طلبك بشكل أسرع، أرسل لنا رسالة سريعة بتفاصيله.",
-    "whatsappMessage": "مرحبًا OtherSide! لقد قمت للتو بتقديم الطلب {orderNumber} بإجمالي EGP {total}. برجاء التأكيد 🙏",
+    "whatsappMessage": "مرحبًا OtherSide! أنا {name} ({phone}) وقمت للتو بتقديم الطلب {orderNumber} بإجمالي EGP {total}، للتوصيل إلى {city}، {governorate}. برجاء التأكيد 🙏",
     "trackOrder": "تتبع الطلب",
     "continueShopping": "متابعة التسوق",
     "notFound": "لم نتمكن من العثور على هذا الطلب."

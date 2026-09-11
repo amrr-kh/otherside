@@ -27,12 +27,6 @@ export default async function OrderConfirmationPage({
 
   if (!order) notFound();
 
-  const whatsappMessage = t("whatsappMessage", {
-    orderNumber: order.orderNumber,
-    total: Number(order.total).toLocaleString(),
-  });
-  const whatsappHref = `${settings.whatsappUrl}?text=${encodeURIComponent(whatsappMessage)}`;
-
   const address = order.addressSnapshot as {
     name: string;
     phone: string;
@@ -44,6 +38,16 @@ export default async function OrderConfirmationPage({
     apartment?: string;
     landmark?: string;
   };
+
+  const whatsappMessage = t("whatsappMessage", {
+    orderNumber: order.orderNumber,
+    total: Number(order.total).toLocaleString(),
+    name: address.name,
+    phone: address.phone,
+    city: address.city,
+    governorate: address.governorate,
+  });
+  const whatsappHref = `${settings.whatsappUrl}?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (
     <div className="mx-auto max-w-2xl px-5 py-24 md:px-10 md:py-32">
