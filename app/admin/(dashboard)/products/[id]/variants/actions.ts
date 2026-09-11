@@ -1,11 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { unlink } from "node:fs/promises";
-import path from "node:path";
 import { prisma } from "@/lib/db";
 import { slugify } from "@/lib/slug";
-import { saveUploadedImage } from "@/lib/uploads";
+import { saveUploadedImage, deleteUploadedImage } from "@/lib/uploads";
 import { requireAdmin } from "@/lib/require-admin";
 import type { ImageRole, ProductGender } from "@/generated/prisma/enums";
 
@@ -198,8 +196,7 @@ export async function deleteImage(imageId: string, productId: string) {
   });
   if (image) {
     await prisma.productImage.delete({ where: { id: imageId } });
-    const filePath = path.join(process.cwd(), "public", image.url);
-    await unlink(filePath).catch(() => {});
+    await deleteUploadedImage(image.url);
   }
   revalidatePath(`/admin/products/${productId}/variants`);
 }
