@@ -9,6 +9,7 @@ import {
   uploadColorImage,
   deleteImage,
   updateInventory,
+  updateColorSwatch,
 } from "./actions";
 
 const inputClass =
@@ -132,16 +133,34 @@ export default async function ProductVariantsPage({
                 key={color.id}
                 className="rounded-lg border border-soft-black/10 bg-white p-4"
               >
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-3">
                   {color.swatchHex ? (
                     <span
-                      className="h-4 w-4 rounded-full border border-soft-black/20"
+                      className="h-4 w-4 shrink-0 rounded-full border border-soft-black/20"
                       style={{ backgroundColor: color.swatchHex }}
                     />
                   ) : null}
                   <h3 className="text-sm font-semibold text-soft-black">
                     {color.value}
                   </h3>
+                  <form
+                    action={updateColorSwatch.bind(null, color.id, product.id)}
+                    className="flex items-center gap-2"
+                  >
+                    <input
+                      type="text"
+                      name="swatchHex"
+                      defaultValue={color.swatchHex ?? ""}
+                      placeholder="#4a1d2c"
+                      className={`${inputClass} w-28 py-1 text-xs`}
+                    />
+                    <button
+                      type="submit"
+                      className="shrink-0 rounded border border-soft-black/20 px-2 py-1 text-[10px] uppercase tracking-[0.08em] text-soft-black/70 hover:bg-soft-black/5"
+                    >
+                      Update Swatch
+                    </button>
+                  </form>
                 </div>
 
                 <div className="mt-3 flex flex-wrap gap-3">

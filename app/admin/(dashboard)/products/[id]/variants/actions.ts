@@ -86,6 +86,22 @@ export async function addColor(productId: string, formData: FormData) {
   revalidatePath(`/admin/products/${productId}/variants`);
 }
 
+export async function updateColorSwatch(
+  colorValueId: string,
+  productId: string,
+  formData: FormData,
+) {
+  await requireAdmin();
+  const swatchHex = String(formData.get("swatchHex") ?? "").trim() || null;
+
+  await prisma.productOptionValue.update({
+    where: { id: colorValueId },
+    data: { swatchHex },
+  });
+
+  revalidatePath(`/admin/products/${productId}/variants`);
+}
+
 export async function addSize(productId: string, formData: FormData) {
   await requireAdmin();
   const value = String(formData.get("value") ?? "").trim();
