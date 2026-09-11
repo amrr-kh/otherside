@@ -1,5 +1,7 @@
 "use client";
 
+import { CustomSelect } from "@/components/CustomSelect";
+
 export type ProductFormValues = {
   name: string;
   shortDescription: string;
@@ -142,16 +144,17 @@ export function ProductForm({
           <label htmlFor="gender" className={labelClass}>
             Gender
           </label>
-          <select
+          <CustomSelect
             id="gender"
             name="gender"
             defaultValue={values.gender}
-            className={inputClass}
-          >
-            <option value="UNISEX">Unisex</option>
-            <option value="WOMEN">Women</option>
-            <option value="MEN">Men</option>
-          </select>
+            theme="light"
+            options={[
+              { value: "UNISEX", label: "Unisex" },
+              { value: "WOMEN", label: "Women" },
+              { value: "MEN", label: "Men" },
+            ]}
+          />
         </div>
       </div>
 
@@ -195,16 +198,18 @@ export function ProductForm({
         <label htmlFor="status" className={labelClass}>
           Status
         </label>
-        <select
+        <CustomSelect
           id="status"
           name="status"
           defaultValue={values.status}
-          className={`${inputClass} max-w-40`}
-        >
-          <option value="DRAFT">Draft</option>
-          <option value="ACTIVE">Active</option>
-          <option value="ARCHIVED">Archived</option>
-        </select>
+          theme="light"
+          className="max-w-40"
+          options={[
+            { value: "DRAFT", label: "Draft" },
+            { value: "ACTIVE", label: "Active" },
+            { value: "ARCHIVED", label: "Archived" },
+          ]}
+        />
       </div>
 
       <div className="flex flex-wrap gap-6">

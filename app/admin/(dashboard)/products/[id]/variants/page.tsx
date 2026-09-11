@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { AutoSubmitFileInput } from "@/components/admin/AutoSubmitFileInput";
+import { CustomSelect } from "@/components/CustomSelect";
 import {
   addColor,
   addSize,
@@ -200,11 +201,17 @@ export default async function ProductVariantsPage({
                     <label className="mb-1 block text-xs text-soft-black/50">
                       Photos are for
                     </label>
-                    <select name="modelGender" defaultValue="" className={`${inputClass} w-36`}>
-                      <option value="">Unisex / Shared</option>
-                      <option value="MEN">Men</option>
-                      <option value="WOMEN">Women</option>
-                    </select>
+                    <CustomSelect
+                      name="modelGender"
+                      defaultValue=""
+                      theme="light"
+                      className="w-36"
+                      options={[
+                        { value: "", label: "Unisex / Shared" },
+                        { value: "MEN", label: "Men" },
+                        { value: "WOMEN", label: "Women" },
+                      ]}
+                    />
                   </div>
                   <div>
                     <label className="mb-1 block text-xs text-soft-black/50">

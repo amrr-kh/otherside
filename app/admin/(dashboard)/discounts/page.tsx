@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import { CustomSelect } from "@/components/CustomSelect";
 import {
   createDiscountCode,
   toggleDiscountCode,
@@ -128,10 +129,15 @@ export default async function AdminDiscountsPage() {
             <label className="mb-1 block text-xs text-soft-black/50">
               Type
             </label>
-            <select name="type" required defaultValue="PERCENT" className={inputClass}>
-              <option value="PERCENT">Percent off</option>
-              <option value="FIXED">Fixed amount off (EGP)</option>
-            </select>
+            <CustomSelect
+              name="type"
+              defaultValue="PERCENT"
+              theme="light"
+              options={[
+                { value: "PERCENT", label: "Percent off" },
+                { value: "FIXED", label: "Fixed amount off (EGP)" },
+              ]}
+            />
           </div>
           <div>
             <label className="mb-1 block text-xs text-soft-black/50">

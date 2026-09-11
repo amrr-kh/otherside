@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
+import { CustomSelect } from "@/components/CustomSelect";
 import {
   updateOrderStatus,
   setTrackingNumber,
@@ -216,17 +217,15 @@ export default async function AdminOrderDetailPage({
             action={updateOrderStatus.bind(null, order.id)}
             className="mt-3 flex flex-col gap-3"
           >
-            <select
+            <CustomSelect
               name="status"
               defaultValue={order.status}
-              className={inputClass}
-            >
-              {STATUS_OPTIONS.map((status) => (
-                <option key={status} value={status}>
-                  {status.replaceAll("_", " ")}
-                </option>
-              ))}
-            </select>
+              theme="light"
+              options={STATUS_OPTIONS.map((status) => ({
+                value: status,
+                label: status.replaceAll("_", " "),
+              }))}
+            />
             <input
               name="note"
               placeholder="Note for this status change (optional)"

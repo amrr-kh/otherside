@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { placeOrder, type PlaceOrderState } from "@/lib/actions/orders";
 import { checkPromoCode } from "@/lib/actions/promo";
+import { CustomSelect } from "@/components/CustomSelect";
 import type { CartLine } from "@/lib/storefront/cart";
 import type { ShippingZoneOption } from "@/lib/storefront/shipping";
 
@@ -148,23 +149,14 @@ export function CheckoutForm({
               <label className={labelClass} htmlFor="governorate">
                 {t("governorate")}
               </label>
-              <select
+              <CustomSelect
                 id="governorate"
                 name="governorate"
-                required
                 value={governorate}
-                onChange={(e) => setGovernorate(e.target.value)}
-                className={inputClass}
-              >
-                <option value="" disabled>
-                  {t("governoratePlaceholder")}
-                </option>
-                {governorateOptions.map((g) => (
-                  <option key={g} value={g}>
-                    {g}
-                  </option>
-                ))}
-              </select>
+                onChange={setGovernorate}
+                options={governorateOptions}
+                placeholder={t("governoratePlaceholder")}
+              />
             </div>
             <div>
               <label className={labelClass} htmlFor="city">
