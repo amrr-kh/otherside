@@ -101,6 +101,13 @@
     "body": "The page you're looking for doesn't exist yet, or has moved to the other side.",
     "cta": "Back to the Homepage"
   },
+  "errorPage": {
+    "eyebrow": "Something went wrong",
+    "heading": "We hit a snag.",
+    "body": "Something went wrong loading this page. Please try again in a moment.",
+    "retry": "Try Again",
+    "home": "Back to the Homepage"
+  },
   "productCard": {
     "addToWishlist": "Add to wishlist"
   },
@@ -271,6 +278,7 @@
     "errorOutOfStock": "One or more items in your bag are no longer available in that quantity.",
     "errorNoShippingZone": "We don't currently deliver to that governorate.",
     "errorInvalidPromo": "That promo code is no longer valid — remove it and try again.",
+    "errorConnectionError": "We couldn't connect to our order system for a moment. Please try again — your order has not been duplicated.",
     "errorGeneric": "Something went wrong placing your order. Please try again."
   },
   "orderConfirmation": {

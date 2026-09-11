@@ -256,6 +256,11 @@ model Order {
   // Atomic, concurrency-safe counter backing orderNumber (OS-10001 = seq 1).
   sequence         Int                  @unique @default(autoincrement())
   orderNumber      String               @unique
+  // One per checkout form render (see CheckoutForm). A DB-unique constraint
+  // is the actual guard against double orders — a retried/double-clicked
+  // submission with the same key hits this constraint and we return the
+  // order it already created instead of making a second one.
+  idempotencyKey   String               @unique
   customerId       String
   customer         Customer             @relation(fields: [customerId], references: [id])
   status           OrderStatus          @default(RECEIVED)

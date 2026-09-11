@@ -32,6 +32,11 @@ export function CheckoutForm({
     placeOrder,
     initialState,
   );
+  // One value for the whole lifetime of this form instance, so a
+  // double-click, a slow-network retry, or the browser resubmitting the
+  // same POST all carry the same key — the server treats a repeat of it as
+  // "already placed" instead of creating a second order.
+  const [idempotencyKey] = useState(() => crypto.randomUUID());
   const [governorate, setGovernorate] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<
     "COD" | "INSTAPAY" | "MOBILE_WALLET"
@@ -87,6 +92,7 @@ export function CheckoutForm({
 
   return (
     <form action={formAction} className="grid grid-cols-1 gap-12 md:grid-cols-[1.4fr_1fr]">
+      <input type="hidden" name="idempotencyKey" value={idempotencyKey} />
       <div>
         <h1 className="font-display text-3xl italic text-warm-white md:text-4xl">
           {t("heading")}
