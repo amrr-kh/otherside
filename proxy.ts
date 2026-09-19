@@ -20,9 +20,10 @@ export default function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // robots.txt, sitemap.xml and the social image are root-level files — the
-  // locale middleware would otherwise rewrite them into /en/... and 404 them.
+  // robots.txt, sitemap.xml, the social image and the site icons are root-level
+  // files — the locale middleware would otherwise rewrite them into /en/... and
+  // 404 them.
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|uploads/|robots.txt|sitemap.xml|opengraph-image|twitter-image).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|icon.png|apple-icon.png|uploads/|robots.txt|sitemap.xml|opengraph-image|twitter-image).*)",
   ],
 };
