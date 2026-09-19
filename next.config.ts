@@ -13,6 +13,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async headers() {
+    return [
+      {
+        source: "/api/:path*",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+    ];
+  },
   experimental: {
     serverActions: {
       // Default is 1MB, far too small for real product photos.

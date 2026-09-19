@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { publicPageMetadata } from "@/lib/seo-pages";
 import { getTranslations } from "next-intl/server";
 import { getSiteSettings } from "@/lib/site-settings";
 
@@ -37,4 +39,11 @@ export default async function ShippingPage() {
       </div>
     </div>
   );
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/shipping">): Promise<Metadata> {
+  const { locale } = await params;
+  return publicPageMetadata(locale, "/shipping", "shipping");
 }

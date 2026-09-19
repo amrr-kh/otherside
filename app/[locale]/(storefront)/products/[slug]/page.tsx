@@ -1,5 +1,19 @@
+import type { Metadata } from "next";
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
+import { JsonLd } from "@/components/JsonLd";
+import { normalizeCompareAtPrice } from "@/lib/pricing";
+import {
+  SITE_NAME,
+  absoluteImageUrl,
+  absoluteUrl,
+  buildOpenGraph,
+  buildTwitter,
+  localizedPath,
+  pageAlternates,
+  trimDescription,
+} from "@/lib/seo";
 import { getWishlistProductIds } from "@/lib/storefront/wishlist";
 import { ProductPageClient } from "@/components/storefront/product/ProductPageClient";
 import { ProductReviews } from "@/components/storefront/product/ProductReviews";
@@ -7,25 +21,71 @@ import type { ProductDetail } from "@/components/storefront/product/types";
 
 export const revalidate = 60;
 
+// Shared by generateMetadata and the page so one request runs one query.
+const getProduct = cache((slug: string) =>
+  prisma.product.findFirst({
+    where: { slug, status: "ACTIVE" },
+    include: {
+      category: true,
+      images: { orderBy: { sortOrder: "asc" } },
+      options: { include: { values: { orderBy: { sortOrder: "asc" } } } },
+      variants: { include: { optionValues: true, inventory: true } },
+    },
+  }),
+);
+
+function primaryImageUrl(
+  images: { url: string; isPrimary: boolean }[],
+): string | null {
+  const image = images.find((img) => img.isPrimary) ?? images[0];
+  return image ? absoluteImageUrl(image.url) : null;
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/products/[slug]">): Promise<Metadata> {
+  const { locale, slug } = await params;
+
+  let product: Awaited<ReturnType<typeof getProduct>> = null;
+  try {
+    product = await getProduct(slug);
+  } catch (error) {
+    console.error(`ProductPage(${slug}): metadata lookup failed`, error);
+  }
+  if (!product) return {};
+
+  const path = `/products/${slug}`;
+  const description = trimDescription(
+    product.shortDescription || product.fullDescription,
+  );
+  const image = primaryImageUrl(product.images);
+  const shareTitle = `${product.name} | ${SITE_NAME}`;
+
+  return {
+    title: product.name,
+    description,
+    alternates: pageAlternates(locale, path),
+    openGraph: buildOpenGraph({ locale, path, title: shareTitle, description, image }),
+    twitter: buildTwitter({ title: shareTitle, description, image }),
+    other: {
+      "product:price:amount": String(Number(product.basePrice)),
+      "product:price:currency": "EGP",
+    },
+  };
+}
+
 export default async function ProductPage({
   params,
   searchParams,
 }: PageProps<"/[locale]/products/[slug]">) {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const sp = await searchParams;
 
   let product;
   let wishlistedIds: Set<string>;
   try {
     [product, wishlistedIds] = await Promise.all([
-      prisma.product.findFirst({
-        where: { slug, status: "ACTIVE" },
-        include: {
-          images: { orderBy: { sortOrder: "asc" } },
-          options: { include: { values: { orderBy: { sortOrder: "asc" } } } },
-          variants: { include: { optionValues: true, inventory: true } },
-        },
-      }),
+      getProduct(slug),
       getWishlistProductIds(),
     ]);
   } catch (error) {
@@ -119,8 +179,77 @@ export default async function ProductPage({
   const initialGenderParam =
     rawGender === "MEN" || rawGender === "WOMEN" ? rawGender : undefined;
 
+  const price = Number(product.basePrice);
+  const originalPrice = normalizeCompareAtPrice(
+    price,
+    product.compareAtPrice == null ? null : Number(product.compareAtPrice),
+  );
+  const inStock = product.variants.some(
+    (v) => v.isActive && (v.inventory?.quantity ?? 0) > 0,
+  );
+  const productUrl = absoluteUrl(localizedPath(locale, `/products/${slug}`));
+  const imageUrls = product.images.map((img) => absoluteImageUrl(img.url));
+
+  // Only real database values: no ratings/reviews (approved reviews may be
+  // demo content), and price/availability mirror what the page itself shows.
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: trimDescription(product.fullDescription || product.shortDescription, 5000),
+    url: productUrl,
+    ...(imageUrls.length > 0 ? { image: imageUrls } : {}),
+    brand: { "@type": "Brand", name: SITE_NAME },
+    ...(product.material ? { material: product.material } : {}),
+    offers: {
+      "@type": "Offer",
+      url: productUrl,
+      price: price.toFixed(2),
+      priceCurrency: "EGP",
+      itemCondition: "https://schema.org/NewCondition",
+      availability: inStock
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+      ...(originalPrice !== null
+        ? {
+            priceSpecification: {
+              "@type": "UnitPriceSpecification",
+              price: originalPrice.toFixed(2),
+              priceCurrency: "EGP",
+              priceType: "https://schema.org/StrikethroughPrice",
+            },
+          }
+        : {}),
+    },
+  };
+
+  // Category pages exist only for these two categories, so only they are linked.
+  const categoryCrumb =
+    product.category && ["hoodies", "pants"].includes(product.category.slug)
+      ? {
+          name: product.category.name,
+          item: absoluteUrl(localizedPath(locale, `/${product.category.slug}`)),
+        }
+      : null;
+  const breadcrumbs = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { name: SITE_NAME, item: absoluteUrl(localizedPath(locale, "/")) },
+      ...(categoryCrumb ? [categoryCrumb] : []),
+      { name: product.name, item: productUrl },
+    ].map((crumb, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: crumb.name,
+      item: crumb.item,
+    })),
+  };
+
   return (
     <>
+      <JsonLd data={productJsonLd} />
+      <JsonLd data={breadcrumbs} />
       <ProductPageClient
         product={detail}
         initialGenderParam={initialGenderParam}

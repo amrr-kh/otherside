@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { CustomSelect } from "@/components/CustomSelect";
 
 export type ProductFormValues = {
@@ -51,6 +52,25 @@ export function ProductForm({
   submitLabel: string;
 }) {
   const values = { ...EMPTY_VALUES, ...defaultValues };
+  const [price, setPrice] = useState(String(values.basePrice || ""));
+  const [compareAt, setCompareAt] = useState(
+    values.compareAtPrice === null ? "" : String(values.compareAtPrice),
+  );
+
+  const priceNum = Number(price);
+  const compareAtNum = Number(compareAt);
+  const compareAtIgnored =
+    compareAt.trim() !== "" &&
+    Number.isFinite(compareAtNum) &&
+    Number.isFinite(priceNum) &&
+    compareAtNum <= priceNum;
+  const percentOff =
+    compareAt.trim() !== "" &&
+    Number.isFinite(compareAtNum) &&
+    priceNum > 0 &&
+    compareAtNum > priceNum
+      ? Math.round(((compareAtNum - priceNum) / compareAtNum) * 100)
+      : null;
 
   return (
     <form action={action} className="flex max-w-2xl flex-col gap-6">
@@ -95,36 +115,51 @@ export function ProductForm({
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="basePrice" className={labelClass}>
-            Price (EGP)
-          </label>
-          <input
-            id="basePrice"
-            name="basePrice"
-            type="number"
-            min={0}
-            step="0.01"
-            required
-            defaultValue={values.basePrice || ""}
-            className={inputClass}
-          />
+      <div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="basePrice" className={labelClass}>
+              Current Price (EGP)
+            </label>
+            <input
+              id="basePrice"
+              name="basePrice"
+              type="number"
+              min={0}
+              step="0.01"
+              required
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              className={inputClass}
+            />
+          </div>
+          <div>
+            <label htmlFor="compareAtPrice" className={labelClass}>
+              Original Price / Compare-at (EGP, optional)
+            </label>
+            <input
+              id="compareAtPrice"
+              name="compareAtPrice"
+              type="number"
+              min={0}
+              step="0.01"
+              value={compareAt}
+              onChange={(e) => setCompareAt(e.target.value)}
+              className={inputClass}
+            />
+          </div>
         </div>
-        <div>
-          <label htmlFor="compareAtPrice" className={labelClass}>
-            Compare-at Price (optional)
-          </label>
-          <input
-            id="compareAtPrice"
-            name="compareAtPrice"
-            type="number"
-            min={0}
-            step="0.01"
-            defaultValue={values.compareAtPrice ?? ""}
-            className={inputClass}
-          />
-        </div>
+        <p
+          className={`mt-2 text-xs ${
+            compareAtIgnored ? "text-magenta" : "text-soft-black/45"
+          }`}
+        >
+          {compareAtIgnored
+            ? "The original price must be higher than the current price — it will be ignored and no discount will show."
+            : percentOff !== null
+              ? `Customers will see the original price crossed out and “SAVE ${percentOff}%”.`
+              : "Current Price is what customers pay. Add an Original Price only to show a crossed-out discount price; leave it empty for no discount."}
+        </p>
       </div>
 
       <div className="grid grid-cols-2 gap-4">

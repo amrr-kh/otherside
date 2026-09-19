@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { privatePageMetadata } from "@/lib/seo-pages";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getWishlistProducts } from "@/lib/storefront/wishlist";
@@ -34,4 +36,11 @@ export default async function WishlistPage() {
       )}
     </div>
   );
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/wishlist">): Promise<Metadata> {
+  const { locale } = await params;
+  return privatePageMetadata(locale, "wishlist");
 }

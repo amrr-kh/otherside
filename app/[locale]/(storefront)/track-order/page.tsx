@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { privatePageMetadata } from "@/lib/seo-pages";
 import { getTranslations } from "next-intl/server";
 import { TrackOrderForm } from "@/components/storefront/TrackOrderForm";
 
@@ -21,4 +23,11 @@ export default async function TrackOrderPage() {
       </div>
     </div>
   );
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/track-order">): Promise<Metadata> {
+  const { locale } = await params;
+  return privatePageMetadata(locale, "trackOrder");
 }

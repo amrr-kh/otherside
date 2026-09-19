@@ -1,6 +1,7 @@
 import "server-only";
 import { prisma } from "@/lib/db";
 import { peekGuestId } from "@/lib/guest";
+import { normalizeCompareAtPrice } from "@/lib/pricing";
 
 export type CartLine = {
   id: string;
@@ -11,6 +12,8 @@ export type CartLine = {
   size: string;
   quantity: number;
   unitPrice: number;
+  /** Display-only original price; null unless it is genuinely higher than unitPrice. */
+  compareAtUnitPrice: number | null;
   imageUrl: string | null;
 };
 
@@ -52,6 +55,8 @@ export async function getCart(): Promise<{ items: CartLine[]; subtotal: number }
       ? product.images.filter((img) => img.colorOptionValueId === colorValue.id)
       : product.images;
 
+    const unitPrice = Number(item.priceSnapshot);
+
     return {
       id: item.id,
       variantId: variant.id,
@@ -60,7 +65,11 @@ export async function getCart(): Promise<{ items: CartLine[]; subtotal: number }
       color: colorValue?.value ?? "",
       size: sizeValue?.value ?? "",
       quantity: item.quantity,
-      unitPrice: Number(item.priceSnapshot),
+      unitPrice,
+      compareAtUnitPrice: normalizeCompareAtPrice(
+        unitPrice,
+        product.compareAtPrice == null ? null : Number(product.compareAtPrice),
+      ),
       imageUrl: images[0]?.url ?? null,
     };
   });

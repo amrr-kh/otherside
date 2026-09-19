@@ -8,6 +8,7 @@ import { Heart, ShoppingBag } from "lucide-react";
 import { slugify } from "@/lib/slug";
 import { toggleWishlist } from "@/lib/actions/wishlist";
 import { addToCart } from "@/lib/actions/cart";
+import { PriceDisplay } from "@/components/storefront/PriceDisplay";
 import type { ProductDetail } from "./types";
 
 type Gender = "MEN" | "WOMEN";
@@ -264,9 +265,13 @@ export function ProductPageClient({
             </button>
           </div>
 
-          <p className="mt-3 text-xl text-gold">
-            EGP {product.price.toLocaleString()}
-          </p>
+          <PriceDisplay
+            price={product.price}
+            compareAtPrice={product.compareAtPrice}
+            variant="detail"
+            showBadge
+            className="mt-3"
+          />
 
           <p className="mt-5 max-w-md text-sm leading-relaxed text-warm-white/60">
             {product.shortDescription}

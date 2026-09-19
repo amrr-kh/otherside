@@ -59,7 +59,7 @@ export default async function AdminCustomersPage() {
                     {customer.name}
                   </Link>
                   <span className="block text-xs text-soft-black/40">
-                    {customer.phone}
+                    {customer.phone ?? "—"}
                     {customer.email ? ` · ${customer.email}` : ""}
                   </span>
                 </td>

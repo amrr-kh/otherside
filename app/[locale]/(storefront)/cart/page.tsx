@@ -1,8 +1,11 @@
+import type { Metadata } from "next";
+import { privatePageMetadata } from "@/lib/seo-pages";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getCart } from "@/lib/storefront/cart";
 import { updateCartItemQuantity, removeCartItem } from "@/lib/actions/cart";
+import { PriceDisplay } from "@/components/storefront/PriceDisplay";
 
 export const revalidate = 0;
 
@@ -59,9 +62,15 @@ export default async function CartPage() {
                         {item.color} / {item.size}
                       </p>
                     </div>
-                    <span className="whitespace-nowrap text-sm text-gold">
-                      EGP {(item.unitPrice * item.quantity).toLocaleString()}
-                    </span>
+                    <PriceDisplay
+                      price={item.unitPrice * item.quantity}
+                      compareAtPrice={
+                        item.compareAtUnitPrice === null
+                          ? null
+                          : item.compareAtUnitPrice * item.quantity
+                      }
+                      variant="line"
+                    />
                   </div>
 
                   <div className="mt-4 flex items-center gap-4">
@@ -139,4 +148,11 @@ export default async function CartPage() {
       )}
     </div>
   );
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/cart">): Promise<Metadata> {
+  const { locale } = await params;
+  return privatePageMetadata(locale, "cart");
 }

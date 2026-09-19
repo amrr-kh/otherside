@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { privatePageMetadata } from "@/lib/seo-pages";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
@@ -167,4 +169,11 @@ export default async function OrderConfirmationPage({
       </div>
     </div>
   );
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/order-confirmation/[orderNumber]">): Promise<Metadata> {
+  const { locale } = await params;
+  return privatePageMetadata(locale, "orderConfirmation");
 }

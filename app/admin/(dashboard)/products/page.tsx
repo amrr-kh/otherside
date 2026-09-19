@@ -64,6 +64,12 @@ export default async function AdminProductsPage() {
                   </td>
                   <td className="px-5 py-3.5 text-soft-black/60">
                     EGP {Number(product.basePrice).toLocaleString()}
+                    {product.compareAtPrice &&
+                    Number(product.compareAtPrice) > Number(product.basePrice) ? (
+                      <s className="ml-2 text-xs text-soft-black/35">
+                        {Number(product.compareAtPrice).toLocaleString()}
+                      </s>
+                    ) : null}
                   </td>
                   <td className="px-5 py-3.5">
                     <span

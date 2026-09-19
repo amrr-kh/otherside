@@ -24,20 +24,41 @@ model AdminUser {
 }
 
 model Customer {
-  id           String            @id @default(cuid())
-  name         String
-  phone        String            @unique
-  email        String?
+  id            String                 @id @default(cuid())
+  name          String
+  // Null only for customers who signed in with Google and haven't given a
+  // delivery phone yet — checkout fills it in. Still unique when present.
+  phone         String?                @unique
+  email         String?
+  image         String?
   // Null until the customer opts into creating an account — checkout stays
   // guest-first, this only gets set via signup (either fresh or "claiming"
   // a phone number that already has guest order history).
-  passwordHash String?
-  addresses    Address[]
-  orders       Order[]
-  wishlist     Wishlist?
-  sessions     CustomerSession[]
-  createdAt    DateTime          @default(now())
-  updatedAt    DateTime          @updatedAt
+  passwordHash  String?
+  addresses     Address[]
+  orders        Order[]
+  wishlist      Wishlist?
+  sessions      CustomerSession[]
+  oauthAccounts CustomerOAuthAccount[]
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+}
+
+// One row per external sign-in identity (currently only Google). The pair
+// (provider, providerAccountId) is the stable identity — the email on it can
+// change, Google's "sub" cannot.
+model CustomerOAuthAccount {
+  id                String   @id @default(cuid())
+  customerId        String
+  customer          Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  provider          String
+  providerAccountId String
+  email             String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@unique([provider, providerAccountId])
+  @@index([customerId])
 }
 
 model CustomerSession {

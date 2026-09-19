@@ -84,3 +84,54 @@ html {
     transition: background-color 600000s 0s, color 600000s 0s;
   }
 }
+
+/* Link hub (/links): one entrance rise per block plus a single "behind the
+   veil" reveal on the tagline. Motion is opt-in, so reduced-motion visitors
+   (and no-CSS-animation environments) simply see the final state. */
+@keyframes hub-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hub-veil {
+  from {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0.3;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+
+@keyframes hub-veil-rtl {
+  from {
+    clip-path: inset(0 0 0 100%);
+    opacity: 0.3;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hub-rise {
+    animation: hub-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--hub-i, 0) * 60ms);
+  }
+
+  .hub-veil {
+    animation: hub-veil 1.3s cubic-bezier(0.65, 0, 0.35, 1) 0.4s both;
+  }
+
+  [dir="rtl"] .hub-veil {
+    animation-name: hub-veil-rtl;
+  }
+}

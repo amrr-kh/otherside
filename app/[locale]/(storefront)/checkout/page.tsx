@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { privatePageMetadata } from "@/lib/seo-pages";
 import { redirect } from "next/navigation";
 import { getCart } from "@/lib/storefront/cart";
 import { getActiveShippingZones } from "@/lib/storefront/shipping";
@@ -25,10 +27,17 @@ export default async function CheckoutPage() {
         zones={zones}
         prefill={
           session
-            ? { name: session.name, phone: session.phone, email: session.email ?? "" }
+            ? { name: session.name, phone: session.phone ?? "", email: session.email ?? "" }
             : undefined
         }
       />
     </div>
   );
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/checkout">): Promise<Metadata> {
+  const { locale } = await params;
+  return privatePageMetadata(locale, "checkout");
 }

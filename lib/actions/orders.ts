@@ -8,6 +8,8 @@ import { logEvent } from "@/lib/logger";
 import { notifyNewOrder } from "@/lib/notifications/notifyNewOrder";
 import { logOrderToSheet } from "@/lib/notifications/googleSheets";
 import { getOrCreateGuestId } from "@/lib/guest";
+import { getCustomerSession } from "@/lib/customer-session";
+import { resolveCheckoutCustomer } from "@/lib/checkout-customer";
 import type { PaymentMethod } from "@/generated/prisma/enums";
 import { Prisma } from "@/generated/prisma/client";
 
@@ -151,6 +153,7 @@ export async function placeOrder(
   const notes = required(formData, "notes");
   const paymentMethod = required(formData, "paymentMethod") as PaymentMethod;
   const promoCodeRaw = required(formData, "promoCode").toUpperCase();
+  const sessionCustomerId = (await getCustomerSession())?.id ?? null;
 
   if (!name || !phone || !governorate || !city || !street || !building) {
     return { status: "error", message: "missingFields" };
@@ -324,10 +327,11 @@ export async function placeOrder(
 
           const total = subtotal + shippingCost - discountAmount;
 
-          const customer = await tx.customer.upsert({
-            where: { phone },
-            update: { name, email: email || undefined },
-            create: { name, phone, email: email || undefined },
+          const customer = await resolveCheckoutCustomer(tx, {
+            sessionCustomerId,
+            name,
+            phone,
+            email,
           });
 
           await tx.address.create({

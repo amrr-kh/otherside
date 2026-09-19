@@ -50,7 +50,7 @@ export default async function AdminCustomerDetailPage({
       <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
         <div className="rounded-lg border border-soft-black/10 bg-white p-5">
           <h2 className="text-sm font-semibold text-soft-black">Contact</h2>
-          <p className="mt-3 text-sm text-soft-black/70">{customer.phone}</p>
+          <p className="mt-3 text-sm text-soft-black/70">{customer.phone ?? "—"}</p>
           {customer.email ? (
             <p className="text-sm text-soft-black/70">{customer.email}</p>
           ) : null}

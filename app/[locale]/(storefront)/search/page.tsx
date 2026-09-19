@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { privatePageMetadata } from "@/lib/seo-pages";
 import { getTranslations } from "next-intl/server";
 import { ProductCard } from "@/components/storefront/ProductCard";
 import { Unavailable } from "@/components/storefront/Unavailable";
@@ -53,4 +55,11 @@ export default async function SearchPage({
       )}
     </div>
   );
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/search">): Promise<Metadata> {
+  const { locale } = await params;
+  return privatePageMetadata(locale, "search");
 }

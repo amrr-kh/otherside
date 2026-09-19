@@ -9,7 +9,7 @@ const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
 export type CustomerSessionData = {
   id: string;
   name: string;
-  phone: string;
+  phone: string | null;
   email: string | null;
 };
 
@@ -33,8 +33,20 @@ export async function getCustomerSession(): Promise<CustomerSessionData | null> 
   };
 }
 
-/** Only call from a Server Action or Route Handler. */
-export async function createCustomerSession(customerId: string): Promise<void> {
+export const CUSTOMER_SESSION_COOKIE = SESSION_COOKIE;
+
+/** Creates the DB session and returns the cookie to set, without touching the response. */
+export async function issueCustomerSession(customerId: string): Promise<{
+  name: string;
+  value: string;
+  options: {
+    httpOnly: true;
+    sameSite: "lax";
+    secure: boolean;
+    path: string;
+    expires: Date;
+  };
+}> {
   const token = randomUUID();
   const expiresAt = new Date(Date.now() + SESSION_TTL_MS);
 
@@ -42,14 +54,24 @@ export async function createCustomerSession(customerId: string): Promise<void> {
     data: { token, customerId, expiresAt },
   });
 
+  return {
+    name: SESSION_COOKIE,
+    value: token,
+    options: {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      expires: expiresAt,
+    },
+  };
+}
+
+/** Only call from a Server Action or Route Handler. */
+export async function createCustomerSession(customerId: string): Promise<void> {
+  const cookie = await issueCustomerSession(customerId);
   const store = await cookies();
-  store.set(SESSION_COOKIE, token, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    expires: expiresAt,
-  });
+  store.set(cookie.name, cookie.value, cookie.options);
 }
 
 /** Only call from a Server Action or Route Handler. */

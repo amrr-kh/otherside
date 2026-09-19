@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { publicPageMetadata } from "@/lib/seo-pages";
 import { getLocale } from "next-intl/server";
 import { LegalPage, LegalSection } from "@/components/storefront/LegalPage";
 
@@ -365,4 +367,11 @@ export default async function TermsPage() {
       ))}
     </LegalPage>
   );
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/terms">): Promise<Metadata> {
+  const { locale } = await params;
+  return publicPageMetadata(locale, "/terms", "terms");
 }

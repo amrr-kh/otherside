@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { publicPageMetadata } from "@/lib/seo-pages";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getSiteSettings } from "@/lib/site-settings";
@@ -44,4 +46,11 @@ export default async function ContactPage() {
       </div>
     </div>
   );
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/contact">): Promise<Metadata> {
+  const { locale } = await params;
+  return publicPageMetadata(locale, "/contact", "contact");
 }

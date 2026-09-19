@@ -6,11 +6,14 @@ import { useTranslations } from "next-intl";
 import { Heart } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { PlaceholderPhoto } from "./PlaceholderPhoto";
+import { PriceDisplay } from "./PriceDisplay";
+import { getPercentOff } from "@/lib/pricing";
 
 export type ProductCardData = {
   slug: string;
   name: string;
   price: number;
+  compareAtPrice?: number | null;
   colors: string[];
   primaryImageUrl?: string | null;
   secondaryImageUrl?: string | null;
@@ -19,6 +22,8 @@ export type ProductCardData = {
 
 export function ProductCard({ product }: { product: ProductCardData }) {
   const t = useTranslations("productCard");
+  const tp = useTranslations("price");
+  const percentOff = getPercentOff(product.price, product.compareAtPrice);
   const [hovered, setHovered] = useState(false);
   const hasPhoto = Boolean(product.primaryImageUrl);
   const href = product.colorSlug
@@ -70,6 +75,11 @@ export function ProductCard({ product }: { product: ProductCardData }) {
             />
           </>
         )}
+        {percentOff !== null ? (
+          <span className="absolute start-3 top-3 bg-bg/85 px-2 py-1 text-[10px] font-medium uppercase tracking-[0.15em] text-gold backdrop-blur">
+            {tp("save", { percent: percentOff })}
+          </span>
+        ) : null}
         <button
           type="button"
           aria-label={t("addToWishlist")}
@@ -86,9 +96,11 @@ export function ProductCard({ product }: { product: ProductCardData }) {
             {product.colors.join(" / ")}
           </p>
         </div>
-        <span className="whitespace-nowrap text-sm text-gold">
-          EGP {product.price.toLocaleString()}
-        </span>
+        <PriceDisplay
+          price={product.price}
+          compareAtPrice={product.compareAtPrice}
+          variant="card"
+        />
       </div>
     </Link>
   );

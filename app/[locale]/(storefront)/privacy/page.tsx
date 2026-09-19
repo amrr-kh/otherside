@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { publicPageMetadata } from "@/lib/seo-pages";
 import { getLocale } from "next-intl/server";
 import { LegalPage, LegalSection } from "@/components/storefront/LegalPage";
 
@@ -257,4 +259,11 @@ export default async function PrivacyPage() {
       ))}
     </LegalPage>
   );
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/privacy">): Promise<Metadata> {
+  const { locale } = await params;
+  return publicPageMetadata(locale, "/privacy", "privacy");
 }

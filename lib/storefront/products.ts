@@ -1,10 +1,13 @@
 import { prisma } from "@/lib/db";
 import { slugify } from "@/lib/slug";
+import { normalizeCompareAtPrice } from "@/lib/pricing";
 
 export type StorefrontProduct = {
   slug: string;
   name: string;
   price: number;
+  /** Original price, set only when it is genuinely higher than `price`. */
+  compareAtPrice: number | null;
   colors: string[];
   primaryImageUrl: string | null;
   secondaryImageUrl: string | null;
@@ -23,10 +26,18 @@ type ProductWithMedia = {
   slug: string;
   name: string;
   basePrice: unknown;
+  compareAtPrice?: unknown;
   status?: string;
   images: { url: string; colorOptionValueId: string; sortOrder: number; role: string }[];
   options: { name: string; values: { id: string; value: string; swatchHex: string | null }[] }[];
 };
+
+function comparePriceOf(product: ProductWithMedia): number | null {
+  return normalizeCompareAtPrice(
+    Number(product.basePrice),
+    product.compareAtPrice == null ? null : Number(product.compareAtPrice),
+  );
+}
 
 export function toStorefrontProduct(product: ProductWithMedia): StorefrontProduct {
   const colorOption = product.options.find((o) => o.name === "Color");
@@ -41,6 +52,7 @@ export function toStorefrontProduct(product: ProductWithMedia): StorefrontProduc
     slug: product.slug,
     name: product.name,
     price: Number(product.basePrice),
+    compareAtPrice: comparePriceOf(product),
     colors,
     primaryImageUrl: firstColorImages[0]?.url ?? null,
     secondaryImageUrl:
@@ -64,6 +76,7 @@ export function toStorefrontProductsByColor(
       slug: product.slug,
       name: product.name,
       price: Number(product.basePrice),
+      compareAtPrice: comparePriceOf(product),
       colors: [color.value],
       primaryImageUrl: images[0]?.url ?? null,
       secondaryImageUrl: images[1]?.url ?? images[0]?.url ?? null,

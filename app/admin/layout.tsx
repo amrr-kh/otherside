@@ -11,6 +11,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "OtherSide Admin",
+  robots: { index: false, follow: false },
 };
 
 export default function AdminRootLayout({

@@ -1,15 +1,29 @@
+import type { Metadata } from "next";
+import { privatePageMetadata } from "@/lib/seo-pages";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getCustomerSession } from "@/lib/customer-session";
 import { logOut } from "@/lib/actions/account";
 import { prisma } from "@/lib/db";
 import { AccountAuthForms } from "@/components/storefront/account/AccountAuthForms";
+import { isGoogleAuthConfigured } from "@/lib/google-oauth";
 
 export const revalidate = 0;
 
-export default async function AccountPage() {
+export default async function AccountPage({
+  searchParams,
+}: PageProps<"/[locale]/account">) {
+  const sp = await searchParams;
+  const authError = typeof sp.authError === "string" ? sp.authError : undefined;
+  const forms = (
+    <AccountAuthForms
+      googleEnabled={isGoogleAuthConfigured()}
+      authError={authError}
+    />
+  );
+
   const session = await getCustomerSession();
-  if (!session) return <AccountAuthForms />;
+  if (!session) return forms;
 
   const t = await getTranslations("account");
 
@@ -20,7 +34,7 @@ export default async function AccountPage() {
       addresses: { orderBy: { createdAt: "desc" } },
     },
   });
-  if (!customer) return <AccountAuthForms />;
+  if (!customer) return forms;
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-16 md:px-10 md:py-24">
@@ -44,9 +58,11 @@ export default async function AccountPage() {
       </div>
 
       <div className="mt-10 border-t border-warm-white/10 pt-6 text-sm text-warm-white/60">
-        <p dir="ltr" className="inline-block">
-          {customer.phone}
-        </p>
+        {customer.phone ? (
+          <p dir="ltr" className="inline-block">
+            {customer.phone}
+          </p>
+        ) : null}
         {customer.email ? <p>{customer.email}</p> : null}
       </div>
 
@@ -109,4 +125,11 @@ export default async function AccountPage() {
       ) : null}
     </div>
   );
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/account">): Promise<Metadata> {
+  const { locale } = await params;
+  return privatePageMetadata(locale, "account");
 }

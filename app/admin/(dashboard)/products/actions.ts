@@ -2,12 +2,18 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { unlink } from "node:fs/promises";
-import path from "node:path";
 import { prisma } from "@/lib/db";
 import { slugify } from "@/lib/slug";
+import { deleteUploadedImage } from "@/lib/uploads";
 import { requireAdmin } from "@/lib/require-admin";
 import type { ProductGender, ProductStatus } from "@/generated/prisma/enums";
+
+// Prices, status and new products all show on cached storefront pages and in
+// the sitemap, so any product change refreshes both right away.
+function revalidateStorefront() {
+  revalidatePath("/[locale]", "layout");
+  revalidatePath("/sitemap.xml");
+}
 
 async function uniqueSlug(name: string, excludeId?: string) {
   const base = slugify(name) || "product";
@@ -44,7 +50,7 @@ function readProductFields(formData: FormData) {
   const fullDescription = String(formData.get("fullDescription") ?? "").trim();
   const basePrice = Number(formData.get("basePrice"));
   const compareAtPriceRaw = formData.get("compareAtPrice");
-  const compareAtPrice =
+  const compareAtPriceParsed =
     typeof compareAtPriceRaw === "string" && compareAtPriceRaw.trim() !== ""
       ? Number(compareAtPriceRaw)
       : null;
@@ -63,6 +69,18 @@ function readProductFields(formData: FormData) {
   if (!Number.isFinite(basePrice) || basePrice < 0) {
     throw new Error("Price must be a valid non-negative number.");
   }
+  if (
+    compareAtPriceParsed !== null &&
+    (!Number.isFinite(compareAtPriceParsed) || compareAtPriceParsed < 0)
+  ) {
+    throw new Error("Original price must be a valid non-negative number.");
+  }
+  // An original price that isn't higher than the current price would be a
+  // fake "sale", so it's stored as no discount at all.
+  const compareAtPrice =
+    compareAtPriceParsed !== null && compareAtPriceParsed > basePrice
+      ? compareAtPriceParsed
+      : null;
 
   return {
     name,
@@ -92,6 +110,7 @@ export async function createProduct(formData: FormData) {
   });
 
   revalidatePath("/admin/products");
+  revalidateStorefront();
   redirect("/admin/products");
 }
 
@@ -107,6 +126,7 @@ export async function updateProduct(productId: string, formData: FormData) {
   });
 
   revalidatePath("/admin/products");
+  revalidateStorefront();
   redirect("/admin/products");
 }
 
@@ -120,6 +140,7 @@ export async function setProductStatus(
     data: { status },
   });
   revalidatePath("/admin/products");
+  revalidateStorefront();
 }
 
 export async function deleteProduct(productId: string) {
@@ -141,9 +162,10 @@ export async function deleteProduct(productId: string) {
 
   await Promise.all(
     product.images.map((image) =>
-      unlink(path.join(process.cwd(), "public", image.url)).catch(() => {}),
+      deleteUploadedImage(image.url).catch(() => {}),
     ),
   );
 
   revalidatePath("/admin/products");
+  revalidateStorefront();
 }

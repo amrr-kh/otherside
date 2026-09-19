@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { publicPageMetadata } from "@/lib/seo-pages";
 import { getLocale, getTranslations } from "next-intl/server";
 
 export default async function StoryPage() {
@@ -132,4 +134,11 @@ export default async function StoryPage() {
       </div>
     </div>
   );
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/story">): Promise<Metadata> {
+  const { locale } = await params;
+  return publicPageMetadata(locale, "/story", "story");
 }
