@@ -5,6 +5,7 @@ import { getMessages, getTranslations, setRequestLocale } from "next-intl/server
 import { notFound } from "next/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import { getSiteUrl } from "@/lib/site-url";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { SITE_NAME, absoluteUrl, DEFAULT_SHARE_IMAGE_PATH } from "@/lib/seo";
 import "../globals.css";
 
@@ -94,6 +95,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>
+        <GoogleAnalytics />
       </body>
     </html>
   );
