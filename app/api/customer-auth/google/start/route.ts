@@ -26,8 +26,17 @@ export function GET(request: NextRequest) {
       hasClientId: Boolean(process.env.GOOGLE_CLIENT_ID?.trim()),
       hasClientSecret: Boolean(process.env.GOOGLE_CLIENT_SECRET?.trim()),
     });
+    const missing = [
+      process.env.GOOGLE_CLIENT_ID?.trim() ? null : "id",
+      process.env.GOOGLE_CLIENT_SECRET?.trim() ? null : "secret",
+    ]
+      .filter(Boolean)
+      .join("+");
     return NextResponse.redirect(
-      new URL(withParam(next, "authError", "unavailable"), getSiteUrl()),
+      new URL(
+        withParam(withParam(next, "authError", "unavailable"), "missing", missing),
+        getSiteUrl(),
+      ),
     );
   }
 
