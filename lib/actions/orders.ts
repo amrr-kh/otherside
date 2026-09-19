@@ -11,6 +11,10 @@ import { getOrCreateGuestId } from "@/lib/guest";
 import { getCustomerSession } from "@/lib/customer-session";
 import { resolveCheckoutCustomer } from "@/lib/checkout-customer";
 import { saveAddressIfNew } from "@/lib/customer-addresses";
+import {
+  fetchLivePercentPromotions,
+  unitPricesForVariants,
+} from "@/lib/promotion-pricing";
 import type { PaymentMethod } from "@/generated/prisma/enums";
 import { Prisma } from "@/generated/prisma/client";
 
@@ -19,6 +23,21 @@ export type PlaceOrderState =
   | { status: "error"; message: string };
 
 const EGYPT_PHONE_RE = /^01[0125][0-9]{8}$/;
+
+// Live limited-offer percentages, judged by the server's clock at the moment
+// the order is written, using the same rule the cart displayed. Read before the
+// transaction so a missing table (a deploy that runs ahead of its migration)
+// can never abort the order; any other failure is real and is not hidden.
+async function loadLivePromotionsForCheckout() {
+  try {
+    return await fetchLivePercentPromotions(prisma);
+  } catch (error) {
+    if (error instanceof Error && /does not exist/i.test(error.message)) {
+      return [];
+    }
+    throw error;
+  }
+}
 
 // Business-rule failures inside the order transaction (out of stock, a
 // promo code that just got used up, an unknown shipping zone) — distinct
@@ -251,6 +270,7 @@ export async function placeOrder(
     shippingCost: number;
     discountAmount: number;
   }> {
+    const livePromotions = await loadLivePromotionsForCheckout();
     try {
       const result = await prisma.$transaction(
         async (tx) => {
@@ -263,7 +283,9 @@ export async function placeOrder(
             cartItems.map((item) =>
               tx.productVariant.findUniqueOrThrow({
                 where: { id: item.variant.id },
-                include: { product: true },
+                include: {
+                  product: { include: { collections: { select: { id: true } } } },
+                },
               }),
             ),
           );
@@ -272,11 +294,13 @@ export async function placeOrder(
             if (!variant.isActive) throw new OrderValidationError("outOfStock");
           }
 
-          const unitPriceByVariantId = new Map(
-            freshVariants.map((v) => [
-              v.id,
-              Number(v.priceOverride ?? v.product.basePrice),
-            ]),
+          // The unit price is the database price, lowered by a live
+          // limited-offer percentage if one covers this product right now.
+          // Everything below (subtotal, free-shipping threshold, promo code,
+          // the order lines) is derived from these prices.
+          const unitPriceByVariantId = unitPricesForVariants(
+            freshVariants,
+            livePromotions,
           );
 
           const subtotal = cartItems.reduce(

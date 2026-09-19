@@ -369,6 +369,20 @@
     "sale": "Sale price",
     "save": "SAVE {percent}%"
   },
+  "promotion": {
+    "endsIn": "Ends in",
+    "productEndsIn": "Limited offer ends in",
+    "days": "Days",
+    "hours": "Hrs",
+    "minutes": "Min",
+    "seconds": "Sec",
+    "daysShort": "D",
+    "hoursShort": "H",
+    "minutesShort": "M",
+    "secondsShort": "S",
+    "endsAria": "Limited offer ends {when} Cairo time.",
+    "percentOff": "{percent}% OFF"
+  },
   "meta": {
     "homeTitle": "OtherSide | Premium Unisex Fashion in Egypt",
     "homeDescription": "Discover OtherSide — premium unisex hoodies and wide-leg pants designed for comfort, individuality and a different perspective. Shop online in Egypt.",

@@ -369,6 +369,20 @@
     "sale": "سعر التخفيض",
     "save": "وفّر {percent}٪"
   },
+  "promotion": {
+    "endsIn": "ينتهي خلال",
+    "productEndsIn": "ينتهي العرض المحدود خلال",
+    "days": "أيام",
+    "hours": "ساعات",
+    "minutes": "دقائق",
+    "seconds": "ثوانٍ",
+    "daysShort": "ي",
+    "hoursShort": "س",
+    "minutesShort": "د",
+    "secondsShort": "ث",
+    "endsAria": "ينتهي العرض المحدود في {when} بتوقيت القاهرة.",
+    "percentOff": "خصم {percent}٪"
+  },
   "meta": {
     "homeTitle": "OtherSide | أزياء فاخرة للجنسين في مصر",
     "homeDescription": "اكتشف OtherSide — هوديز وبناطيل واسعة الساق فاخرة للجنسين، مصممة للراحة والتفرّد ووجهة نظر مختلفة. تسوّق أونلاين في مصر.",

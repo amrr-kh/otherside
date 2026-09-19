@@ -3,7 +3,10 @@ import { cache } from "react";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { JsonLd } from "@/components/JsonLd";
-import { normalizeCompareAtPrice } from "@/lib/pricing";
+import {
+  getLivePercentPromotions,
+  pricedForDisplay,
+} from "@/lib/promotion-pricing";
 import {
   SITE_NAME,
   absoluteImageUrl,
@@ -15,6 +18,12 @@ import {
   trimDescription,
 } from "@/lib/seo";
 import { getWishlistProductIds } from "@/lib/storefront/wishlist";
+import { getTranslations } from "next-intl/server";
+import {
+  getActivePromotions,
+  pickProductPromotion,
+  toPromotionView,
+} from "@/lib/promotions";
 import { ProductPageClient } from "@/components/storefront/product/ProductPageClient";
 import { ProductReviews } from "@/components/storefront/product/ProductReviews";
 import type { ProductDetail } from "@/components/storefront/product/types";
@@ -27,6 +36,7 @@ const getProduct = cache((slug: string) =>
     where: { slug, status: "ACTIVE" },
     include: {
       category: true,
+      collections: { select: { id: true } },
       images: { orderBy: { sortOrder: "asc" } },
       options: { include: { values: { orderBy: { sortOrder: "asc" } } } },
       variants: { include: { optionValues: true, inventory: true } },
@@ -60,6 +70,8 @@ export async function generateMetadata({
   );
   const image = primaryImageUrl(product.images);
   const shareTitle = `${product.name} | ${SITE_NAME}`;
+  // Same price the page itself shows, including any live limited-offer percent.
+  const priced = pricedForDisplay(await getLivePercentPromotions(), product);
 
   return {
     title: product.name,
@@ -68,7 +80,7 @@ export async function generateMetadata({
     openGraph: buildOpenGraph({ locale, path, title: shareTitle, description, image }),
     twitter: buildTwitter({ title: shareTitle, description, image }),
     other: {
-      "product:price:amount": String(Number(product.basePrice)),
+      "product:price:amount": String(priced.price),
       "product:price:currency": "EGP",
     },
   };
@@ -123,14 +135,16 @@ export default async function ProductPage({
   const colors = colorOption?.values ?? [];
   const sizes = sizeOption?.values ?? [];
 
+  const priced = pricedForDisplay(await getLivePercentPromotions(), product);
+
   const detail: ProductDetail = {
     id: product.id,
     name: product.name,
     slug: product.slug,
     shortDescription: product.shortDescription,
     fullDescription: product.fullDescription,
-    price: Number(product.basePrice),
-    compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
+    price: priced.price,
+    compareAtPrice: priced.compareAtPrice,
     material: product.material,
     fit: product.fit,
     care: product.care,
@@ -179,11 +193,8 @@ export default async function ProductPage({
   const initialGenderParam =
     rawGender === "MEN" || rawGender === "WOMEN" ? rawGender : undefined;
 
-  const price = Number(product.basePrice);
-  const originalPrice = normalizeCompareAtPrice(
-    price,
-    product.compareAtPrice == null ? null : Number(product.compareAtPrice),
-  );
+  const price = priced.price;
+  const originalPrice = priced.compareAtPrice;
   const inStock = product.variants.some(
     (v) => v.isActive && (v.inventory?.quantity ?? 0) > 0,
   );
@@ -206,6 +217,11 @@ export default async function ProductPage({
       url: productUrl,
       price: price.toFixed(2),
       priceCurrency: "EGP",
+      // A limited-offer price is only valid until the offer ends. This is the
+      // fixed end instant, not a ticking value.
+      ...(priced.validUntil
+        ? { priceValidUntil: priced.validUntil.toISOString() }
+        : {}),
       itemCondition: "https://schema.org/NewCondition",
       availability: inStock
         ? "https://schema.org/InStock"
@@ -246,11 +262,25 @@ export default async function ProductPage({
     })),
   };
 
+  // Small countdown near the price, only when a live/upcoming promotion
+  // applies to this product. Never used for SEO data above.
+  const tPromotion = await getTranslations("promotion");
+  const productPromotion = pickProductPromotion(await getActivePromotions(), {
+    productId: product.id,
+    collectionIds: product.collections.map((c) => c.id),
+  });
+  const promotionView = productPromotion
+    ? toPromotionView(productPromotion, locale, (when) =>
+        tPromotion("endsAria", { when }),
+      )
+    : null;
+
   return (
     <>
       <JsonLd data={productJsonLd} />
       <JsonLd data={breadcrumbs} />
       <ProductPageClient
+        promotion={promotionView}
         product={detail}
         initialGenderParam={initialGenderParam}
         preferredGender={

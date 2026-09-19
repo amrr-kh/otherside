@@ -1,8 +1,15 @@
 import { Header } from "@/components/storefront/Header";
 import { Footer } from "@/components/storefront/Footer";
 import { AnnouncementBanner } from "@/components/storefront/AnnouncementBanner";
+import { PromotionBar } from "@/components/storefront/promotion/PromotionBar";
+import { getLocale, getTranslations } from "next-intl/server";
 import { getCartItemCount } from "@/lib/storefront/cart";
 import { getSiteSettings } from "@/lib/site-settings";
+import {
+  getActivePromotions,
+  pickTopBarPromotion,
+  toPromotionView,
+} from "@/lib/promotions";
 
 export default async function StorefrontLayout({
   children,
@@ -28,8 +35,22 @@ export default async function StorefrontLayout({
 
   const settings = await getSiteSettings();
 
+  // Limited-offer countdown: only exists when an admin switched a promotion on.
+  const [locale, tPromotion, promotions] = await Promise.all([
+    getLocale(),
+    getTranslations("promotion"),
+    getActivePromotions(),
+  ]);
+  const topBarPromotion = pickTopBarPromotion(promotions);
+  const topBar = topBarPromotion
+    ? toPromotionView(topBarPromotion, locale, (when) =>
+        tPromotion("endsAria", { when }),
+      )
+    : null;
+
   return (
     <>
+      {topBar ? <PromotionBar promotion={topBar} /> : null}
       {settings.bannerEnabled && settings.bannerText ? (
         <AnnouncementBanner
           text={settings.bannerText}

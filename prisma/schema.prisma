@@ -120,14 +120,15 @@ model Category {
 }
 
 model Collection {
-  id          String    @id @default(cuid())
+  id          String      @id @default(cuid())
   name        String
-  slug        String    @unique
+  slug        String      @unique
   description String?
   image       String?
-  isNewDrop   Boolean   @default(false)
-  sortOrder   Int       @default(0)
-  products    Product[] @relation("ProductCollections")
+  isNewDrop   Boolean     @default(false)
+  sortOrder   Int         @default(0)
+  products    Product[]   @relation("ProductCollections")
+  promotions  Promotion[] @relation("PromotionCollections")
 }
 
 model Product {
@@ -149,6 +150,7 @@ model Product {
   categoryId       String?
   category         Category?        @relation(fields: [categoryId], references: [id])
   collections      Collection[]     @relation("ProductCollections")
+  promotions       Promotion[]      @relation("PromotionProducts")
   options          ProductOption[]
   variants         ProductVariant[]
   images           ProductImage[]
@@ -401,6 +403,49 @@ model NewsletterSubscriber {
   id           String   @id @default(cuid())
   email        String   @unique
   subscribedAt DateTime @default(now())
+}
+
+// ---------- Limited-time promotions ----------
+
+enum PromotionScope {
+  STORE
+  COLLECTIONS
+  PRODUCTS
+}
+
+// A genuine, time-limited offer shown as a countdown. startsAt/endsAt are
+// absolute instants (UTC in the database); the admin enters them in Cairo
+// time. By default it is messaging only. When discountPercent is set, prices of
+// the products in scope drop by that percent while the offer is live — computed
+// on the fly, never written into Product.basePrice / compareAtPrice.
+model Promotion {
+  id                 String         @id @default(cuid())
+  isActive           Boolean        @default(false)
+  title              String
+  message            String?
+  ctaText            String
+  ctaUrl             String
+  // Optional Arabic copy; falls back to the English fields when empty.
+  titleAr            String?
+  messageAr          String?
+  ctaTextAr          String?
+  startsAt           DateTime
+  endsAt             DateTime
+  showTopBar         Boolean        @default(true)
+  showOnProductPages Boolean        @default(true)
+  // Optional whole-number percent off (1-90) applied to products in scope
+  // while the offer is live. Null = no price change at all.
+  discountPercent    Int?
+  // STORE = every product; otherwise only the linked collections / products
+  // get the product-page timer and the percent discount. The top bar is
+  // store-wide either way.
+  scope              PromotionScope @default(STORE)
+  products           Product[]      @relation("PromotionProducts")
+  collections        Collection[]   @relation("PromotionCollections")
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  @@index([isActive, endsAt])
 }
 
 // ---------- Site content ----------

@@ -6,6 +6,7 @@ export const NAV_SECTIONS = [
   { href: "/admin/orders", label: "Orders" },
   { href: "/admin/customers", label: "Customers" },
   { href: "/admin/discounts", label: "Discount Codes" },
+  { href: "/admin/promotions", label: "Limited Offer" },
   { href: "/admin/shipping", label: "Shipping" },
   { href: "/admin/reviews", label: "Reviews" },
   { href: "/admin/content", label: "Content" },

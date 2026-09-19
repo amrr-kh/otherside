@@ -1,6 +1,7 @@
 import "server-only";
 import { prisma } from "@/lib/db";
 import { peekGuestId } from "@/lib/guest";
+import { getLivePercentPromotions } from "@/lib/promotion-pricing";
 import type { StorefrontProduct } from "./products";
 import { toStorefrontProduct, productMediaInclude } from "./products";
 
@@ -30,7 +31,8 @@ export async function getWishlistProducts(): Promise<StorefrontProduct[]> {
   });
   if (!wishlist) return [];
 
+  const promotions = await getLivePercentPromotions();
   return wishlist.items
     .filter((item) => item.product.status === "ACTIVE")
-    .map((item) => toStorefrontProduct(item.product));
+    .map((item) => toStorefrontProduct(item.product, promotions));
 }

@@ -1,7 +1,10 @@
 import "server-only";
 import { prisma } from "@/lib/db";
 import { peekGuestId } from "@/lib/guest";
-import { normalizeCompareAtPrice } from "@/lib/pricing";
+import {
+  getLivePercentPromotions,
+  pricedForDisplay,
+} from "@/lib/promotion-pricing";
 
 export type CartLine = {
   id: string;
@@ -33,6 +36,7 @@ export async function getCart(): Promise<{ items: CartLine[]; subtotal: number }
                 include: {
                   images: true,
                   options: { include: { values: true } },
+                  collections: { select: { id: true } },
                 },
               },
               optionValues: true,
@@ -43,6 +47,10 @@ export async function getCart(): Promise<{ items: CartLine[]; subtotal: number }
     },
   });
   if (!cart) return { items: [], subtotal: 0 };
+
+  // A live limited-offer percentage lowers the price shown here, exactly the
+  // way checkout will charge it (both use lib/pricing's applyPercentOff).
+  const promotions = await getLivePercentPromotions();
 
   const items: CartLine[] = cart.items.map((item) => {
     const { variant } = item;
@@ -55,7 +63,14 @@ export async function getCart(): Promise<{ items: CartLine[]; subtotal: number }
       ? product.images.filter((img) => img.colorOptionValueId === colorValue.id)
       : product.images;
 
-    const unitPrice = Number(item.priceSnapshot);
+    // The cart remembers the price when the item was added; the offer (if
+    // any) is applied on top of that, and the original stays visible.
+    const { price: unitPrice, compareAtPrice } = pricedForDisplay(promotions, {
+      id: product.id,
+      collections: product.collections,
+      basePrice: item.priceSnapshot,
+      compareAtPrice: product.compareAtPrice,
+    });
 
     return {
       id: item.id,
@@ -66,10 +81,7 @@ export async function getCart(): Promise<{ items: CartLine[]; subtotal: number }
       size: sizeValue?.value ?? "",
       quantity: item.quantity,
       unitPrice,
-      compareAtUnitPrice: normalizeCompareAtPrice(
-        unitPrice,
-        product.compareAtPrice == null ? null : Number(product.compareAtPrice),
-      ),
+      compareAtUnitPrice: compareAtPrice,
       imageUrl: images[0]?.url ?? null,
     };
   });

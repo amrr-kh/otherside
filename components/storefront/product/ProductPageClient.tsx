@@ -9,6 +9,8 @@ import { slugify } from "@/lib/slug";
 import { toggleWishlist } from "@/lib/actions/wishlist";
 import { addToCart } from "@/lib/actions/cart";
 import { PriceDisplay } from "@/components/storefront/PriceDisplay";
+import { PromotionProductTimer } from "@/components/storefront/promotion/PromotionProductTimer";
+import type { PromotionView } from "@/lib/promotion-shared";
 import type { ProductDetail } from "./types";
 
 type Gender = "MEN" | "WOMEN";
@@ -20,7 +22,9 @@ export function ProductPageClient({
   initialGenderParam,
   preferredGender,
   initiallyWishlisted,
+  promotion = null,
 }: {
+  promotion?: PromotionView | null;
   product: ProductDetail;
   initialColorParam?: string;
   initialSizeParam?: string;
@@ -272,6 +276,10 @@ export function ProductPageClient({
             showBadge
             className="mt-3"
           />
+
+          {promotion ? (
+            <PromotionProductTimer promotion={promotion} className="mt-4 max-w-md" />
+          ) : null}
 
           <p className="mt-5 max-w-md text-sm leading-relaxed text-warm-white/60">
             {product.shortDescription}

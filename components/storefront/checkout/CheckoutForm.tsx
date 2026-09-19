@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { placeOrder, type PlaceOrderState } from "@/lib/actions/orders";
 import { checkPromoCode } from "@/lib/actions/promo";
 import { CustomSelect } from "@/components/CustomSelect";
+import { PriceDisplay } from "@/components/storefront/PriceDisplay";
 import type { CartLine } from "@/lib/storefront/cart";
 import type { ShippingZoneOption } from "@/lib/storefront/shipping";
 import type { SavedAddress } from "@/components/storefront/account/AddressBook";
@@ -446,9 +447,15 @@ export function CheckoutForm({
                     {item.color} / {item.size} × {item.quantity}
                   </p>
                 </div>
-                <span className="whitespace-nowrap text-xs text-gold">
-                  EGP {(item.unitPrice * item.quantity).toLocaleString()}
-                </span>
+                <PriceDisplay
+                  price={item.unitPrice * item.quantity}
+                  compareAtPrice={
+                    item.compareAtUnitPrice === null
+                      ? null
+                      : item.compareAtUnitPrice * item.quantity
+                  }
+                  variant="line"
+                />
               </div>
             </div>
           ))}
