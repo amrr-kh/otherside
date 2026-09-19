@@ -16,6 +16,10 @@ export default async function EditProductPage({
 
   if (!product) notFound();
 
+  const onSale =
+    product.compareAtPrice !== null &&
+    Number(product.compareAtPrice) > Number(product.basePrice);
+
   return (
     <div>
       <Link
@@ -36,10 +40,12 @@ export default async function EditProductPage({
             name: product.name,
             shortDescription: product.shortDescription,
             fullDescription: product.fullDescription,
-            basePrice: Number(product.basePrice),
-            compareAtPrice: product.compareAtPrice
+            // Stored as basePrice (what customers pay) + compareAtPrice (the
+            // higher original). On a sale the original is the "regular" price.
+            regularPrice: onSale
               ? Number(product.compareAtPrice)
-              : null,
+              : Number(product.basePrice),
+            salePrice: onSale ? Number(product.basePrice) : null,
             categoryName: product.category?.name ?? "",
             gender: product.gender,
             status: product.status,

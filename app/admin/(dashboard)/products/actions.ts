@@ -48,11 +48,11 @@ function readProductFields(formData: FormData) {
   const name = String(formData.get("name") ?? "").trim();
   const shortDescription = String(formData.get("shortDescription") ?? "").trim();
   const fullDescription = String(formData.get("fullDescription") ?? "").trim();
-  const basePrice = Number(formData.get("basePrice"));
-  const compareAtPriceRaw = formData.get("compareAtPrice");
-  const compareAtPriceParsed =
-    typeof compareAtPriceRaw === "string" && compareAtPriceRaw.trim() !== ""
-      ? Number(compareAtPriceRaw)
+  const regularPrice = Number(formData.get("regularPrice"));
+  const salePriceRaw = formData.get("salePrice");
+  const salePrice =
+    typeof salePriceRaw === "string" && salePriceRaw.trim() !== ""
+      ? Number(salePriceRaw)
       : null;
   const gender = String(formData.get("gender") ?? "UNISEX") as ProductGender;
   const status = String(formData.get("status") ?? "DRAFT") as ProductStatus;
@@ -66,21 +66,20 @@ function readProductFields(formData: FormData) {
   if (!name) throw new Error("Product name is required.");
   if (!shortDescription) throw new Error("Short description is required.");
   if (!fullDescription) throw new Error("Full description is required.");
-  if (!Number.isFinite(basePrice) || basePrice < 0) {
-    throw new Error("Price must be a valid non-negative number.");
+  if (!Number.isFinite(regularPrice) || regularPrice < 0) {
+    throw new Error("Regular price must be a valid non-negative number.");
   }
   if (
-    compareAtPriceParsed !== null &&
-    (!Number.isFinite(compareAtPriceParsed) || compareAtPriceParsed < 0)
+    salePrice !== null &&
+    (!Number.isFinite(salePrice) || salePrice <= 0 || salePrice >= regularPrice)
   ) {
-    throw new Error("Original price must be a valid non-negative number.");
+    throw new Error("The sale price must be lower than the regular price.");
   }
-  // An original price that isn't higher than the current price would be a
-  // fake "sale", so it's stored as no discount at all.
-  const compareAtPrice =
-    compareAtPriceParsed !== null && compareAtPriceParsed > basePrice
-      ? compareAtPriceParsed
-      : null;
+  // basePrice is what customers pay (checkout always uses it). During a sale
+  // that's the sale price, and the regular price is kept as the crossed-out
+  // original in compareAtPrice.
+  const basePrice = salePrice ?? regularPrice;
+  const compareAtPrice = salePrice !== null ? regularPrice : null;
 
   return {
     name,

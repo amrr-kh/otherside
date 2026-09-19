@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CustomSelect } from "@/components/CustomSelect";
 
 export type ProductFormValues = {
   name: string;
   shortDescription: string;
   fullDescription: string;
-  basePrice: number;
-  compareAtPrice: number | null;
+  /** The normal price. Shown crossed out while a sale price is set. */
+  regularPrice: number;
+  /** What customers pay during a sale; null means no sale. */
+  salePrice: number | null;
   categoryName: string;
   gender: "WOMEN" | "MEN" | "UNISEX";
   status: "DRAFT" | "ACTIVE" | "ARCHIVED";
@@ -24,8 +26,8 @@ const EMPTY_VALUES: ProductFormValues = {
   name: "",
   shortDescription: "",
   fullDescription: "",
-  basePrice: 0,
-  compareAtPrice: null,
+  regularPrice: 0,
+  salePrice: null,
   categoryName: "",
   gender: "UNISEX",
   status: "DRAFT",
@@ -52,25 +54,31 @@ export function ProductForm({
   submitLabel: string;
 }) {
   const values = { ...EMPTY_VALUES, ...defaultValues };
-  const [price, setPrice] = useState(String(values.basePrice || ""));
-  const [compareAt, setCompareAt] = useState(
-    values.compareAtPrice === null ? "" : String(values.compareAtPrice),
+  const [regular, setRegular] = useState(String(values.regularPrice || ""));
+  const [sale, setSale] = useState(
+    values.salePrice === null ? "" : String(values.salePrice),
   );
+  const saleRef = useRef<HTMLInputElement>(null);
 
-  const priceNum = Number(price);
-  const compareAtNum = Number(compareAt);
-  const compareAtIgnored =
-    compareAt.trim() !== "" &&
-    Number.isFinite(compareAtNum) &&
-    Number.isFinite(priceNum) &&
-    compareAtNum <= priceNum;
+  const regularNum = Number(regular);
+  const saleNum = Number(sale);
+  const hasSale = sale.trim() !== "";
+  const saleInvalid =
+    hasSale &&
+    (!Number.isFinite(saleNum) ||
+      saleNum <= 0 ||
+      (Number.isFinite(regularNum) && saleNum >= regularNum));
   const percentOff =
-    compareAt.trim() !== "" &&
-    Number.isFinite(compareAtNum) &&
-    priceNum > 0 &&
-    compareAtNum > priceNum
-      ? Math.round(((compareAtNum - priceNum) / compareAtNum) * 100)
+    hasSale && !saleInvalid && regularNum > 0
+      ? Math.round(((regularNum - saleNum) / regularNum) * 100)
       : null;
+
+  // Stops the form from submitting with a "sale" that isn't really cheaper.
+  useEffect(() => {
+    saleRef.current?.setCustomValidity(
+      saleInvalid ? "The sale price must be lower than the regular price." : "",
+    );
+  }, [saleInvalid]);
 
   return (
     <form action={action} className="flex max-w-2xl flex-col gap-6">
@@ -118,47 +126,48 @@ export function ProductForm({
       <div>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label htmlFor="basePrice" className={labelClass}>
-              Current Price (EGP)
+            <label htmlFor="regularPrice" className={labelClass}>
+              Regular Price (EGP)
             </label>
             <input
-              id="basePrice"
-              name="basePrice"
+              id="regularPrice"
+              name="regularPrice"
               type="number"
               min={0}
               step="0.01"
               required
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              value={regular}
+              onChange={(e) => setRegular(e.target.value)}
               className={inputClass}
             />
           </div>
           <div>
-            <label htmlFor="compareAtPrice" className={labelClass}>
-              Original Price / Compare-at (EGP, optional)
+            <label htmlFor="salePrice" className={labelClass}>
+              Sale Price (EGP, optional)
             </label>
             <input
-              id="compareAtPrice"
-              name="compareAtPrice"
+              ref={saleRef}
+              id="salePrice"
+              name="salePrice"
               type="number"
               min={0}
               step="0.01"
-              value={compareAt}
-              onChange={(e) => setCompareAt(e.target.value)}
+              value={sale}
+              onChange={(e) => setSale(e.target.value)}
               className={inputClass}
             />
           </div>
         </div>
         <p
           className={`mt-2 text-xs ${
-            compareAtIgnored ? "text-magenta" : "text-soft-black/45"
+            saleInvalid ? "text-magenta" : "text-soft-black/45"
           }`}
         >
-          {compareAtIgnored
-            ? "The original price must be higher than the current price — it will be ignored and no discount will show."
+          {saleInvalid
+            ? "The sale price must be lower than the regular price."
             : percentOff !== null
-              ? `Customers will see the original price crossed out and “SAVE ${percentOff}%”.`
-              : "Current Price is what customers pay. Add an Original Price only to show a crossed-out discount price; leave it empty for no discount."}
+              ? `On sale: customers will pay EGP ${saleNum.toLocaleString("en-US")} and see EGP ${regularNum.toLocaleString("en-US")} crossed out with “SAVE ${percentOff}%”.`
+              : "Customers pay the Regular Price. To run a sale, type a lower Sale Price; clear it to end the sale."}
         </p>
       </div>
 
