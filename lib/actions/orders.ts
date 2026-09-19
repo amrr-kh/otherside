@@ -10,6 +10,7 @@ import { logOrderToSheet } from "@/lib/notifications/googleSheets";
 import { getOrCreateGuestId } from "@/lib/guest";
 import { getCustomerSession } from "@/lib/customer-session";
 import { resolveCheckoutCustomer } from "@/lib/checkout-customer";
+import { saveAddressIfNew } from "@/lib/customer-addresses";
 import type { PaymentMethod } from "@/generated/prisma/enums";
 import { Prisma } from "@/generated/prisma/client";
 
@@ -154,6 +155,7 @@ export async function placeOrder(
   const paymentMethod = required(formData, "paymentMethod") as PaymentMethod;
   const promoCodeRaw = required(formData, "promoCode").toUpperCase();
   const sessionCustomerId = (await getCustomerSession())?.id ?? null;
+  const saveAddress = formData.get("saveAddress") === "on";
 
   if (!name || !phone || !governorate || !city || !street || !building) {
     return { status: "error", message: "missingFields" };
@@ -334,18 +336,20 @@ export async function placeOrder(
             email,
           });
 
-          await tx.address.create({
-            data: {
-              customerId: customer.id,
+          // Signed-in customers choose (checkbox) whether to keep the address;
+          // guests keep the long-standing behaviour. Either way an address the
+          // customer already has is reused rather than duplicated.
+          if (!sessionCustomerId || saveAddress) {
+            await saveAddressIfNew(tx, customer.id, {
               governorate,
               city,
               street,
               building,
-              floor: floor || null,
-              apartment: apartment || null,
-              landmark: landmark || null,
-            },
-          });
+              floor,
+              apartment,
+              landmark,
+            });
+          }
 
           const [{ val: nextSeq }] = await tx.$queryRaw<{ val: bigint }[]>(
             Prisma.sql`SELECT nextval('"Order_sequence_seq"') as val`,

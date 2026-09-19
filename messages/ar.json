@@ -279,7 +279,10 @@
     "errorNoShippingZone": "لا نقوم حاليًا بالتوصيل إلى هذه المحافظة.",
     "errorInvalidPromo": "كود الخصم لم يعد صالحًا — قم بإزالته وحاول مرة أخرى.",
     "errorConnectionError": "لم نتمكن من الاتصال بنظام الطلبات للحظة. يرجى المحاولة مرة أخرى — لم يتم تكرار طلبك.",
-    "errorGeneric": "حدث خطأ أثناء إتمام طلبك. يرجى المحاولة مرة أخرى."
+    "errorGeneric": "حدث خطأ أثناء إتمام طلبك. يرجى المحاولة مرة أخرى.",
+    "savedAddressesHeading": "عناوينك المحفوظة",
+    "useNewAddress": "استخدام عنوان جديد",
+    "saveAddressForNext": "احفظ هذا العنوان للمرة القادمة"
   },
   "orderConfirmation": {
     "eyebrow": "تم تأكيد الطلب",
@@ -342,7 +345,24 @@
     "errorGoogleCancelled": "تم إلغاء تسجيل الدخول عبر Google. يمكنك المحاولة مرة أخرى في أي وقت.",
     "errorGoogleFailed": "تعذّر تسجيل دخولك عبر Google. يُرجى المحاولة مرة أخرى.",
     "errorGoogleEmailUnverified": "البريد الإلكتروني لحساب Google هذا غير موثّق، لذلك لا يمكننا استخدامه لتسجيل دخولك.",
-    "errorGoogleUnavailable": "تسجيل الدخول عبر Google غير متاح حاليًا."
+    "errorGoogleUnavailable": "تسجيل الدخول عبر Google غير متاح حاليًا.",
+    "yourDetails": "بياناتك",
+    "phoneMissing": "أضف رقم موبايلك عند إتمام أول طلب — وسنحتفظ به هنا للمرة القادمة.",
+    "addressesIntro": "محفوظة هنا ليكون إتمام طلبك أسرع في المرة القادمة.",
+    "noAddresses": "لا توجد عناوين محفوظة بعد. أضف عنوانًا هنا، أو فعّل «احفظ هذا العنوان» عند إتمام الطلب.",
+    "addAddress": "إضافة عنوان جديد",
+    "editAddress": "تعديل",
+    "deleteAddress": "حذف",
+    "confirmDelete": "تأكيد الحذف",
+    "saveAddressButton": "حفظ العنوان",
+    "savingAddress": "جارٍ الحفظ…",
+    "cancel": "إلغاء",
+    "orderMore": "+{count} أخرى",
+    "trackingNumber": "رقم التتبع: {number}",
+    "errorAddressMissingFields": "يرجى ملء المحافظة والمدينة والشارع والمبنى.",
+    "errorAddressNoShippingZone": "لا نقوم حاليًا بالتوصيل إلى هذه المحافظة.",
+    "errorAddressNotSignedIn": "يرجى تسجيل الدخول مرة أخرى.",
+    "errorAddressNotFound": "هذا العنوان لم يعد موجودًا."
   },
   "price": {
     "original": "السعر الأصلي",

@@ -279,7 +279,10 @@
     "errorNoShippingZone": "We don't currently deliver to that governorate.",
     "errorInvalidPromo": "That promo code is no longer valid — remove it and try again.",
     "errorConnectionError": "We couldn't connect to our order system for a moment. Please try again — your order has not been duplicated.",
-    "errorGeneric": "Something went wrong placing your order. Please try again."
+    "errorGeneric": "Something went wrong placing your order. Please try again.",
+    "savedAddressesHeading": "Your saved addresses",
+    "useNewAddress": "Use a new address",
+    "saveAddressForNext": "Save this address for next time"
   },
   "orderConfirmation": {
     "eyebrow": "Order Confirmed",
@@ -342,7 +345,24 @@
     "errorGoogleCancelled": "Google sign-in was cancelled. You can try again any time.",
     "errorGoogleFailed": "We couldn't sign you in with Google. Please try again.",
     "errorGoogleEmailUnverified": "That Google account's email isn't verified, so we can't use it to sign you in.",
-    "errorGoogleUnavailable": "Google sign-in isn't available right now."
+    "errorGoogleUnavailable": "Google sign-in isn't available right now.",
+    "yourDetails": "Your details",
+    "phoneMissing": "Add your mobile number when you place your first order — we'll keep it here for next time.",
+    "addressesIntro": "Saved here so checkout is faster next time.",
+    "noAddresses": "No saved addresses yet. Add one here, or tick “Save this address” at checkout.",
+    "addAddress": "Add a new address",
+    "editAddress": "Edit",
+    "deleteAddress": "Delete",
+    "confirmDelete": "Confirm delete",
+    "saveAddressButton": "Save address",
+    "savingAddress": "Saving…",
+    "cancel": "Cancel",
+    "orderMore": "+{count} more",
+    "trackingNumber": "Tracking: {number}",
+    "errorAddressMissingFields": "Please fill in governorate, city, street and building.",
+    "errorAddressNoShippingZone": "We don't currently deliver to that governorate.",
+    "errorAddressNotSignedIn": "Please sign in again.",
+    "errorAddressNotFound": "That address no longer exists."
   },
   "price": {
     "original": "Original price",

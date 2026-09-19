@@ -3,11 +3,15 @@
 import bcrypt from "bcryptjs";
 import { redirect } from "@/i18n/navigation";
 import { getLocale } from "next-intl/server";
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import {
   createCustomerSession,
   destroyCustomerSession,
+  getCustomerSession,
 } from "@/lib/customer-session";
+import { normalizeAddress, saveAddressIfNew } from "@/lib/customer-addresses";
+import { getActiveShippingZones } from "@/lib/storefront/shipping";
 
 const EGYPT_PHONE_RE = /^01[0125][0-9]{8}$/;
 
@@ -95,4 +99,67 @@ export async function logOut(): Promise<void> {
   await destroyCustomerSession();
   const locale = await getLocale();
   redirect({ href: "/", locale });
+}
+
+export type AddressFormState =
+  | { status: "idle" }
+  | { status: "saved" }
+  | { status: "error"; message: string };
+
+function readAddress(formData: FormData) {
+  const value = (key: string) => String(formData.get(key) ?? "");
+  return {
+    governorate: value("governorate"),
+    city: value("city"),
+    street: value("street"),
+    building: value("building"),
+    floor: value("floor"),
+    apartment: value("apartment"),
+    landmark: value("landmark"),
+  };
+}
+
+/** Creates a new saved address, or updates one when `id` is present. Only ever touches the signed-in customer's own addresses. */
+export async function saveAddress(
+  _prevState: AddressFormState,
+  formData: FormData,
+): Promise<AddressFormState> {
+  const session = await getCustomerSession();
+  if (!session) return { status: "error", message: "notSignedIn" };
+
+  const input = readAddress(formData);
+  const address = normalizeAddress(input);
+  if (!address.governorate || !address.city || !address.street || !address.building) {
+    return { status: "error", message: "missingFields" };
+  }
+
+  const zones = await getActiveShippingZones();
+  if (!zones.some((zone) => zone.governorates.includes(address.governorate))) {
+    return { status: "error", message: "noShippingZone" };
+  }
+
+  const id = String(formData.get("id") ?? "");
+  if (id) {
+    const own = await prisma.address.findFirst({
+      where: { id, customerId: session.id },
+      select: { id: true },
+    });
+    if (!own) return { status: "error", message: "notFound" };
+    await prisma.address.update({ where: { id }, data: address });
+  } else {
+    await saveAddressIfNew(prisma, session.id, input);
+  }
+
+  revalidatePath("/[locale]/account", "page");
+  return { status: "saved" };
+}
+
+export async function deleteAddress(addressId: string): Promise<void> {
+  const session = await getCustomerSession();
+  if (!session) return;
+
+  await prisma.address.deleteMany({
+    where: { id: addressId, customerId: session.id },
+  });
+  revalidatePath("/[locale]/account", "page");
 }

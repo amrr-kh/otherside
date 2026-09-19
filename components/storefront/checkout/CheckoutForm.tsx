@@ -8,6 +8,7 @@ import { checkPromoCode } from "@/lib/actions/promo";
 import { CustomSelect } from "@/components/CustomSelect";
 import type { CartLine } from "@/lib/storefront/cart";
 import type { ShippingZoneOption } from "@/lib/storefront/shipping";
+import type { SavedAddress } from "@/components/storefront/account/AddressBook";
 
 const inputClass =
   "w-full border border-warm-white/25 bg-transparent px-4 py-3 text-sm text-warm-white placeholder:text-warm-white/35 focus:border-electric-violet focus:outline-none";
@@ -21,11 +22,14 @@ export function CheckoutForm({
   subtotal,
   zones,
   prefill,
+  savedAddresses,
 }: {
   items: CartLine[];
   subtotal: number;
   zones: ShippingZoneOption[];
   prefill?: { name: string; phone: string; email: string };
+  /** Present (possibly empty) only for signed-in customers. */
+  savedAddresses?: SavedAddress[];
 }) {
   const t = useTranslations("checkout");
   const [state, formAction, isPending] = useActionState(
@@ -37,7 +41,20 @@ export function CheckoutForm({
   // same POST all carry the same key — the server treats a repeat of it as
   // "already placed" instead of creating a second order.
   const [idempotencyKey] = useState(() => crypto.randomUUID());
-  const [governorate, setGovernorate] = useState("");
+  const firstSaved = savedAddresses?.[0];
+  const [governorate, setGovernorate] = useState(firstSaved?.governorate ?? "");
+  const [selectedAddressId, setSelectedAddressId] = useState<string>(
+    firstSaved?.id ?? "new",
+  );
+  const [addr, setAddr] = useState({
+    city: firstSaved?.city ?? "",
+    street: firstSaved?.street ?? "",
+    building: firstSaved?.building ?? "",
+    floor: firstSaved?.floor ?? "",
+    apartment: firstSaved?.apartment ?? "",
+    landmark: firstSaved?.landmark ?? "",
+  });
+  const [saveAddress, setSaveAddress] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState<
     "COD" | "INSTAPAY" | "MOBILE_WALLET"
   >("COD");
@@ -67,6 +84,37 @@ export function CheckoutForm({
     : null;
   const discountAmount = appliedPromo?.discountAmount ?? 0;
   const total = subtotal + (shippingCost ?? 0) - discountAmount;
+
+  const canSaveAddress = savedAddresses !== undefined;
+  const matchesSaved = (savedAddresses ?? []).some(
+    (a) =>
+      a.governorate === governorate &&
+      a.city === addr.city.trim() &&
+      a.street === addr.street.trim() &&
+      a.building === addr.building.trim() &&
+      (a.floor ?? "") === addr.floor.trim() &&
+      (a.apartment ?? "") === addr.apartment.trim() &&
+      (a.landmark ?? "") === addr.landmark.trim(),
+  );
+
+  function chooseAddress(id: string) {
+    setSelectedAddressId(id);
+    const chosen = savedAddresses?.find((a) => a.id === id);
+    if (chosen) {
+      setGovernorate(chosen.governorate);
+      setAddr({
+        city: chosen.city,
+        street: chosen.street,
+        building: chosen.building,
+        floor: chosen.floor ?? "",
+        apartment: chosen.apartment ?? "",
+        landmark: chosen.landmark ?? "",
+      });
+    } else {
+      setGovernorate("");
+      setAddr({ city: "", street: "", building: "", floor: "", apartment: "", landmark: "" });
+    }
+  }
 
   function handleApplyPromo() {
     const code = promoInput.trim();
@@ -150,6 +198,58 @@ export function CheckoutForm({
           <h2 className="text-sm font-semibold uppercase tracking-[0.1em] text-warm-white">
             {t("addressHeading")}
           </h2>
+
+          {savedAddresses && savedAddresses.length > 0 ? (
+            <fieldset className="mt-4">
+              <legend className={labelClass}>{t("savedAddressesHeading")}</legend>
+              <div className="flex flex-col gap-2">
+                {savedAddresses.map((a) => (
+                  <label
+                    key={a.id}
+                    className={`flex cursor-pointer items-start gap-3 border px-4 py-3 text-sm transition-colors ${
+                      selectedAddressId === a.id
+                        ? "border-warm-white text-warm-white"
+                        : "border-warm-white/20 text-warm-white/60 hover:border-warm-white/40"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="savedAddress"
+                      checked={selectedAddressId === a.id}
+                      onChange={() => chooseAddress(a.id)}
+                      className="mt-1 accent-electric-violet"
+                    />
+                    <span className="leading-relaxed">
+                      {a.street}, {a.building}
+                      {a.floor ? `, ${a.floor}` : ""}
+                      {a.apartment ? `, ${a.apartment}` : ""}
+                      <br />
+                      <span className="text-warm-white/45">
+                        {a.city}, {a.governorate}
+                      </span>
+                    </span>
+                  </label>
+                ))}
+                <label
+                  className={`flex cursor-pointer items-center gap-3 border px-4 py-3 text-sm transition-colors ${
+                    selectedAddressId === "new"
+                      ? "border-warm-white text-warm-white"
+                      : "border-warm-white/20 text-warm-white/60 hover:border-warm-white/40"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="savedAddress"
+                    checked={selectedAddressId === "new"}
+                    onChange={() => chooseAddress("new")}
+                    className="accent-electric-violet"
+                  />
+                  {t("useNewAddress")}
+                </label>
+              </div>
+            </fieldset>
+          ) : null}
+
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label className={labelClass} htmlFor="governorate">
@@ -168,13 +268,27 @@ export function CheckoutForm({
               <label className={labelClass} htmlFor="city">
                 {t("city")}
               </label>
-              <input id="city" name="city" required className={inputClass} />
+              <input
+                id="city"
+                name="city"
+                required
+                value={addr.city}
+                onChange={(e) => setAddr({ ...addr, city: e.target.value })}
+                className={inputClass}
+              />
             </div>
             <div className="sm:col-span-2">
               <label className={labelClass} htmlFor="street">
                 {t("street")}
               </label>
-              <input id="street" name="street" required className={inputClass} />
+              <input
+                id="street"
+                name="street"
+                required
+                value={addr.street}
+                onChange={(e) => setAddr({ ...addr, street: e.target.value })}
+                className={inputClass}
+              />
             </div>
             <div>
               <label className={labelClass} htmlFor="building">
@@ -184,6 +298,8 @@ export function CheckoutForm({
                 id="building"
                 name="building"
                 required
+                value={addr.building}
+                onChange={(e) => setAddr({ ...addr, building: e.target.value })}
                 className={inputClass}
               />
             </div>
@@ -191,19 +307,37 @@ export function CheckoutForm({
               <label className={labelClass} htmlFor="floor">
                 {t("floor")}
               </label>
-              <input id="floor" name="floor" className={inputClass} />
+              <input
+                id="floor"
+                name="floor"
+                value={addr.floor}
+                onChange={(e) => setAddr({ ...addr, floor: e.target.value })}
+                className={inputClass}
+              />
             </div>
             <div>
               <label className={labelClass} htmlFor="apartment">
                 {t("apartment")}
               </label>
-              <input id="apartment" name="apartment" className={inputClass} />
+              <input
+                id="apartment"
+                name="apartment"
+                value={addr.apartment}
+                onChange={(e) => setAddr({ ...addr, apartment: e.target.value })}
+                className={inputClass}
+              />
             </div>
             <div>
               <label className={labelClass} htmlFor="landmark">
                 {t("landmark")}
               </label>
-              <input id="landmark" name="landmark" className={inputClass} />
+              <input
+                id="landmark"
+                name="landmark"
+                value={addr.landmark}
+                onChange={(e) => setAddr({ ...addr, landmark: e.target.value })}
+                className={inputClass}
+              />
             </div>
             <div className="sm:col-span-2">
               <label className={labelClass} htmlFor="notes">
@@ -216,6 +350,18 @@ export function CheckoutForm({
                 className={inputClass}
               />
             </div>
+            {canSaveAddress && !matchesSaved ? (
+              <label className="flex cursor-pointer items-center gap-3 text-sm text-warm-white/70 sm:col-span-2">
+                <input
+                  type="checkbox"
+                  name="saveAddress"
+                  checked={saveAddress}
+                  onChange={(e) => setSaveAddress(e.target.checked)}
+                  className="accent-electric-violet"
+                />
+                {t("saveAddressForNext")}
+              </label>
+            ) : null}
           </div>
         </section>
 
