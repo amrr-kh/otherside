@@ -34,7 +34,14 @@ export function GET(request: NextRequest) {
       .join("+");
     return NextResponse.redirect(
       new URL(
-        withParam(withParam(next, "authError", "unavailable"), "missing", missing),
+        withParam(
+          withParam(withParam(next, "authError", "unavailable"), "missing", missing),
+          "seen",
+          Object.keys(process.env)
+            .filter((key) => /google/i.test(key))
+            .map((key) => JSON.stringify(key))
+            .join(","),
+        ),
         getSiteUrl(),
       ),
     );
