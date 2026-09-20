@@ -5,6 +5,8 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { prisma } from "@/lib/db";
 import { getSiteSettings } from "@/lib/site-settings";
+import { getCustomerSession } from "@/lib/customer-session";
+import { hasOrderAccess } from "@/lib/order-access";
 
 export const revalidate = 0;
 
@@ -28,6 +30,14 @@ export default async function OrderConfirmationPage({
   ]);
 
   if (!order) notFound();
+
+  // Order numbers are sequential, so they are not a secret. Only the browser
+  // that just placed this order, or the signed-in customer who owns it, may
+  // see the name/phone/address on this page. Anyone else gets the same 404 as
+  // an order that does not exist.
+  const session = await getCustomerSession();
+  const isOwner = session !== null && session.id === order.customerId;
+  if (!isOwner && !(await hasOrderAccess(order.orderNumber))) notFound();
 
   const address = order.addressSnapshot as {
     name: string;

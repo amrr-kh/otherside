@@ -16,13 +16,14 @@ export async function Reviews() {
     console.error("Reviews: failed to load approved reviews", error);
   }
 
-  const items =
-    realReviews.length > 0
-      ? realReviews.map((r) => ({ quote: r.body, label: r.customerName }))
-      : [t("quote1"), t("quote2"), t("quote3")].map((quote) => ({
-          quote,
-          label: t("demoLabel"),
-        }));
+  // Only genuine, approved customer reviews are ever shown. With none yet the
+  // whole section is left out rather than showing placeholder quotes.
+  if (realReviews.length === 0) return null;
+
+  const items = realReviews.map((r) => ({
+    quote: r.body,
+    label: r.customerName,
+  }));
 
   return (
     <section className="mx-auto max-w-[1600px] px-5 py-24 md:px-10 md:py-32">

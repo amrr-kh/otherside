@@ -334,6 +334,7 @@
     "errorPasswordTooShort": "Password must be at least 8 characters.",
     "errorPasswordMismatch": "Passwords don't match.",
     "errorPhoneRegistered": "An account with that number already exists — sign in instead.",
+    "errorPhoneHasOrders": "This number already has orders with us. To protect your privacy, sign up with the same email you used at checkout, or message us on WhatsApp.",
     "errorInvalidCredentials": "Incorrect phone number or password.",
     "welcome": "Hey, {name}.",
     "logOut": "Log Out",

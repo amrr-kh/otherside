@@ -73,7 +73,7 @@ export function usePromotionLabels(): CountdownLabels & {
 /** "20% OFF" (or the Arabic form) when the offer lowers prices, otherwise null. */
 export function usePercentBadge(promotion: PromotionView): string | null {
   const t = useTranslations("promotion");
-  return promotion.discountPercent === null
+  return promotion.badgePercent === null
     ? null
-    : t("percentOff", { percent: promotion.discountPercent });
+    : t("percentOff", { percent: promotion.badgePercent });
 }

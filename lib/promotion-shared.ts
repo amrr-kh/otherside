@@ -12,6 +12,13 @@ export type PromotionView = {
   ctaUrl: string;
   /** Whole-number percent off while the offer is live, or null for a messaging-only offer. */
   discountPercent: number | null;
+  /**
+   * The percentage to print in the "% OFF" badge. Normally the same as
+   * discountPercent, but null on the site-wide top bar for an offer that only
+   * covers some products, so the bar never advertises a percentage that does
+   * not apply to what the visitor is looking at.
+   */
+  badgePercent: number | null;
   /** ISO 8601 UTC instants: the database is the source of truth for both. */
   startsAt: string;
   endsAt: string;

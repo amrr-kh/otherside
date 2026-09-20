@@ -47,6 +47,7 @@ async function sendOrderEmail(order: NewOrderNotification): Promise<void> {
         subject: `New order ${order.orderNumber} — EGP ${order.total.toLocaleString()}`,
         text: buildMessage(order),
       }),
+      signal: AbortSignal.timeout(8_000),
     });
     if (!res.ok) {
       console.error(
@@ -81,6 +82,7 @@ async function sendOrderWhatsApp(order: NewOrderNotification): Promise<void> {
           To: to.startsWith("whatsapp:") ? to : `whatsapp:${to}`,
           Body: buildMessage(order),
         }),
+        signal: AbortSignal.timeout(8_000),
       },
     );
     if (!res.ok) {

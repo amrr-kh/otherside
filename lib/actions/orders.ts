@@ -1,6 +1,7 @@
 "use server";
 
 import { randomUUID } from "node:crypto";
+import { after } from "next/server";
 import { getLocale } from "next-intl/server";
 import { redirect } from "@/i18n/navigation";
 import { prisma } from "@/lib/db";
@@ -9,6 +10,7 @@ import { notifyNewOrder } from "@/lib/notifications/notifyNewOrder";
 import { logOrderToSheet } from "@/lib/notifications/googleSheets";
 import { getOrCreateGuestId } from "@/lib/guest";
 import { getCustomerSession } from "@/lib/customer-session";
+import { grantOrderAccess } from "@/lib/order-access";
 import { resolveCheckoutCustomer } from "@/lib/checkout-customer";
 import { saveAddressIfNew } from "@/lib/customer-addresses";
 import {
@@ -120,6 +122,8 @@ export async function placeOrder(
   });
   if (existingOrder) {
     logEvent("checkout_duplicate_submission", { requestId, idempotencyKey });
+    // Same form, same idempotency key: this browser is the buyer.
+    await grantOrderAccess(existingOrder.orderNumber);
     const locale = await getLocale();
     redirect({ href: `/order-confirmation/${existingOrder.orderNumber}`, locale });
   }
@@ -230,7 +234,11 @@ export async function placeOrder(
       })
       .join("; ");
 
-    await Promise.all([
+    // The order is already saved. Alerts and the Google Sheet row run AFTER the
+    // customer is redirected (and each call has its own timeout), so a slow or
+    // failing email/WhatsApp/Sheets service can never hold up or fail checkout.
+    after(async () => {
+      await Promise.allSettled([
       notifyNewOrder({
         orderNumber,
         customerName: name,
@@ -256,9 +264,11 @@ export async function placeOrder(
         total: subtotal + shippingCost - discountAmount,
         paymentMethod,
       }),
-    ]);
+      ]);
+    });
   }
 
+  await grantOrderAccess(orderNumber);
   const locale = await getLocale();
   redirect({ href: `/order-confirmation/${orderNumber}`, locale });
   return { status: "idle" };

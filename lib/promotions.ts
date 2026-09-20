@@ -87,6 +87,7 @@ export function toPromotionView(
   promotion: ActivePromotion,
   locale: string,
   endsLabelTemplate: (when: string) => string,
+  options: { siteWideBar?: boolean } = {},
 ): PromotionView {
   const ar = locale === "ar";
   const nowMs = Date.now();
@@ -97,6 +98,10 @@ export function toPromotionView(
     ctaText: (ar && promotion.ctaTextAr) || promotion.ctaText,
     ctaUrl: promotion.ctaUrl,
     discountPercent: promotion.discountPercent,
+    badgePercent:
+      options.siteWideBar && promotion.scope !== "STORE"
+        ? null
+        : promotion.discountPercent,
     startsAt: promotion.startsAt.toISOString(),
     endsAt: promotion.endsAt.toISOString(),
     endsLabel: endsLabelTemplate(formatCairoDeadline(promotion.endsAt, locale)),
@@ -108,17 +113,40 @@ export function toPromotionView(
   };
 }
 
+/**
+ * Of several candidate offers, the one to show. Offers already running beat
+ * ones that have not started; among those, the biggest percentage wins (it is
+ * also the one that actually sets the price, see bestPercentPromotion), and
+ * ties go to the one that ends soonest (the incoming order).
+ */
+function bestOffer(candidates: ActivePromotion[]): ActivePromotion | null {
+  const now = Date.now();
+  const running = candidates.filter((p) => p.startsAt.getTime() <= now);
+  const pool = running.length > 0 ? running : candidates;
+  return pool.reduce<ActivePromotion | null>(
+    (best, p) =>
+      best === null || (p.discountPercent ?? -1) > (best.discountPercent ?? -1)
+        ? p
+        : best,
+    null,
+  );
+}
+
 export function pickTopBarPromotion(list: ActivePromotion[]) {
-  return list.find((p) => p.showTopBar) ?? null;
+  // The bar is site-wide, so an offer that covers the whole store speaks for
+  // the whole site; only fall back to a partial offer when there is none.
+  const candidates = list.filter((p) => p.showTopBar);
+  const storeWide = candidates.filter((p) => p.scope === "STORE");
+  return bestOffer(storeWide.length > 0 ? storeWide : candidates);
 }
 
 export function pickProductPromotion(
   list: ActivePromotion[],
   product: { productId: string; collectionIds: string[] },
 ) {
-  return (
-    list.find(
+  return bestOffer(
+    list.filter(
       (p) => p.showOnProductPages && promotionAppliesToProduct(p, product),
-    ) ?? null
+    ),
   );
 }

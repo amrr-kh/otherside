@@ -43,8 +43,11 @@ export default async function StorefrontLayout({
   ]);
   const topBarPromotion = pickTopBarPromotion(promotions);
   const topBar = topBarPromotion
-    ? toPromotionView(topBarPromotion, locale, (when) =>
-        tPromotion("endsAria", { when }),
+    ? toPromotionView(
+        topBarPromotion,
+        locale,
+        (when) => tPromotion("endsAria", { when }),
+        { siteWideBar: true },
       )
     : null;
 

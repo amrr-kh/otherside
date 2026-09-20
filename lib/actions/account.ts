@@ -47,6 +47,27 @@ export async function signUp(
     return { status: "error", message: "phoneRegistered" };
   }
 
+  // A phone number is not verified, so anyone can type anyone's. Claiming a
+  // guest record that already has orders or saved addresses would hand this
+  // person that customer's private history. Only allow it when they also give
+  // the same email the customer used at checkout; a record with nothing in it
+  // has nothing to leak and can be claimed freely.
+  if (existing) {
+    const [orderCount, addressCount] = await Promise.all([
+      prisma.order.count({ where: { customerId: existing.id } }),
+      prisma.address.count({ where: { customerId: existing.id } }),
+    ]);
+    if (orderCount + addressCount > 0) {
+      const emailMatches =
+        !!existing.email &&
+        !!email &&
+        existing.email.trim().toLowerCase() === email.trim().toLowerCase();
+      if (!emailMatches) {
+        return { status: "error", message: "phoneHasOrders" };
+      }
+    }
+  }
+
   const passwordHash = await bcrypt.hash(password, 12);
 
   // A guest checkout may have already created this Customer row by phone —

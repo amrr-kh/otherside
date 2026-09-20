@@ -30,6 +30,8 @@ export async function logOrderToSheet(row: OrderSheetRow): Promise<void> {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(row),
+      // Never wait on Google forever; the order is already saved.
+      signal: AbortSignal.timeout(10_000),
     });
     if (!res.ok) {
       console.error(
