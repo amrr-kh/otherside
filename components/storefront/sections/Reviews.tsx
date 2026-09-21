@@ -26,22 +26,24 @@ export async function Reviews() {
   }));
 
   return (
-    <section className="mx-auto max-w-[1600px] px-5 py-24 md:px-10 md:py-32">
-      <h2 className="font-display text-4xl italic text-warm-white md:text-5xl">
-        {t("heading")}
-      </h2>
+    <section className="bg-os-ink text-os-cream">
+      <div className="mx-auto max-w-[1600px] px-5 py-20 md:px-10 md:py-32">
+        <h2 className="text-4xl leading-[1.08] tracking-tight md:text-5xl">
+          {t("heading")}
+        </h2>
 
-      <div className="mt-14 grid grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-8">
-        {items.map((item, i) => (
-          <figure key={i} className="border-t border-white/10 pt-6">
-            <blockquote className="text-base leading-relaxed text-warm-white/75">
-              &ldquo;{item.quote}&rdquo;
-            </blockquote>
-            <figcaption className="mt-4 text-xs uppercase tracking-[0.15em] text-warm-white/35">
-              {item.label}
-            </figcaption>
-          </figure>
-        ))}
+        <div className="mt-14 grid grid-cols-1 gap-12 sm:grid-cols-3 sm:gap-8">
+          {items.map((item, i) => (
+            <figure key={i}>
+              <blockquote className="text-base leading-relaxed text-os-cream/75">
+                &ldquo;{item.quote}&rdquo;
+              </blockquote>
+              <figcaption className="mt-4 text-[11px] uppercase tracking-[0.18em] text-os-cream/40">
+                {item.label}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
       </div>
     </section>
   );

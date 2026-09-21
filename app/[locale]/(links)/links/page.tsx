@@ -184,10 +184,10 @@ export default async function LinksPage({
               className="hub-rise mt-6"
               style={{ "--hub-i": 1 } as React.CSSProperties}
             >
-              <h1 className="font-display text-[3.25rem] italic leading-none tracking-tight text-warm-white">
+              <h1 className="text-[3.25rem] leading-none tracking-tight text-warm-white">
                 {SITE_NAME}
               </h1>
-              <p className="mt-4 font-display text-[1.7rem] italic leading-[1.12] text-warm-white/90">
+              <p className="mt-4 text-[1.7rem] leading-[1.12] tracking-tight text-warm-white/90">
                 {t("tagline")}
                 <br />
                 <span className="hub-veil inline-block text-gold">
@@ -231,7 +231,7 @@ export default async function LinksPage({
                     <span className="block text-[11px] font-medium uppercase tracking-[0.28em] rtl:tracking-normal text-gold">
                       {t("veilEyebrow")}
                     </span>
-                    <span className="mt-1.5 block font-display text-[1.65rem] italic leading-tight text-warm-white">
+                    <span className="mt-1.5 block text-[1.65rem] leading-tight tracking-tight text-warm-white">
                       {t("veilCta")}
                     </span>
                   </span>

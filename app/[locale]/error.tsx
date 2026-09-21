@@ -21,7 +21,7 @@ export default function StorefrontError({
       <p className="text-xs uppercase tracking-[0.25em] text-electric-violet">
         {t("eyebrow")}
       </p>
-      <h1 className="mt-5 font-display text-4xl italic text-warm-white md:text-6xl">
+      <h1 className="mt-5 text-3xl tracking-tight text-warm-white md:text-5xl">
         {t("heading")}
       </h1>
       <p className="mt-5 max-w-sm text-sm text-warm-white/55">{t("body")}</p>
@@ -39,7 +39,7 @@ export default function StorefrontError({
         </button>
         <Link
           href="/"
-          className="px-2 py-3 text-xs font-medium uppercase tracking-[0.18em] text-warm-white/70 underline underline-offset-4 hover:text-warm-white"
+          className="px-2 py-3 text-xs font-medium uppercase tracking-[0.18em] text-warm-white/70 hover:text-warm-white"
         >
           {t("home")}
         </Link>

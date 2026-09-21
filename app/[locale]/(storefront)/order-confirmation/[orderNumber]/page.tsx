@@ -66,7 +66,7 @@ export default async function OrderConfirmationPage({
       <p className="text-xs uppercase tracking-[0.25em] text-electric-violet">
         {t("eyebrow")}
       </p>
-      <h1 className="mt-5 font-display text-4xl italic text-warm-white md:text-5xl">
+      <h1 className="mt-5 text-3xl tracking-tight text-warm-white md:text-4xl">
         {t("heading")}
       </h1>
       <p className="mt-3 text-sm text-warm-white/55">{t("intro")}</p>
@@ -76,7 +76,7 @@ export default async function OrderConfirmationPage({
           <span className="text-xs uppercase tracking-[0.1em] text-warm-white/50">
             {t("orderNumber")}
           </span>
-          <span className="font-display text-xl italic text-warm-white" dir="ltr">
+          <span className="text-xl tracking-tight text-warm-white" dir="ltr">
             {order.orderNumber}
           </span>
         </div>
@@ -172,7 +172,7 @@ export default async function OrderConfirmationPage({
         </Link>
         <Link
           href="/hoodies"
-          className="px-2 py-3 text-xs font-medium uppercase tracking-[0.18em] text-warm-white/70 underline underline-offset-4 hover:text-warm-white"
+          className="px-2 py-3 text-xs font-medium uppercase tracking-[0.18em] text-warm-white/70 hover:text-warm-white"
         >
           {t("continueShopping")}
         </Link>

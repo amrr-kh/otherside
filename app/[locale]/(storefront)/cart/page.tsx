@@ -15,7 +15,7 @@ export default async function CartPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-5 py-16 md:px-10 md:py-24">
-      <h1 className="font-display text-4xl italic text-warm-white md:text-5xl">
+      <h1 className="text-3xl tracking-tight text-warm-white md:text-4xl">
         {t("title")}
       </h1>
 
@@ -54,7 +54,7 @@ export default async function CartPage() {
                     <div>
                       <Link
                         href={`/products/${item.productSlug}`}
-                        className="text-sm text-warm-white hover:underline"
+                        className="text-sm text-warm-white transition-opacity hover:opacity-70"
                       >
                         {item.productName}
                       </Link>

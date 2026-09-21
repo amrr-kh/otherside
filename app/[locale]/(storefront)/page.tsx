@@ -11,6 +11,7 @@ import {
   trimDescription,
 } from "@/lib/seo";
 import { Hero } from "@/components/storefront/sections/Hero";
+import { Intro } from "@/components/storefront/sections/Intro";
 import { BrandStory } from "@/components/storefront/sections/BrandStory";
 import { DropSection } from "@/components/storefront/sections/DropSection";
 import { EditorialFeature } from "@/components/storefront/sections/EditorialFeature";
@@ -76,11 +77,12 @@ export default async function HomePage() {
       <JsonLd data={organization} />
       <JsonLd data={website} />
       <Hero />
-      <BrandStory />
+      <Intro />
       <DropSection />
+      <SelectedProducts />
       <EditorialFeature />
       <CampaignSection />
-      <SelectedProducts />
+      <BrandStory />
       <MaterialSection />
       <Reviews />
       <Newsletter />

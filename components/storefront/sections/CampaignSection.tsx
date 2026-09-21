@@ -1,30 +1,45 @@
+import Image from "next/image";
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
-import { PlaceholderPhoto } from "../PlaceholderPhoto";
+import { CtaLink } from "../Cta";
+import { CAMPAIGN_IMAGES } from "../campaignImages";
 
+/** Male and female model side by side, with a short invitation to build a piece. */
 export async function CampaignSection() {
   const t = await getTranslations("campaign");
 
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2">
-      <div className="flex flex-col justify-center gap-6 bg-soft-black px-6 py-20 md:px-16 md:py-0">
-        <h2 className="font-display text-4xl italic leading-[1.05] text-warm-white md:text-5xl">
-          {t("line1")}
-          <br />
-          {t("line2")}
-          <br />
-          {t("line3")}
-        </h2>
-        <p className="max-w-xs text-sm text-warm-white/55">{t("tagline")}</p>
-        <Link
-          href="/create-your-own"
-          className="w-fit border border-warm-white/70 px-7 py-3 text-xs font-medium uppercase tracking-[0.18em] text-warm-white transition-colors hover:bg-warm-white hover:text-bg"
-        >
-          {t("cta")}
-        </Link>
-      </div>
-      <div className="relative aspect-[4/5] md:aspect-auto">
-        <PlaceholderPhoto variant="lifestyle" className="absolute inset-0" />
+    <section className="bg-os-burgundy-deep text-os-cream">
+      <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-12 px-5 py-20 md:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] md:items-end md:gap-16 md:px-10 md:py-32">
+        <div className="flex flex-col gap-6 md:pb-4">
+          <h2 className="text-4xl leading-[1.08] tracking-tight md:text-5xl">
+            {t("line1")} {t("line2")} {t("line3")}
+          </h2>
+          <p className="max-w-xs text-sm leading-relaxed text-os-cream/65">
+            {t("tagline")}
+          </p>
+          <CtaLink href="/create-your-own" kind="text">
+            {t("cta")}
+          </CtaLink>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 md:gap-5">
+          {[CAMPAIGN_IMAGES.campaignMen, CAMPAIGN_IMAGES.campaignWomen].map(
+            (src) => (
+              <div
+                key={src}
+                className="relative aspect-[4/5] overflow-hidden bg-os-black"
+              >
+                <Image
+                  src={src}
+                  alt=""
+                  fill
+                  sizes="(min-width: 768px) 32vw, 50vw"
+                  className="object-cover object-[50%_18%]"
+                />
+              </div>
+            ),
+          )}
+        </div>
       </div>
     </section>
   );

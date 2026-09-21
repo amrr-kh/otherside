@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 const cormorantGaramond = Cormorant_Garamond({
-  variable: "--font-display-en",
+  variable: "---en",
   subsets: ["latin"],
   weight: ["500"],
 });
@@ -29,7 +29,7 @@ export default function GlobalNotFound() {
         <p className="text-xs uppercase tracking-[0.25em] text-electric-violet">
           404
         </p>
-        <h1 className="mt-5 font-display text-4xl leading-[0.95] tracking-[-0.02em] text-warm-white md:text-6xl">
+        <h1 className="mt-5 text-3xl leading-[0.95] tracking-[-0.02em] text-warm-white md:text-5xl">
           There&apos;s nothing on this side.
         </h1>
         <p className="mt-5 max-w-sm text-sm text-warm-white/55">

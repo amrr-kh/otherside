@@ -64,7 +64,7 @@ export default async function AccountPage({
           <p className="text-xs uppercase tracking-[0.25em] text-electric-violet">
             {t("eyebrow")}
           </p>
-          <h1 className="mt-3 font-display text-4xl italic text-warm-white">
+          <h1 className="mt-3 text-3xl tracking-tight text-warm-white">
             {t("welcome", { name: customer.name })}
           </h1>
         </div>
@@ -79,7 +79,7 @@ export default async function AccountPage({
       </div>
 
       <div className="mt-10 border-t border-warm-white/10 pt-6">
-        <h2 className="text-sm font-semibold uppercase tracking-[0.1em] text-warm-white">
+        <h2 className="text-sm uppercase tracking-[0.1em] text-warm-white">
           {t("yourDetails")}
         </h2>
         <div className="mt-3 space-y-1 text-sm text-warm-white/60">
@@ -95,7 +95,7 @@ export default async function AccountPage({
       </div>
 
       <div className="mt-10 border-t border-warm-white/10 pt-6">
-        <h2 className="text-sm font-semibold uppercase tracking-[0.1em] text-warm-white">
+        <h2 className="text-sm uppercase tracking-[0.1em] text-warm-white">
           {t("orderHistory")}
         </h2>
         {customer.orders.length === 0 ? (
@@ -112,7 +112,7 @@ export default async function AccountPage({
                 >
                   <div className="min-w-0">
                     <span
-                      className="font-display text-sm italic text-warm-white"
+                      className="text-sm tracking-tight text-warm-white"
                       dir="ltr"
                     >
                       {order.orderNumber}
@@ -151,7 +151,7 @@ export default async function AccountPage({
       </div>
 
       <div className="mt-10 border-t border-warm-white/10 pt-6">
-        <h2 className="text-sm font-semibold uppercase tracking-[0.1em] text-warm-white">
+        <h2 className="text-sm uppercase tracking-[0.1em] text-warm-white">
           {t("savedAddresses")}
         </h2>
         <p className="mt-1 text-xs text-warm-white/40">{t("addressesIntro")}</p>

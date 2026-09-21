@@ -32,7 +32,7 @@ export function ProductReviews({
 
   return (
     <section className="mx-auto max-w-[1600px] px-5 py-16 md:px-10 md:py-24">
-      <h2 className="font-display text-3xl italic text-warm-white md:text-4xl">
+      <h2 className="text-3xl tracking-tight text-warm-white md:text-3xl">
         {t("heading", { count: reviews.length })}
       </h2>
 
@@ -70,7 +70,7 @@ export function ProductReviews({
           <p className="text-sm text-electric-violet">{t("thankYou")}</p>
         ) : (
           <>
-            <h3 className="text-sm font-semibold uppercase tracking-[0.1em] text-warm-white">
+            <h3 className="text-sm uppercase tracking-[0.1em] text-warm-white">
               {t("writeReview")}
             </h3>
             <form action={formAction} className="mt-4 flex flex-col gap-4">

@@ -65,7 +65,7 @@ export function TrackOrderForm() {
       {state.status === "found" ? (
         <div className="mt-12 border-t border-warm-white/10 pt-10">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h2 className="font-display text-2xl italic text-warm-white">
+            <h2 className="text-2xl tracking-tight text-warm-white">
               {t("orderLabel")} {state.order.orderNumber}
             </h2>
             <span className="text-sm text-gold">

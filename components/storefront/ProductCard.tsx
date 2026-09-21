@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { Heart } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { PlaceholderPhoto } from "./PlaceholderPhoto";
 import { PriceDisplay } from "./PriceDisplay";
@@ -15,13 +14,66 @@ export type ProductCardData = {
   price: number;
   compareAtPrice?: number | null;
   colors: string[];
+  colorHexes?: (string | null)[];
   primaryImageUrl?: string | null;
   secondaryImageUrl?: string | null;
   colorSlug?: string;
 };
 
-export function ProductCard({ product }: { product: ProductCardData }) {
+const MAX_DOTS = 5;
+
+function ColorDot({ hex }: { hex: string }) {
+  return (
+    <span
+      aria-hidden="true"
+      className="inline-block h-3 w-3 shrink-0 rounded-full ring-1 ring-current/30"
+      style={{ backgroundColor: hex }}
+    />
+  );
+}
+
+/** Colour indicators: swatch dots when the colours have one, plain text otherwise. */
+function ColorIndicators({ product }: { product: ProductCardData }) {
   const t = useTranslations("productCard");
+  const { colors, colorHexes } = product;
+  if (colors.length === 0) return null;
+
+  const hasSwatches =
+    !!colorHexes &&
+    colorHexes.length === colors.length &&
+    colorHexes.every((hex) => Boolean(hex));
+
+  if (colors.length === 1) {
+    return (
+      <p className="mt-2 flex items-center gap-2 text-xs opacity-60">
+        {hasSwatches ? <ColorDot hex={colorHexes![0]!} /> : null}
+        {colors[0]}
+      </p>
+    );
+  }
+
+  if (!hasSwatches) {
+    return (
+      <p className="mt-2 text-xs opacity-60">
+        {t("colorsCount", { count: colors.length })}
+      </p>
+    );
+  }
+
+  const shown = colorHexes!.slice(0, MAX_DOTS);
+  const extra = colors.length - shown.length;
+  return (
+    <p className="mt-2 flex items-center gap-1.5 text-xs opacity-70">
+      <span className="sr-only">{colors.join(", ")}</span>
+      {shown.map((hex, i) => (
+        <ColorDot key={`${hex}-${i}`} hex={hex!} />
+      ))}
+      {extra > 0 ? <span aria-hidden="true">+{extra}</span> : null}
+    </p>
+  );
+}
+
+export function ProductCard({ product }: { product: ProductCardData }) {
   const tp = useTranslations("price");
   const percentOff = getPercentOff(product.price, product.compareAtPrice);
   const [hovered, setHovered] = useState(false);
@@ -37,15 +89,15 @@ export function ProductCard({ product }: { product: ProductCardData }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div className="relative aspect-[3/4] overflow-hidden bg-soft-black">
+      <div className="relative aspect-[4/5] overflow-hidden bg-soft-black">
         {hasPhoto ? (
           <>
             <Image
               src={product.primaryImageUrl!}
               alt={product.name}
               fill
-              sizes="(min-width: 768px) 33vw, 50vw"
-              className={`object-cover transition-opacity duration-500 ${
+              sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
+              className={`object-cover object-[50%_18%] transition-opacity duration-500 ${
                 hovered ? "opacity-0" : "opacity-100"
               }`}
             />
@@ -53,8 +105,8 @@ export function ProductCard({ product }: { product: ProductCardData }) {
               src={product.secondaryImageUrl ?? product.primaryImageUrl!}
               alt={product.name}
               fill
-              sizes="(min-width: 768px) 33vw, 50vw"
-              className={`object-cover transition-opacity duration-500 ${
+              sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
+              className={`object-cover object-[50%_18%] transition-opacity duration-500 ${
                 hovered ? "opacity-100" : "opacity-0"
               }`}
             />
@@ -76,31 +128,21 @@ export function ProductCard({ product }: { product: ProductCardData }) {
           </>
         )}
         {percentOff !== null ? (
-          <span className="absolute start-3 top-3 bg-bg/85 px-2 py-1 text-[10px] font-medium uppercase tracking-[0.15em] text-gold backdrop-blur">
+          <span className="absolute start-3 top-3 bg-os-burgundy px-2.5 py-1.5 text-[10px] uppercase tracking-[0.15em] text-os-cream">
             {tp("save", { percent: percentOff })}
           </span>
         ) : null}
-        <button
-          type="button"
-          aria-label={t("addToWishlist")}
-          onClick={(e) => e.preventDefault()}
-          className="absolute end-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-black/30 text-warm-white/80 backdrop-blur transition-colors hover:text-magenta"
-        >
-          <Heart className="h-4 w-4" />
-        </button>
       </div>
-      <div className="mt-3 flex items-start justify-between gap-3">
-        <div>
-          <h3 className="text-sm text-warm-white">{product.name}</h3>
-          <p className="mt-1 text-xs text-warm-white/45">
-            {product.colors.join(" / ")}
-          </p>
-        </div>
+
+      <div className="mt-4">
+        <h3 className="text-sm">{product.name}</h3>
         <PriceDisplay
           price={product.price}
           compareAtPrice={product.compareAtPrice}
           variant="card"
+          className="mt-1.5"
         />
+        <ColorIndicators product={product} />
       </div>
     </Link>
   );

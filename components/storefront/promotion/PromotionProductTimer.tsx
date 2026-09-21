@@ -34,7 +34,7 @@ export function PromotionProductTimer({
     // two regions with the same name confuse screen-reader navigation. The fixed
     // deadline sentence below is still available to assistive tech.
     <div
-      className={`border border-copper/25 bg-burgundy-deep/40 px-4 py-3 ${className}`}
+      className={`bg-os-burgundy-deep px-4 py-3 ${className}`}
     >
       <p className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[10px] uppercase tracking-[0.16em] text-copper-light">
         <span className="whitespace-nowrap">{labels.productEndsIn}</span>

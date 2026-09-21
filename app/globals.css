@@ -45,11 +45,71 @@
 
   --font-display: var(--font-display-en);
   --font-sans: var(--font-sans-en);
+
+  /* Storefront palette (literal values; used by the editorial sections). */
+  --color-os-ink: #0d0b0b;
+  --color-os-black: #111010;
+  --color-os-cream: #f3eee6;
+  --color-os-stone: #ede9e2;
+  --color-os-burgundy: #5c1a2b;
+  --color-os-burgundy-deep: #321313;
+  --color-os-brown: #3a2820;
+  --color-os-copper: #a65f42;
+  --color-os-white: #ffffff;
 }
 
 [data-locale="ar"] {
   --font-display: var(--font-display-ar);
   --font-sans: var(--font-sans-ar);
+}
+
+/* Storefront-only re-theme. Everything under <body data-locale> (the
+   customer pages) picks up the refreshed warm palette through the existing
+   token names, while the admin (which has no data-locale) keeps its own look. */
+[data-locale] {
+  --color-bg: #0d0b0b;
+  --color-cosmic-black: #111010;
+  --color-soft-black: #181414;
+  --color-dark-purple: #321313;
+  --color-deep-violet: #5c1a2b;
+  --color-magenta: #c27e5e;
+  --color-electric-violet: #c27e5e;
+  --color-orange: #c27e5e;
+  --color-gold: #c27e5e;
+  --color-warm-white: #f3eee6;
+  --color-pure-white: #ffffff;
+  --color-copper: #a65f42;
+  --color-copper-light: #c27e5e;
+  --color-copper-dark: #8a4d34;
+  --color-burgundy: #5c1a2b;
+  --color-burgundy-deep: #321313;
+}
+
+/* House rules for the storefront: links never underline and nothing renders
+   bold. (Unlayered on purpose, so it also beats utility classes.) */
+[data-locale] a {
+  text-decoration: none;
+}
+
+[data-locale] :is(b, strong, th) {
+  font-weight: 400;
+}
+
+/* Safety net: any leftover serif/italic display styling on the storefront
+   renders as clean sans. The one exception is the logo wordmark (the span that
+   follows the monogram SVG inside a link), which is approved artwork. */
+[data-locale] .font-display:not(a > svg + span) {
+  font-family: var(--font-sans);
+  font-style: normal;
+}
+
+[data-locale] .italic:not(a > svg + span) {
+  font-style: normal;
+}
+
+/* Arabic letters must stay joined, so wide tracking is switched off there. */
+[data-locale="ar"] [class*="tracking-["] {
+  letter-spacing: 0;
 }
 
 html {
@@ -121,7 +181,21 @@ html {
   }
 }
 
+/* Mobile menu: a plain fade, nothing more. */
+@keyframes menu-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
+  .menu-fade {
+    animation: menu-fade 0.2s ease-out both;
+  }
+
   .hub-rise {
     animation: hub-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
     animation-delay: calc(var(--hub-i, 0) * 60ms);

@@ -22,7 +22,7 @@ export default async function CreateYourOwnPage() {
       <p className="text-xs uppercase tracking-[0.25em] text-electric-violet">
         {t("eyebrow")}
       </p>
-      <h1 className="mt-5 font-display text-4xl italic leading-[1.05] text-warm-white md:text-5xl">
+      <h1 className="mt-5 text-3xl leading-[1.05] tracking-tight text-warm-white md:text-4xl">
         {t("heading")}
       </h1>
       <p className="mt-6 text-base leading-relaxed text-warm-white/60">

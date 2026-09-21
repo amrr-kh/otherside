@@ -143,12 +143,12 @@ export function CheckoutForm({
     <form action={formAction} className="grid grid-cols-1 gap-12 md:grid-cols-[1.4fr_1fr]">
       <input type="hidden" name="idempotencyKey" value={idempotencyKey} />
       <div>
-        <h1 className="font-display text-3xl italic text-warm-white md:text-4xl">
+        <h1 className="text-3xl tracking-tight text-warm-white md:text-3xl">
           {t("heading")}
         </h1>
 
         <section className="mt-8">
-          <h2 className="text-sm font-semibold uppercase tracking-[0.1em] text-warm-white">
+          <h2 className="text-sm uppercase tracking-[0.1em] text-warm-white">
             {t("contactHeading")}
           </h2>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -196,7 +196,7 @@ export function CheckoutForm({
         </section>
 
         <section className="mt-10">
-          <h2 className="text-sm font-semibold uppercase tracking-[0.1em] text-warm-white">
+          <h2 className="text-sm uppercase tracking-[0.1em] text-warm-white">
             {t("addressHeading")}
           </h2>
 
@@ -367,7 +367,7 @@ export function CheckoutForm({
         </section>
 
         <section className="mt-10">
-          <h2 className="text-sm font-semibold uppercase tracking-[0.1em] text-warm-white">
+          <h2 className="text-sm uppercase tracking-[0.1em] text-warm-white">
             {t("paymentHeading")}
           </h2>
           <div className="mt-4 flex flex-col gap-2">
@@ -422,7 +422,7 @@ export function CheckoutForm({
 
       {/* Order summary */}
       <div className="h-fit border border-warm-white/10 p-6">
-        <h2 className="text-sm font-semibold uppercase tracking-[0.1em] text-warm-white">
+        <h2 className="text-sm uppercase tracking-[0.1em] text-warm-white">
           {t("orderSummary")}
         </h2>
 

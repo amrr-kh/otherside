@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
+import { CtaArrow } from "../Cta";
 
 export function Newsletter() {
   const t = useTranslations("newsletter");
@@ -15,19 +16,27 @@ export function Newsletter() {
   }
 
   return (
-    <section className="border-t border-white/10 bg-cosmic-black">
-      <div className="mx-auto max-w-[1600px] px-5 py-24 md:px-10 md:py-28">
-        <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-          <h2 className="max-w-lg font-display text-4xl italic leading-[1.05] text-warm-white md:text-5xl">
+    <section
+      className="bg-os-cream text-os-ink"
+      style={{ colorScheme: "light" }}
+    >
+      <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-10 px-5 py-20 md:grid-cols-2 md:items-end md:gap-24 md:px-10 md:py-32">
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.28em] text-os-burgundy">
+            {t("eyebrow")}
+          </p>
+          <h2 className="mt-5 max-w-md text-4xl leading-[1.08] tracking-tight md:text-5xl">
             {t("line1")}
             <br />
             {t("line2")}
           </h2>
+          <p className="mt-6 max-w-sm text-base leading-relaxed text-os-ink/65">
+            {t("body")}
+          </p>
+        </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="flex w-full max-w-md flex-col gap-3 sm:flex-row sm:gap-0"
-          >
+        <div className="w-full max-w-md md:justify-self-end">
+          <form onSubmit={handleSubmit} className="group/cta flex">
             <input
               type="email"
               dir="ltr"
@@ -35,15 +44,22 @@ export function Newsletter() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder={t("placeholder")}
-              className="w-full border border-warm-white/25 bg-transparent px-4 py-3 text-sm text-warm-white placeholder:text-warm-white/35 focus:border-electric-violet focus:outline-none sm:border-r-0"
+              aria-label={t("placeholder")}
+              className="min-w-0 flex-1 border border-os-ink/25 bg-transparent px-4 py-4 text-sm text-os-ink placeholder:text-os-ink/40 focus:border-os-burgundy focus:outline-none"
             />
             <button
               type="submit"
-              className="whitespace-nowrap border border-warm-white/70 px-6 py-3 text-xs font-medium uppercase tracking-[0.18em] text-warm-white transition-colors hover:bg-warm-white hover:text-bg"
+              aria-label={t("cta")}
+              className="flex w-14 shrink-0 items-center justify-center bg-os-burgundy text-os-cream transition-opacity hover:opacity-90"
             >
-              {submitted ? t("success") : t("cta")}
+              <CtaArrow />
             </button>
           </form>
+          {submitted ? (
+            <p role="status" className="mt-4 text-sm text-os-ink/70">
+              {t("success")}
+            </p>
+          ) : null}
         </div>
       </div>
     </section>

@@ -62,20 +62,20 @@ export function AccountAuthForms({
       <p className="text-xs uppercase tracking-[0.25em] text-electric-violet">
         {t("eyebrow")}
       </p>
-      <h1 className="mt-4 font-display text-4xl italic text-warm-white">
+      <h1 className="mt-4 text-3xl tracking-tight text-warm-white">
         {mode === "signIn" ? t("signInHeading") : t("signUpHeading")}
       </h1>
       <p className="mt-3 text-sm text-warm-white/55">
         {t("optionalNote")}
       </p>
 
-      <div className="mt-8 flex border-b border-warm-white/10">
+      <div className="mt-8 flex gap-1">
         <button
           type="button"
           onClick={() => setMode("signIn")}
-          className={`px-4 py-2.5 text-xs font-medium uppercase tracking-[0.1em] ${
+          className={`px-4 py-2.5 text-xs uppercase tracking-[0.1em] transition-colors ${
             mode === "signIn"
-              ? "border-b-2 border-warm-white text-warm-white"
+              ? "bg-warm-white/10 text-warm-white"
               : "text-warm-white/40 hover:text-warm-white/70"
           }`}
         >
@@ -84,9 +84,9 @@ export function AccountAuthForms({
         <button
           type="button"
           onClick={() => setMode("signUp")}
-          className={`px-4 py-2.5 text-xs font-medium uppercase tracking-[0.1em] ${
+          className={`px-4 py-2.5 text-xs uppercase tracking-[0.1em] transition-colors ${
             mode === "signUp"
-              ? "border-b-2 border-warm-white text-warm-white"
+              ? "bg-warm-white/10 text-warm-white"
               : "text-warm-white/40 hover:text-warm-white/70"
           }`}
         >

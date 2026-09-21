@@ -12,7 +12,7 @@ export default async function StoryPage() {
         <p className="text-xs uppercase tracking-[0.25em] text-electric-violet">
           الجانب الآخر
         </p>
-        <h1 className="mt-5 font-display text-4xl italic leading-[1.1] text-warm-white md:text-5xl">
+        <h1 className="mt-5 text-3xl leading-[1.1] tracking-tight text-warm-white md:text-4xl">
           شاهد الحقيقة
           <br />
           خلف الستار.
@@ -43,7 +43,7 @@ export default async function StoryPage() {
             الهوديز الواسعة والبناطيل المريحة إلى الهوية البصرية للعلامة
             نفسها.
           </p>
-          <p className="font-display text-xl italic text-warm-white">
+          <p className="text-xl tracking-tight text-warm-white">
             OtherSide ليست عن أن تصبح شخصًا آخر.
           </p>
           <p>
@@ -53,7 +53,7 @@ export default async function StoryPage() {
         </div>
 
         <div className="mt-14 border-t border-warm-white/10 pt-10 text-center">
-          <p className="font-display text-xl italic text-warm-white">
+          <p className="text-xl tracking-tight text-warm-white">
             Bidu. Eshta. Amr.
           </p>
           <p className="mt-2 text-sm text-warm-white/45">
@@ -76,7 +76,7 @@ export default async function StoryPage() {
       <p className="text-xs uppercase tracking-[0.25em] text-electric-violet">
         The OtherSide
       </p>
-      <h1 className="mt-5 font-display text-4xl italic leading-[1.1] text-warm-white md:text-5xl">
+      <h1 className="mt-5 text-3xl leading-[1.1] tracking-tight text-warm-white md:text-4xl">
         See the reality
         <br />
         behind the veil.
@@ -108,7 +108,7 @@ export default async function StoryPage() {
           everything we create, from oversized hoodies and relaxed pants to
           the visual identity of the brand itself.
         </p>
-        <p className="font-display text-xl italic text-warm-white">
+        <p className="text-xl tracking-tight text-warm-white">
           OtherSide is not about becoming someone else.
         </p>
         <p>
@@ -118,7 +118,7 @@ export default async function StoryPage() {
       </div>
 
       <div className="mt-14 border-t border-warm-white/10 pt-10 text-center">
-        <p className="font-display text-xl italic text-warm-white">
+        <p className="text-xl tracking-tight text-warm-white">
           Bidu. Eshta. Amr.
         </p>
         <p className="mt-2 text-sm text-warm-white/45">

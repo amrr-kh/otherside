@@ -9,7 +9,8 @@
     "wishlist": "Wishlist",
     "bag": "Bag",
     "openMenu": "Open menu",
-    "closeMenu": "Close menu"
+    "closeMenu": "Close menu",
+    "theVeilStudy": "The Veil Study"
   },
   "footer": {
     "tagline": "See the reality behind the veil.",
@@ -21,11 +22,11 @@
     "ourStory": "Our Story",
     "trackOrder": "Track Order",
     "shipping": "Shipping",
-    "returns": "Returns",
+    "returns": "Returns & Exchanges",
     "contact": "Contact",
     "copyright": "© {year} OtherSide. All rights reserved.",
-    "privacy": "Privacy",
-    "terms": "Terms"
+    "privacy": "Privacy Policy",
+    "terms": "Terms and Conditions"
   },
   "hero": {
     "line1": "See the",
@@ -34,12 +35,14 @@
     "line4": "veil.",
     "shopHoodies": "Shop Hoodies",
     "shopPants": "Shop Pants",
-    "exploreDrop": "Explore the Drop"
+    "exploreDrop": "Explore the Drop",
+    "subtitle": "Unisex essentials built around strong silhouettes, comfort and individuality.",
+    "cta": "Shop the collection"
   },
   "brandStory": {
     "eyebrow": "The OtherSide — 01",
-    "headingLine1": "The reality is",
-    "headingLine2": "in the details.",
+    "headingLine1": "A different side",
+    "headingLine2": "of the same world.",
     "body": "OtherSide was founded by Bidu, Eshta, and Amr with one idea: what you see on the surface is never the whole story. We create premium unisex pieces built around strong silhouettes, comfort, individuality, and everyday wear — no unnecessary labels, no fixed rules.",
     "readMore": "Read Our Story",
     "principle1Title": "Unisex by design",
@@ -89,11 +92,13 @@
     "quote3": "Not loud. Just unforgettable."
   },
   "newsletter": {
-    "line1": "A signal from",
-    "line2": "the other side.",
-    "placeholder": "Your email address",
-    "cta": "Enter the Other Side",
-    "success": "You're in"
+    "line1": "Be the first",
+    "line2": "to know.",
+    "placeholder": "Email address",
+    "cta": "Subscribe",
+    "success": "You're in",
+    "eyebrow": "Stay connected",
+    "body": "New drops, exclusive access and a different perspective."
   },
   "notFound": {
     "eyebrow": "404",
@@ -109,7 +114,8 @@
     "home": "Back to the Homepage"
   },
   "productCard": {
-    "addToWishlist": "Add to wishlist"
+    "addToWishlist": "Add to wishlist",
+    "colorsCount": "{count} colors"
   },
   "category": {
     "hoodiesTitle": "Hoodies",
@@ -438,5 +444,15 @@
     "facebook": "OtherSide on Facebook",
     "opensInNewTab": "opens in a new tab",
     "copyright": "© {year} OtherSide"
+  },
+  "intro": {
+    "eyebrow": "The Essentials",
+    "heading": "Built for what stays.",
+    "body": "Refined staples made for movement, comfort and individuality.",
+    "cta": "Shop the collection"
+  },
+  "statement": {
+    "line1": "Same world.",
+    "line2": "A different you."
   }
 }

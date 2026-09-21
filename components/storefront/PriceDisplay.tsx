@@ -8,12 +8,15 @@ import {
 type Props = {
   price: number;
   compareAtPrice?: number | null;
-  /** "card" stacks the prices for narrow grid cells; "detail" lays them out inline. */
+  /** "card" lays prices out inline for grid cells; "detail" is the product page; "line" stacks them for cart rows. */
   variant?: "card" | "detail" | "line";
   showBadge?: boolean;
   className?: string;
 };
 
+// Colour comes from the surrounding section (dark or light), so prices read
+// correctly on either background. The original price is struck through (a
+// line through the number, never an underline) and dimmed.
 export function PriceDisplay({
   price,
   compareAtPrice,
@@ -28,7 +31,7 @@ export function PriceDisplay({
   if (original === null) {
     return (
       <span
-        className={`whitespace-nowrap text-gold ${
+        className={`whitespace-nowrap ${
           variant === "detail" ? "text-xl" : "text-sm"
         } ${className}`}
       >
@@ -40,16 +43,16 @@ export function PriceDisplay({
   if (variant === "detail") {
     return (
       <div className={`flex flex-wrap items-baseline gap-x-3 gap-y-1 ${className}`}>
-        <s className="text-base text-warm-white/50 decoration-warm-white/50">
-          <span className="sr-only">{t("original")}: </span>
-          {formatEgp(original)}
-        </s>
-        <span className="text-2xl font-semibold text-gold">
+        <span className="text-2xl">
           <span className="sr-only">{t("sale")}: </span>
           {formatEgp(price)}
         </span>
+        <s className="text-base opacity-50">
+          <span className="sr-only">{t("original")}: </span>
+          {formatEgp(original)}
+        </s>
         {showBadge && percentOff !== null ? (
-          <span className="border border-gold/60 px-2 py-0.5 text-[11px] font-medium uppercase tracking-[0.15em] text-gold">
+          <span className="bg-os-burgundy px-2 py-1 text-[11px] uppercase tracking-[0.15em] text-os-cream">
             {t("save", { percent: percentOff })}
           </span>
         ) : null}
@@ -57,16 +60,33 @@ export function PriceDisplay({
     );
   }
 
-  // "card" and "line": right-aligned stack, sale price stronger than the original.
+  if (variant === "card") {
+    return (
+      <span
+        className={`flex flex-wrap items-baseline gap-x-2.5 whitespace-nowrap ${className}`}
+      >
+        <span className="text-sm">
+          <span className="sr-only">{t("sale")}: </span>
+          {formatEgp(price)}
+        </span>
+        <s className="text-xs opacity-50">
+          <span className="sr-only">{t("original")}: </span>
+          {formatEgp(original)}
+        </s>
+      </span>
+    );
+  }
+
+  // "line": right-aligned stack for cart / checkout rows.
   return (
     <span
       className={`flex flex-col items-end gap-0.5 whitespace-nowrap ${className}`}
     >
-      <span className="text-sm font-semibold text-gold">
+      <span className="text-sm">
         <span className="sr-only">{t("sale")}: </span>
         {formatEgp(price)}
       </span>
-      <s className="text-xs text-warm-white/45 decoration-warm-white/45">
+      <s className="text-xs opacity-50">
         <span className="sr-only">{t("original")}: </span>
         {formatEgp(original)}
       </s>

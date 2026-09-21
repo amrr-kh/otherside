@@ -1,49 +1,46 @@
+import Image from "next/image";
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
-import { Logo } from "../Logo";
-import { PlaceholderPhoto } from "../PlaceholderPhoto";
+import { CtaLink } from "../Cta";
+import { CAMPAIGN_IMAGES } from "../campaignImages";
 
+/**
+ * Image-led opening: two model photos side by side, the message on plain dark
+ * next to (desktop) or below (mobile) them. No overlay sits on the photography.
+ */
 export async function Hero() {
   const t = await getTranslations("hero");
+  const headline = [t("line1"), t("line2"), t("line3"), t("line4")].join(" ");
 
   return (
-    <section className="relative flex h-[92vh] min-h-[560px] w-full items-end overflow-hidden bg-cosmic-black">
-      <PlaceholderPhoto variant="hero" className="absolute inset-0" />
-      <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/10 to-transparent" />
+    <section className="bg-os-ink text-os-cream">
+      <div className="mx-auto grid max-w-[1600px] grid-cols-1 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+        <div className="order-1 grid grid-cols-2 gap-1 md:order-2 md:h-[clamp(560px,calc(100svh-4rem),900px)]">
+          {[CAMPAIGN_IMAGES.heroMen, CAMPAIGN_IMAGES.heroWomen].map((src) => (
+            <div
+              key={src}
+              className="relative aspect-[3/4.6] overflow-hidden bg-soft-black md:aspect-auto"
+            >
+              <Image
+                src={src}
+                alt=""
+                fill
+                preload
+                sizes="(min-width: 1600px) 480px, (min-width: 768px) 30vw, 50vw"
+                className="object-cover object-[50%_12%]"
+              />
+            </div>
+          ))}
+        </div>
 
-      <div className="relative mx-auto flex w-full max-w-[1600px] flex-col gap-10 px-5 pb-16 md:px-10 md:pb-24">
-        <Logo markClassName="h-8 w-8" wordmarkClassName="text-xl" />
-
-        <div>
-          <h1 className="font-display text-[13vw] italic leading-[0.92] tracking-tight text-warm-white sm:text-[9vw] md:text-[6.4vw] lg:text-[88px]">
-            {t("line1")}
-            <br />
-            {t("line2")}
-            <br />
-            {t("line3")}
-            <br />
-            {t("line4")}
+        <div className="order-2 flex flex-col justify-end px-5 pb-16 pt-12 md:order-1 md:px-10 md:pb-20 md:pt-0">
+          <h1 className="max-w-[14ch] text-balance text-[2.6rem] leading-[1.05] tracking-tight md:text-[3.4rem] lg:text-[4.2rem]">
+            {headline}
           </h1>
-
-          <div className="mt-9 flex flex-wrap items-center gap-4">
-            <Link
-              href="/hoodies"
-              className="border border-warm-white/70 px-7 py-3 text-xs font-medium uppercase tracking-[0.18em] text-warm-white transition-colors hover:bg-warm-white hover:text-bg"
-            >
-              {t("shopHoodies")}
-            </Link>
-            <Link
-              href="/pants"
-              className="border border-warm-white/70 px-7 py-3 text-xs font-medium uppercase tracking-[0.18em] text-warm-white transition-colors hover:bg-warm-white hover:text-bg"
-            >
-              {t("shopPants")}
-            </Link>
-            <Link
-              href="#drop"
-              className="px-2 py-3 text-xs font-medium uppercase tracking-[0.18em] text-warm-white/70 underline underline-offset-4 transition-colors hover:text-warm-white"
-            >
-              {t("exploreDrop")}
-            </Link>
+          <p className="mt-6 max-w-md text-base leading-relaxed text-os-cream/70">
+            {t("subtitle")}
+          </p>
+          <div className="mt-9">
+            <CtaLink href="/collections/the-veil-study">{t("cta")}</CtaLink>
           </div>
         </div>
       </div>

@@ -13,6 +13,8 @@ export type StorefrontProduct = {
   /** Original price, set only when it is genuinely higher than `price`. */
   compareAtPrice: number | null;
   colors: string[];
+  /** Swatch color of each entry in `colors` (same order); null when none is set. */
+  colorHexes?: (string | null)[];
   primaryImageUrl: string | null;
   secondaryImageUrl: string | null;
   /** Set only for single-color cards, so the link can pre-select this color. */
@@ -60,6 +62,7 @@ export function toStorefrontProduct(
     price,
     compareAtPrice,
     colors,
+    colorHexes: colorOption?.values.map((v) => v.swatchHex) ?? [],
     primaryImageUrl: firstColorImages[0]?.url ?? null,
     secondaryImageUrl:
       firstColorImages[1]?.url ?? firstColorImages[0]?.url ?? null,
@@ -86,6 +89,7 @@ export function toStorefrontProductsByColor(
       price,
       compareAtPrice,
       colors: [color.value],
+      colorHexes: [color.swatchHex],
       primaryImageUrl: images[0]?.url ?? null,
       secondaryImageUrl: images[1]?.url ?? images[0]?.url ?? null,
       colorSlug: slugify(color.value),

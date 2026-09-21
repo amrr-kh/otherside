@@ -24,7 +24,7 @@ export async function CategoryGrid({
 
   return (
     <div className="mx-auto max-w-[1600px] px-5 py-16 md:px-10 md:py-24">
-      <h1 className="font-display text-4xl italic text-warm-white md:text-5xl">
+      <h1 className="text-3xl tracking-tight text-warm-white md:text-4xl">
         {title}
       </h1>
       <p className="mt-3 max-w-md text-sm text-warm-white/50">{intro}</p>

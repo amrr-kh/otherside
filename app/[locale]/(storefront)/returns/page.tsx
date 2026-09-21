@@ -15,7 +15,7 @@ export default async function ReturnsPage() {
       <p className="text-xs uppercase tracking-[0.25em] text-electric-violet">
         {t("eyebrow")}
       </p>
-      <h1 className="mt-5 font-display text-4xl italic text-warm-white md:text-5xl">
+      <h1 className="mt-5 text-3xl tracking-tight text-warm-white md:text-4xl">
         {t("heading")}
       </h1>
 
@@ -26,7 +26,7 @@ export default async function ReturnsPage() {
           {t("p3Prefix")}{" "}
           <Link
             href="/create-your-own"
-            className="text-warm-white underline underline-offset-4 hover:text-electric-violet"
+            className="text-copper-light transition-opacity hover:opacity-70"
           >
             {t("p3Link")}
           </Link>{" "}
@@ -39,7 +39,7 @@ export default async function ReturnsPage() {
                 href={settings.whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-warm-white underline underline-offset-4 hover:text-electric-violet"
+                className="text-copper-light transition-opacity hover:opacity-70"
               >
                 {chunks}
               </a>

@@ -13,7 +13,7 @@ export function LegalPage({
 }) {
   return (
     <div className="mx-auto max-w-2xl px-5 py-24 md:px-10 md:py-32">
-      <h1 className="font-display text-4xl italic text-warm-white md:text-5xl">
+      <h1 className="text-3xl tracking-tight text-warm-white md:text-4xl">
         {title}
       </h1>
       <p className="mt-3 text-xs uppercase tracking-[0.15em] text-warm-white/40">
@@ -41,7 +41,7 @@ export function LegalSection({
 }) {
   return (
     <section>
-      <h2 className="text-sm font-semibold uppercase tracking-[0.1em] text-warm-white">
+      <h2 className="text-sm uppercase tracking-[0.1em] text-warm-white">
         {heading}
       </h2>
       <div className="mt-3 space-y-3">{children}</div>

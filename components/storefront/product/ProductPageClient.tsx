@@ -167,8 +167,8 @@ export function ProductPageClient({
   }
 
   return (
-    <div className="mx-auto max-w-[1600px] px-5 py-8 md:px-10 md:py-14">
-      <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-16">
+    <div className="mx-auto max-w-[1600px] px-5 pb-16 pt-5 md:px-10 md:pb-24 md:pt-10">
+      <div className="grid grid-cols-1 gap-10 md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] md:gap-16 lg:gap-24">
         {/* Gallery */}
         <div>
           <div className="relative aspect-[4/5] overflow-hidden bg-soft-black">
@@ -179,7 +179,7 @@ export function ProductPageClient({
                 alt={product.name}
                 fill
                 sizes="(min-width: 768px) 50vw, 100vw"
-                className="object-cover transition-opacity duration-300"
+                className="object-cover object-[50%_15%] transition-opacity duration-300"
                 priority
               />
             ) : (
@@ -245,12 +245,12 @@ export function ProductPageClient({
         </div>
 
         {/* Purchase panel */}
-        <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-electric-violet">
+        <div className="md:sticky md:top-24 md:self-start">
+          <p className="text-[11px] uppercase tracking-[0.28em] text-copper-light">
             {t("eyebrow")}
           </p>
           <div className="mt-3 flex items-start justify-between gap-4">
-            <h1 className="font-display text-4xl italic text-warm-white md:text-5xl">
+            <h1 className="text-3xl tracking-tight text-warm-white md:text-4xl">
               {product.name}
             </h1>
             <button
@@ -288,7 +288,7 @@ export function ProductPageClient({
           {/* Gender / model view */}
           {product.availableGenders.length > 0 ? (
             <div className="mt-8">
-              <h2 className="text-xs uppercase tracking-[0.15em] text-warm-white/60">
+              <h2 className="text-[11px] uppercase tracking-[0.18em] text-warm-white/55">
                 {t("viewAs")}
               </h2>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -312,7 +312,7 @@ export function ProductPageClient({
 
           {/* Colors */}
           <div className="mt-8">
-            <h2 className="text-xs uppercase tracking-[0.15em] text-warm-white/60">
+            <h2 className="text-[11px] uppercase tracking-[0.18em] text-warm-white/55">
               {t("color")}
               {(() => {
                 const c = product.colors.find((c) => c.id === selectedColorId);
@@ -343,7 +343,7 @@ export function ProductPageClient({
 
           {/* Sizes */}
           <div className="mt-6">
-            <h2 className="text-xs uppercase tracking-[0.15em] text-warm-white/60">
+            <h2 className="text-[11px] uppercase tracking-[0.18em] text-warm-white/55">
               {t("size")}
             </h2>
             <div className="mt-3 flex flex-wrap gap-2">
@@ -399,7 +399,7 @@ export function ProductPageClient({
                 type="button"
                 disabled={!canAddToBag || isPending}
                 onClick={handleAddToBag}
-                className="flex flex-1 items-center justify-center gap-2 bg-warm-white px-6 py-3.5 text-xs font-medium uppercase tracking-[0.18em] text-bg transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:bg-warm-white/15 disabled:text-warm-white/40"
+                className="flex flex-1 items-center justify-center gap-2 bg-warm-white px-6 py-4 text-xs uppercase tracking-[0.18em] text-bg transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:bg-warm-white/15 disabled:text-warm-white/40"
               >
                 <ShoppingBag className="h-4 w-4" />
                 {addedToBag
