@@ -7,6 +7,7 @@ import { CAMPAIGN_IMAGES } from "../campaignImages";
 /** Two large photographs, one per category, on a warm light background. */
 export async function EditorialFeature() {
   const t = await getTranslations("editorial");
+  const tAlt = await getTranslations("mediaAlt");
 
   const FEATURES = [
     {
@@ -15,6 +16,7 @@ export async function EditorialFeature() {
       body: t("hoodiesBody"),
       href: "/hoodies",
       image: CAMPAIGN_IMAGES.editorialHoodies,
+      alt: tAlt("editorialHoodies"),
     },
     {
       eyebrow: t("pantsEyebrow"),
@@ -22,6 +24,7 @@ export async function EditorialFeature() {
       body: t("pantsBody"),
       href: "/pants",
       image: CAMPAIGN_IMAGES.editorialPants,
+      alt: tAlt("editorialPants"),
     },
   ];
 
@@ -37,7 +40,7 @@ export async function EditorialFeature() {
               <div className="relative aspect-[4/5] overflow-hidden bg-os-cream">
                 <Image
                   src={f.image}
-                  alt=""
+                  alt={f.alt}
                   fill
                   sizes="(min-width: 768px) 46vw, 100vw"
                   className="object-cover object-[50%_20%] transition-transform duration-700 ease-out group-hover/cta:scale-[1.03]"

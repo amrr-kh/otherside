@@ -393,6 +393,10 @@
   "meta": {
     "homeTitle": "OtherSide | Unisex Fashion in Egypt",
     "homeDescription": "Discover OtherSide — unisex hoodies and wide-leg pants designed for comfort, individuality and a different perspective. Shop online in Egypt.",
+    "hoodiesTitle": "Oversized Unisex Hoodies Egypt",
+    "hoodiesDescription": "Shop oversized unisex hoodies from OtherSide — every colour, every size, S to XL. Cash on delivery, InstaPay and mobile wallet payment.",
+    "pantsTitle": "Wide-Leg Pants Egypt | Unisex",
+    "pantsDescription": "Shop fluid wide-leg unisex pants from OtherSide — every colour, every size, S to XL. Cash on delivery, InstaPay and mobile wallet payment.",
     "storyTitle": "Our Story",
     "storyDescription": "OtherSide was founded by Bidu, Eshta and Amr on one idea: what you see on the surface is never the whole story. Unisex fashion from Egypt.",
     "contactTitle": "Contact",
@@ -454,5 +458,13 @@
   "statement": {
     "line1": "Same world.",
     "line2": "A different you."
+  },
+  "mediaAlt": {
+    "heroMen": "Model wearing the OtherSide Basic Hoodie in Black",
+    "heroWomen": "Model wearing the OtherSide Basic Hoodie in Burgundy",
+    "editorialHoodies": "OtherSide Basic Hoodie in Cream",
+    "editorialPants": "OtherSide Wide-Leg Pants in Charcoal",
+    "campaignMen": "Model wearing the OtherSide Basic Hoodie in Brown",
+    "campaignWomen": "Model wearing the OtherSide Basic Hoodie in Green"
   }
 }

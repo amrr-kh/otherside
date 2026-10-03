@@ -9,20 +9,25 @@ import { CAMPAIGN_IMAGES } from "../campaignImages";
  */
 export async function Hero() {
   const t = await getTranslations("hero");
+  const tAlt = await getTranslations("mediaAlt");
   const headline = [t("line1"), t("line2"), t("line3"), t("line4")].join(" ");
+  const photos = [
+    { src: CAMPAIGN_IMAGES.heroMen, alt: tAlt("heroMen") },
+    { src: CAMPAIGN_IMAGES.heroWomen, alt: tAlt("heroWomen") },
+  ];
 
   return (
     <section className="bg-os-ink text-os-cream">
       <div className="mx-auto grid max-w-[1600px] grid-cols-1 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
         <div className="order-1 grid grid-cols-2 gap-1 md:order-2 md:h-[clamp(560px,calc(100svh-4rem),900px)]">
-          {[CAMPAIGN_IMAGES.heroMen, CAMPAIGN_IMAGES.heroWomen].map((src) => (
+          {photos.map(({ src, alt }) => (
             <div
               key={src}
               className="relative aspect-[3/4.6] overflow-hidden bg-soft-black md:aspect-auto"
             >
               <Image
                 src={src}
-                alt=""
+                alt={alt}
                 fill
                 preload
                 sizes="(min-width: 1600px) 480px, (min-width: 768px) 30vw, 50vw"

@@ -90,6 +90,12 @@ export function ProductPageClient({
   const backImage = colorImages.find((i) => i.role === "BACK");
   const displayedImage =
     colorImages.find((i) => i.id === activeImageId) ?? frontImage;
+  const selectedColorValue = product.colors.find(
+    (c) => c.id === selectedColorId,
+  )?.value;
+  const galleryAlt = selectedColorValue
+    ? `${product.name} — ${selectedColorValue}`
+    : product.name;
 
   const availableSizeIds = useMemo(() => {
     return new Set(
@@ -176,11 +182,11 @@ export function ProductPageClient({
               <Image
                 key={displayedImage.id}
                 src={displayedImage.url}
-                alt={product.name}
+                alt={galleryAlt}
                 fill
                 sizes="(min-width: 768px) 50vw, 100vw"
                 className="object-cover object-[50%_15%] transition-opacity duration-300"
-                priority
+                preload
               />
             ) : (
               <div className="flex h-full items-center justify-center text-warm-white/30">
@@ -233,7 +239,7 @@ export function ProductPageClient({
                 >
                   <Image
                     src={img.url}
-                    alt={`${product.name} ${img.role.toLowerCase()}`}
+                    alt={`${galleryAlt} — ${img.role.toLowerCase()}`}
                     fill
                     sizes="120px"
                     className="object-cover"

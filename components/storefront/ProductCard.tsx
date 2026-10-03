@@ -81,6 +81,12 @@ export function ProductCard({ product }: { product: ProductCardData }) {
   const href = product.colorSlug
     ? `/products/${product.slug}?color=${product.colorSlug}`
     : `/products/${product.slug}`;
+  // Single-colour cards exist per colour, so naming it is accurate; a
+  // multi-colour card (e.g. a collection grid) just keeps the product name.
+  const photoAlt =
+    product.colors.length === 1
+      ? `${product.name} — ${product.colors[0]}`
+      : product.name;
 
   return (
     <Link
@@ -94,7 +100,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
           <>
             <Image
               src={product.primaryImageUrl!}
-              alt={product.name}
+              alt={photoAlt}
               fill
               sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
               className={`object-cover object-[50%_18%] transition-opacity duration-500 ${
@@ -103,7 +109,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
             />
             <Image
               src={product.secondaryImageUrl ?? product.primaryImageUrl!}
-              alt={product.name}
+              alt={photoAlt}
               fill
               sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
               className={`object-cover object-[50%_18%] transition-opacity duration-500 ${

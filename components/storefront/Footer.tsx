@@ -1,7 +1,8 @@
 "use client";
 
+import NextLink from "next/link";
 import { useTranslations, useLocale } from "next-intl";
-import { Link, usePathname } from "@/i18n/navigation";
+import { Link, usePathname, getPathname } from "@/i18n/navigation";
 import { Logo } from "./Logo";
 
 const LINK_CLASS =
@@ -119,9 +120,14 @@ export function Footer({
         <div className="mt-16 flex flex-col gap-5 text-xs text-os-cream/40 md:mt-20 md:flex-row md:items-center md:justify-between">
           <p>{t("copyright", { year: new Date().getFullYear() })}</p>
           <div className="flex items-center gap-4">
-            <Link
-              href={pathname}
-              locale="en"
+            {/* Plain next/link with a pre-resolved path: next-intl's own
+                <Link locale=...> always emits the /en-prefixed form for the
+                default locale and relies on the proxy to 307 it back to the
+                unprefixed canonical URL. getPathname() already returns the
+                final, unprefixed path, so linking straight to it skips that
+                extra redirect hop. */}
+            <NextLink
+              href={getPathname({ href: pathname, locale: "en" })}
               className={
                 locale === "en"
                   ? "text-os-cream"
@@ -129,11 +135,10 @@ export function Footer({
               }
             >
               EN
-            </Link>
+            </NextLink>
             <span className="text-os-cream/20">/</span>
-            <Link
-              href={pathname}
-              locale="ar"
+            <NextLink
+              href={getPathname({ href: pathname, locale: "ar" })}
               className={
                 locale === "ar"
                   ? "text-os-cream"
@@ -141,7 +146,7 @@ export function Footer({
               }
             >
               العربية
-            </Link>
+            </NextLink>
           </div>
         </div>
       </div>

@@ -6,6 +6,11 @@ import { CAMPAIGN_IMAGES } from "../campaignImages";
 /** Male and female model side by side, with a short invitation to build a piece. */
 export async function CampaignSection() {
   const t = await getTranslations("campaign");
+  const tAlt = await getTranslations("mediaAlt");
+  const photos = [
+    { src: CAMPAIGN_IMAGES.campaignMen, alt: tAlt("campaignMen") },
+    { src: CAMPAIGN_IMAGES.campaignWomen, alt: tAlt("campaignWomen") },
+  ];
 
   return (
     <section className="bg-os-burgundy-deep text-os-cream">
@@ -23,22 +28,20 @@ export async function CampaignSection() {
         </div>
 
         <div className="grid grid-cols-2 gap-3 md:gap-5">
-          {[CAMPAIGN_IMAGES.campaignMen, CAMPAIGN_IMAGES.campaignWomen].map(
-            (src) => (
-              <div
-                key={src}
-                className="relative aspect-[4/5] overflow-hidden bg-os-black"
-              >
-                <Image
-                  src={src}
-                  alt=""
-                  fill
-                  sizes="(min-width: 768px) 32vw, 50vw"
-                  className="object-cover object-[50%_18%]"
-                />
-              </div>
-            ),
-          )}
+          {photos.map(({ src, alt }) => (
+            <div
+              key={src}
+              className="relative aspect-[4/5] overflow-hidden bg-os-black"
+            >
+              <Image
+                src={src}
+                alt={alt}
+                fill
+                sizes="(min-width: 768px) 32vw, 50vw"
+                className="object-cover object-[50%_18%]"
+              />
+            </div>
+          ))}
         </div>
       </div>
     </section>

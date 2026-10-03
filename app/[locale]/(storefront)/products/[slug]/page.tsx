@@ -18,6 +18,7 @@ import {
   trimDescription,
 } from "@/lib/seo";
 import { getWishlistProductIds } from "@/lib/storefront/wishlist";
+import { PRODUCT_SEO_OVERRIDES } from "@/lib/seo-overrides";
 import { getTranslations } from "next-intl/server";
 import {
   getActivePromotions,
@@ -65,16 +66,21 @@ export async function generateMetadata({
   if (!product) return {};
 
   const path = `/products/${slug}`;
-  const description = trimDescription(
+  const baseDescription = trimDescription(
     product.shortDescription || product.fullDescription,
   );
+  // Search-result-only copy (see lib/seo-overrides.ts); the H1 below always
+  // stays product.name, exactly as the catalog has it.
+  const override = PRODUCT_SEO_OVERRIDES[slug]?.[locale === "ar" ? "ar" : "en"];
+  const title = override?.title ?? product.name;
+  const description = override?.description ?? baseDescription;
   const image = primaryImageUrl(product.images);
-  const shareTitle = `${product.name} | ${SITE_NAME}`;
+  const shareTitle = `${title} | ${SITE_NAME}`;
   // Same price the page itself shows, including any live limited-offer percent.
   const priced = pricedForDisplay(await getLivePercentPromotions(), product);
 
   return {
-    title: product.name,
+    title,
     description,
     alternates: pageAlternates(locale, path),
     openGraph: buildOpenGraph({ locale, path, title: shareTitle, description, image }),

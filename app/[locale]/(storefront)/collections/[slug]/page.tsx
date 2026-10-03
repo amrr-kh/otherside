@@ -13,6 +13,8 @@ import {
   trimDescription,
 } from "@/lib/seo";
 import { CollectionGrid } from "@/components/storefront/CollectionGrid";
+import { getCollectionProductsByColor } from "@/lib/storefront/products";
+import { COLLECTION_SEO_OVERRIDES } from "@/lib/seo-overrides";
 
 export const revalidate = 60;
 
@@ -33,13 +35,18 @@ export async function generateMetadata({
 
   const t = await getTranslations({ locale, namespace: "meta" });
   const path = `/collections/${slug}`;
-  const description = trimDescription(
+  const baseDescription = trimDescription(
     collection.description || t("categoryFallbackDescription", { name: collection.name }),
   );
-  const shareTitle = `${collection.name} | ${SITE_NAME}`;
+  // Search-result-only copy (see lib/seo-overrides.ts); the on-page H1 stays
+  // collection.name exactly as the catalog has it.
+  const override = COLLECTION_SEO_OVERRIDES[slug]?.[locale === "ar" ? "ar" : "en"];
+  const title = override?.title ?? collection.name;
+  const description = override?.description ?? baseDescription;
+  const shareTitle = `${title} | ${SITE_NAME}`;
 
   return {
-    title: collection.name,
+    title,
     description,
     alternates: pageAlternates(locale, path),
     openGraph: buildOpenGraph({ locale, path, title: shareTitle, description }),
@@ -58,6 +65,40 @@ export default async function CollectionPage({
   });
 
   if (!collection) notFound();
+
+  // Real, live products in this collection — one entry per product (not per
+  // color), in the order the grid shows them.
+  const listedProducts: { slug: string; name: string }[] = [];
+  try {
+    const cards = await getCollectionProductsByColor(slug);
+    const seen = new Set<string>();
+    for (const card of cards) {
+      if (seen.has(card.slug)) continue;
+      seen.add(card.slug);
+      listedProducts.push({ slug: card.slug, name: card.name });
+    }
+  } catch (error) {
+    console.error(`CollectionPage(${slug}): failed to load products for schema`, error);
+  }
+
+  const collectionJsonLd =
+    listedProducts.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: collection.name,
+          url: absoluteUrl(localizedPath(locale, `/collections/${slug}`)),
+          mainEntity: {
+            "@type": "ItemList",
+            itemListElement: listedProducts.map((p, index) => ({
+              "@type": "ListItem",
+              position: index + 1,
+              url: absoluteUrl(localizedPath(locale, `/products/${p.slug}`)),
+              name: p.name,
+            })),
+          },
+        }
+      : null;
 
   const breadcrumbs = {
     "@context": "https://schema.org",
@@ -80,6 +121,7 @@ export default async function CollectionPage({
 
   return (
     <>
+      {collectionJsonLd ? <JsonLd data={collectionJsonLd} /> : null}
       <JsonLd data={breadcrumbs} />
       <CollectionGrid
         collectionSlug={slug}

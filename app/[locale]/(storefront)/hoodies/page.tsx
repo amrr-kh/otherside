@@ -18,9 +18,12 @@ export async function generateMetadata({
   params,
 }: PageProps<"/[locale]/hoodies">): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "category" });
-  const title = t("hoodiesTitle");
-  const description = trimDescription(t("hoodiesIntro"));
+  const tMeta = await getTranslations({ locale, namespace: "meta" });
+  // The <title>/description are keyword-focused copy for search results;
+  // the on-page H1 and intro paragraph (category.hoodiesTitle/hoodiesIntro)
+  // are untouched and stay exactly as the approved storefront shows them.
+  const title = tMeta("hoodiesTitle");
+  const description = trimDescription(tMeta("hoodiesDescription"));
   const shareTitle = `${title} | ${SITE_NAME}`;
 
   return {

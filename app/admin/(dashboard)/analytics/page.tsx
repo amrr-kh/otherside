@@ -1,4 +1,6 @@
 import { prisma } from "@/lib/db";
+import { getWebsiteTraffic, isGa4Configured } from "@/lib/analytics/ga4";
+import { WebsiteTraffic } from "./WebsiteTraffic";
 
 const EXCLUDED_FROM_REVENUE = new Set(["CANCELLED", "RETURNED"]);
 
@@ -124,8 +126,14 @@ export default async function AdminAnalyticsPage() {
   const maxPaymentCount = Math.max(...Array.from(paymentCounts.values()), 1);
   const maxProductRevenue = Math.max(...topProducts.map((p) => p.revenue), 1);
 
+  const todayKey = localDateKey(new Date());
+  const ordersToday = orders.filter((o) => localDateKey(o.createdAt) === todayKey).length;
+
+  const configured = isGa4Configured();
+  const traffic = configured ? await getWebsiteTraffic("7d") : null;
+
   return (
-    <div className="max-w-4xl">
+    <div className="max-w-6xl">
       <h1 className="text-xl font-semibold text-soft-black">Analytics</h1>
       <p className="mt-1 text-sm text-soft-black/50">
         Computed from every order placed so far.
@@ -267,6 +275,13 @@ export default async function AdminAnalyticsPage() {
           )}
         </div>
       </div>
+
+      <WebsiteTraffic
+        initial={traffic}
+        initialRange="7d"
+        configured={configured}
+        ordersToday={ordersToday}
+      />
     </div>
   );
 }

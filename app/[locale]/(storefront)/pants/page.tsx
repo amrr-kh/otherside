@@ -18,9 +18,11 @@ export async function generateMetadata({
   params,
 }: PageProps<"/[locale]/pants">): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "category" });
-  const title = t("pantsTitle");
-  const description = trimDescription(t("pantsIntro"));
+  const tMeta = await getTranslations({ locale, namespace: "meta" });
+  // Same split as /hoodies: the <title>/description target search intent,
+  // the on-page H1 and intro (category.pantsTitle/pantsIntro) are untouched.
+  const title = tMeta("pantsTitle");
+  const description = trimDescription(tMeta("pantsDescription"));
   const shareTitle = `${title} | ${SITE_NAME}`;
 
   return {

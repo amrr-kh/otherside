@@ -100,13 +100,13 @@ function Photo({
   src,
   alt,
   sizes,
-  priority = false,
+  preload = false,
   className = "",
 }: {
   src: string | null;
   alt: string;
   sizes: string;
-  priority?: boolean;
+  preload?: boolean;
   className?: string;
 }) {
   if (!src) {
@@ -120,7 +120,7 @@ function Photo({
       alt={alt}
       fill
       sizes={sizes}
-      priority={priority}
+      preload={preload}
       className={`object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100 ${className}`}
     />
   );
@@ -221,7 +221,7 @@ export default async function LinksPage({
                 <Photo
                   src={photos.veil}
                   alt=""
-                  priority
+                  preload
                   sizes="(min-width: 480px) 448px, 100vw"
                   className="object-[50%_18%]"
                 />

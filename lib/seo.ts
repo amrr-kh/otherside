@@ -15,7 +15,10 @@ export function localizedPath(locale: string, path: string): string {
 }
 
 export function absoluteUrl(path: string): string {
-  return `${getSiteUrl()}${path}`;
+  // The root path collapses to the bare origin, matching how Next's own
+  // metadata resolver renders a root canonical/hreflang tag (no trailing
+  // slash) — keeps sitemap.xml <loc> values identical to the rendered tags.
+  return `${getSiteUrl()}${path === "/" ? "" : path}`;
 }
 
 /** Canonical URL (never carries ?color= / ?size=) plus en/ar/x-default alternates. */
