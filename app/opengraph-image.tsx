@@ -27,7 +27,7 @@ export default function OpengraphImage() {
             textTransform: "uppercase",
           }}
         >
-          Premium unisex fashion · Egypt
+          Unisex fashion · Egypt
         </div>
         <div
           style={{

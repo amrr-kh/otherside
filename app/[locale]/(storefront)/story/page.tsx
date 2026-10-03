@@ -30,7 +30,7 @@ export default async function StoryPage() {
           </p>
           <p>
             نهجنا في الأزياء بسيط: بلا تصنيفات غير ضرورية، وبلا قواعد ثابتة،
-            وبلا ضغط للانصهار في هوية واحدة. نصنع قطعًا فاخرة للجنسين، مبنية
+            وبلا ضغط للانصهار في هوية واحدة. نصنع قطعًا للجنسين، مبنية
             على سيلويت قوي، وراحة، وتفرد، وارتداء يومي.
           </p>
           <p>
@@ -94,9 +94,9 @@ export default async function StoryPage() {
         </p>
         <p>
           Our approach to fashion is simple: no unnecessary labels, no fixed
-          rules, and no pressure to fit into one identity. We create premium
-          unisex pieces built around strong silhouettes, comfort,
-          individuality, and everyday wear.
+          rules, and no pressure to fit into one identity. We create unisex
+          pieces built around strong silhouettes, comfort, individuality, and
+          everyday wear.
         </p>
         <p>
           Some designs are quiet and minimal. Others reveal more through

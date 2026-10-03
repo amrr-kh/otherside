@@ -15,7 +15,7 @@ const EN_SECTIONS = [
   {
     heading: "1. About OtherSide",
     paragraphs: [
-      "OtherSide is a premium unisex fashion brand operating in Egypt.",
+      "OtherSide is a unisex fashion brand operating in Egypt.",
       "Our website allows customers to browse products, select available variants, place orders, and arrange delivery.",
     ],
   },
@@ -180,7 +180,7 @@ const AR_SECTIONS = [
   {
     heading: "١. عن OtherSide",
     paragraphs: [
-      "OtherSide علامة أزياء فاخرة للجنسين تعمل في مصر.",
+      "OtherSide علامة أزياء للجنسين تعمل في مصر.",
       "يتيح موقعنا للعملاء تصفح المنتجات، واختيار الخيارات المتاحة، وإتمام الطلبات، وترتيب التوصيل.",
     ],
   },

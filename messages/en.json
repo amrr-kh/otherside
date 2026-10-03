@@ -43,7 +43,7 @@
     "eyebrow": "The OtherSide — 01",
     "headingLine1": "A different side",
     "headingLine2": "of the same world.",
-    "body": "OtherSide was founded by Bidu, Eshta, and Amr with one idea: what you see on the surface is never the whole story. We create premium unisex pieces built around strong silhouettes, comfort, individuality, and everyday wear — no unnecessary labels, no fixed rules.",
+    "body": "OtherSide was founded by Bidu, Eshta, and Amr with one idea: what you see on the surface is never the whole story. We create unisex pieces built around strong silhouettes, comfort, individuality, and everyday wear — no unnecessary labels, no fixed rules.",
     "readMore": "Read Our Story",
     "principle1Title": "Unisex by design",
     "principle1Body": "No unnecessary labels, no fixed rules.",
@@ -391,10 +391,10 @@
     "percentOff": "{percent}% OFF"
   },
   "meta": {
-    "homeTitle": "OtherSide | Premium Unisex Fashion in Egypt",
-    "homeDescription": "Discover OtherSide — premium unisex hoodies and wide-leg pants designed for comfort, individuality and a different perspective. Shop online in Egypt.",
+    "homeTitle": "OtherSide | Unisex Fashion in Egypt",
+    "homeDescription": "Discover OtherSide — unisex hoodies and wide-leg pants designed for comfort, individuality and a different perspective. Shop online in Egypt.",
     "storyTitle": "Our Story",
-    "storyDescription": "OtherSide was founded by Bidu, Eshta and Amr on one idea: what you see on the surface is never the whole story. Premium unisex fashion from Egypt.",
+    "storyDescription": "OtherSide was founded by Bidu, Eshta and Amr on one idea: what you see on the surface is never the whole story. Unisex fashion from Egypt.",
     "contactTitle": "Contact",
     "contactDescription": "Order questions, sizing help or custom requests — reach the OtherSide team on WhatsApp, email or social media.",
     "shippingTitle": "Shipping",
@@ -414,7 +414,7 @@
     "checkoutTitle": "Checkout",
     "wishlistTitle": "Wishlist",
     "orderConfirmationTitle": "Order Confirmation",
-    "categoryFallbackDescription": "Shop {name} from OtherSide — premium unisex fashion from Egypt.",
+    "categoryFallbackDescription": "Shop {name} from OtherSide — unisex fashion from Egypt.",
     "linksTitle": "OtherSide | Official Links",
     "linksDescription": "Shop OtherSide, discover The Veil Study, track your order and connect with us."
   },
