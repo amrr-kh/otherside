@@ -24,6 +24,6 @@ export const config = {
   // files — the locale middleware would otherwise rewrite them into /en/... and
   // 404 them.
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|icon.png|apple-icon.png|uploads/|robots.txt|sitemap.xml|opengraph-image|twitter-image).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|icon.png|apple-icon.png|uploads/|brand/|robots.txt|sitemap.xml|opengraph-image|twitter-image).*)",
   ],
 };
