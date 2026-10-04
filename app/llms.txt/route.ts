@@ -16,7 +16,7 @@ const body = `# OtherSide
 - [Create Your Own](${SITE_URL}/create-your-own): custom pieces
 
 ## Good to know
-- Online store based in Egypt; prices are in Egyptian pounds (EGP)
+- Online store based in Cairo, Egypt; currently delivers to Cairo and Giza only; prices are in Egyptian pounds (EGP)
 - Payment: cash on delivery, InstaPay and mobile wallets
 - Languages: English and Arabic (Arabic pages start with ${SITE_URL}/ar)
 - [Shipping](${SITE_URL}/shipping), [Returns](${SITE_URL}/returns), [Contact](${SITE_URL}/contact), [Our story](${SITE_URL}/story)

@@ -166,7 +166,7 @@
     "materialHeading": "Material",
     "careHeading": "Care",
     "shippingHeading": "Shipping",
-    "shippingBody": "Calculated at checkout based on your governorate. Cash on delivery across Egypt.",
+    "shippingBody": "Shipping is calculated at checkout. We currently deliver to Cairo and Giza, with cash on delivery.",
     "returnsHeading": "Returns",
     "returnsBody": "Unworn items in original condition can be returned within 14 days of delivery.",
     "availabilityHeading": "Availability",
@@ -215,9 +215,9 @@
   "shipping": {
     "eyebrow": "Delivery",
     "heading": "Shipping",
-    "p1": "We currently deliver across Egypt. Shipping cost and estimated delivery time depend on your governorate and are shown at checkout before you place your order.",
+    "p1": "We currently deliver to Cairo and Giza only. Shipping cost and estimated delivery time are shown at checkout before you place your order.",
     "p2": "Every order is confirmed by phone or WhatsApp before it ships, so please make sure the number you provide at checkout is correct and reachable.",
-    "p3": "Payment on delivery is available across Egypt. We also accept InstaPay and Egyptian mobile wallet transfers — both are shown as options at checkout.",
+    "p3": "Payment on delivery is available in Cairo and Giza. We also accept InstaPay and Egyptian mobile wallet transfers — both are shown as options at checkout.",
     "p4": "Questions about a specific delivery? Reach us on <whatsapp>WhatsApp</whatsapp> and we'll help directly."
   },
   "returns": {
@@ -402,7 +402,7 @@
     "contactTitle": "Contact",
     "contactDescription": "Order questions, sizing help or custom requests — reach the OtherSide team on WhatsApp, email or social media.",
     "shippingTitle": "Shipping",
-    "shippingDescription": "OtherSide delivers across Egypt. Shipping cost and delivery time depend on your governorate; payment on delivery, InstaPay and mobile wallets are available.",
+    "shippingDescription": "OtherSide currently delivers to Cairo and Giza. Shipping cost is shown at checkout; payment on delivery, InstaPay and mobile wallets are available.",
     "returnsTitle": "Returns & Exchanges",
     "returnsDescription": "Unworn items with tags attached can be returned or exchanged within 14 days of delivery. Read the OtherSide returns policy.",
     "createYourOwnTitle": "Create Your Own",
