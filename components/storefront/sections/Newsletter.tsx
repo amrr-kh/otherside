@@ -1,18 +1,30 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useTransition, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
+import { subscribeToNewsletter } from "@/lib/actions/newsletter";
 import { CtaArrow } from "../Cta";
 
 export function Newsletter() {
   const t = useTranslations("newsletter");
   const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [trap, setTrap] = useState("");
+  const [result, setResult] = useState<"success" | "invalid" | "failed" | null>(
+    null,
+  );
+  const [pending, startTransition] = useTransition();
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    // Wired to NewsletterSubscriber once the API route exists (Phase 5+).
-    setSubmitted(true);
+    startTransition(async () => {
+      const res = await subscribeToNewsletter(email, trap);
+      if (res.status === "success") {
+        setResult("success");
+        setEmail("");
+      } else {
+        setResult(res.message);
+      }
+    });
   }
 
   return (
@@ -37,6 +49,17 @@ export function Newsletter() {
 
         <div className="w-full max-w-md md:justify-self-end">
           <form onSubmit={handleSubmit} className="group/cta flex">
+            {/* Hidden spam trap: people never see it, bots tend to fill it. */}
+            <input
+              type="text"
+              name="company"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              value={trap}
+              onChange={(e) => setTrap(e.target.value)}
+              className="absolute -left-[9999px] h-0 w-0 opacity-0"
+            />
             <input
               type="email"
               dir="ltr"
@@ -49,15 +72,16 @@ export function Newsletter() {
             />
             <button
               type="submit"
+              disabled={pending}
               aria-label={t("cta")}
               className="flex w-14 shrink-0 items-center justify-center bg-os-burgundy text-os-cream transition-opacity hover:opacity-90"
             >
               <CtaArrow />
             </button>
           </form>
-          {submitted ? (
+          {result ? (
             <p role="status" className="mt-4 text-sm text-os-ink/70">
-              {t("success")}
+              {t(result)}
             </p>
           ) : null}
         </div>

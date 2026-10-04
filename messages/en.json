@@ -98,7 +98,9 @@
     "cta": "Subscribe",
     "success": "You're in",
     "eyebrow": "Stay connected",
-    "body": "New drops, exclusive access and a different perspective."
+    "body": "New drops, exclusive access and a different perspective.",
+    "invalid": "Please enter a valid email address.",
+    "failed": "Something went wrong. Please try again."
   },
   "notFound": {
     "eyebrow": "404",
