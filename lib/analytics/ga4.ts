@@ -89,63 +89,66 @@ export async function getWebsiteTraffic(range: TrafficRange): Promise<WebsiteTra
     const days = range === "7d" ? 7 : 30;
     const rangeStart = `${days - 1}daysAgo`;
 
-    const [batch] = await client.batchRunReports({
-      property: propertyPath(),
-      requests: [
-        {
-          dateRanges: [{ startDate: "today", endDate: "today" }],
-          metrics: [{ name: "activeUsers" }, { name: "sessions" }, { name: "screenPageViews" }],
-        },
-        {
-          dateRanges: [{ startDate: "6daysAgo", endDate: "today" }],
-          metrics: [{ name: "activeUsers" }],
-        },
-        {
-          dateRanges: [{ startDate: "29daysAgo", endDate: "today" }],
-          metrics: [{ name: "activeUsers" }],
-        },
-        {
-          dateRanges: [{ startDate: rangeStart, endDate: "today" }],
-          dimensions: [{ name: "date" }],
-          metrics: [{ name: "activeUsers" }],
-          orderBys: [{ dimension: { dimensionName: "date" } }],
-        },
-        {
-          dateRanges: [{ startDate: rangeStart, endDate: "today" }],
-          dimensions: [{ name: "pagePath" }],
-          metrics: [{ name: "screenPageViews" }],
-          orderBys: [{ metric: { metricName: "screenPageViews" }, desc: true }],
-          limit: 10,
-        },
-        {
-          dateRanges: [{ startDate: rangeStart, endDate: "today" }],
-          dimensions: [{ name: "sessionSource" }],
-          metrics: [{ name: "sessions" }],
-          orderBys: [{ metric: { metricName: "sessions" }, desc: true }],
-          limit: 15,
-        },
-        {
-          dateRanges: [{ startDate: rangeStart, endDate: "today" }],
-          dimensions: [{ name: "deviceCategory" }],
-          metrics: [{ name: "sessions" }],
-          orderBys: [{ metric: { metricName: "sessions" }, desc: true }],
-        },
-        {
-          dateRanges: [{ startDate: rangeStart, endDate: "today" }],
-          dimensions: [{ name: "country" }],
-          metrics: [{ name: "activeUsers" }],
-          orderBys: [{ metric: { metricName: "activeUsers" }, desc: true }],
-          limit: 5,
-        },
-        {
-          dateRanges: [{ startDate: rangeStart, endDate: "today" }],
-          metrics: [{ name: "sessions" }],
-        },
-      ],
-    });
+    const requests = [
+      {
+        dateRanges: [{ startDate: "today", endDate: "today" }],
+        metrics: [{ name: "activeUsers" }, { name: "sessions" }, { name: "screenPageViews" }],
+      },
+      {
+        dateRanges: [{ startDate: "6daysAgo", endDate: "today" }],
+        metrics: [{ name: "activeUsers" }],
+      },
+      {
+        dateRanges: [{ startDate: "29daysAgo", endDate: "today" }],
+        metrics: [{ name: "activeUsers" }],
+      },
+      {
+        dateRanges: [{ startDate: rangeStart, endDate: "today" }],
+        dimensions: [{ name: "date" }],
+        metrics: [{ name: "activeUsers" }],
+        orderBys: [{ dimension: { dimensionName: "date" } }],
+      },
+      {
+        dateRanges: [{ startDate: rangeStart, endDate: "today" }],
+        dimensions: [{ name: "pagePath" }],
+        metrics: [{ name: "screenPageViews" }],
+        orderBys: [{ metric: { metricName: "screenPageViews" }, desc: true }],
+        limit: 10,
+      },
+      {
+        dateRanges: [{ startDate: rangeStart, endDate: "today" }],
+        dimensions: [{ name: "sessionSource" }],
+        metrics: [{ name: "sessions" }],
+        orderBys: [{ metric: { metricName: "sessions" }, desc: true }],
+        limit: 15,
+      },
+      {
+        dateRanges: [{ startDate: rangeStart, endDate: "today" }],
+        dimensions: [{ name: "deviceCategory" }],
+        metrics: [{ name: "sessions" }],
+        orderBys: [{ metric: { metricName: "sessions" }, desc: true }],
+      },
+      {
+        dateRanges: [{ startDate: rangeStart, endDate: "today" }],
+        dimensions: [{ name: "country" }],
+        metrics: [{ name: "activeUsers" }],
+        orderBys: [{ metric: { metricName: "activeUsers" }, desc: true }],
+        limit: 5,
+      },
+      {
+        dateRanges: [{ startDate: rangeStart, endDate: "today" }],
+        metrics: [{ name: "sessions" }],
+      },
+    ];
 
-    const [todayR, last7R, last30R, dailyR, topPagesR, sourcesR, devicesR, countriesR, rangeSessionsR] =
-      batch.reports ?? [];
+    // The Data API allows at most 5 reports per batch call, so send two in parallel.
+    const [first, second] = await Promise.all([
+      client.batchRunReports({ property: propertyPath(), requests: requests.slice(0, 5) }),
+      client.batchRunReports({ property: propertyPath(), requests: requests.slice(5) }),
+    ]);
+
+    const [todayR, last7R, last30R, dailyR, topPagesR] = first[0].reports ?? [];
+    const [sourcesR, devicesR, countriesR, rangeSessionsR] = second[0].reports ?? [];
 
     const sourceTotals = new Map<string, number>();
     for (const row of sourcesR?.rows ?? []) {
