@@ -3,7 +3,7 @@ import Script from "next/script";
 // The measurement ID is public (it ships to every visitor's browser), so it is
 // safe to keep in the code. Set NEXT_PUBLIC_GA_MEASUREMENT_ID to override it.
 const MEASUREMENT_ID =
-  process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "G-R6XTDVYDFJ";
+  process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "G-HXLVHHQZDE";
 
 // Visitors from these regions are not measured until they consent, and the
 // site has no consent banner yet, so they are simply not counted.
