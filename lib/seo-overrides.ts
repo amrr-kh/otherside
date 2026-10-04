@@ -8,15 +8,19 @@
  * what a search engine shows in the `<title>` tag and, for Arabic, the
  * `<meta name="description">`: the catalog has no Arabic name/description
  * fields, so without this an Arabic results snippet was showing English
- * text. The English description is left out on purpose — the real
- * shortDescription is already accurate and keyword-appropriate.
+ * text. The English product descriptions were added on 4 Oct 2026 because
+ * the catalog's one-line shortDescription was too short to work as a snippet.
  */
 type SeoOverride = { title?: string; description?: string };
 type LocaleOverrides = { en?: SeoOverride; ar?: SeoOverride };
 
 export const PRODUCT_SEO_OVERRIDES: Record<string, LocaleOverrides> = {
   "basic-hoodie": {
-    en: { title: "Oversized Unisex Hoodie — Basic Hoodie Egypt" },
+    en: {
+      title: "Oversized Unisex Hoodie — Basic Hoodie Egypt",
+      description:
+        "OtherSide Basic Hoodie — an oversized unisex hoodie in a relaxed fit, every colour, sizes S to XL. Cash on delivery in Cairo and Giza, InstaPay and mobile wallets.",
+    },
     ar: {
       title: "هودي اوفر سايز للجنسين — Basic Hoodie",
       description:
@@ -24,7 +28,11 @@ export const PRODUCT_SEO_OVERRIDES: Record<string, LocaleOverrides> = {
     },
   },
   "wide-leg-pants": {
-    en: { title: "Wide-Leg Unisex Pants — Wide-Leg Pants Egypt" },
+    en: {
+      title: "Wide-Leg Unisex Pants — Wide-Leg Pants Egypt",
+      description:
+        "OtherSide Wide-Leg Pants — fluid unisex wide-leg pants with a relaxed drop, every colour, sizes S to XL. Cash on delivery in Cairo and Giza, InstaPay and mobile wallets.",
+    },
     ar: {
       title: "بنطلون واسع الساق للجنسين — Wide-Leg Pants",
       description:
