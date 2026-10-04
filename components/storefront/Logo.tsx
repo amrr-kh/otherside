@@ -6,6 +6,8 @@ export function LogoMark({ className = "h-7 w-7" }: { className?: string }) {
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src="/brand/logo-mark.png"
+      width={262}
+      height={222}
       alt=""
       aria-hidden="true"
       className={`${className} object-contain`}
@@ -32,6 +34,8 @@ export function Logo({
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/brand/logo-wordmark.png"
+          width={746}
+          height={135}
           alt="OtherSide"
           className="h-[1.15em] w-auto"
         />
