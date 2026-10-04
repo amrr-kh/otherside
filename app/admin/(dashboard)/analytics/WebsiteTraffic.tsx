@@ -109,7 +109,7 @@ export function WebsiteTraffic({
         <h2 className="text-sm font-semibold text-soft-black">Website Traffic</h2>
         <p className="mt-3 max-w-xl text-sm text-soft-black/50">
           Google Analytics isn&apos;t connected to the admin dashboard yet. The
-          storefront tag (G-HXLVHHQZDE) keeps recording visits either way —
+          storefront tag (G-R6XTDVYDFJ) keeps recording visits either way —
           this panel just needs GA4_PROPERTY_ID and GA4_SERVICE_ACCOUNT_KEY
           set in Vercel to start showing them here.
         </p>
